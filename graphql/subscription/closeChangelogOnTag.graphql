@@ -1,0 +1,23 @@
+subscription CloseChangeLogOnTag {
+    Tag {
+        name
+        release @required {
+            name
+        }
+        commit {
+            repo {
+                defaultBranch
+                owner
+                name
+                org {
+                    provider {
+                        apiUrl
+                    }
+                }
+            }
+            pushes {
+                branch
+            }
+        }
+    }
+}

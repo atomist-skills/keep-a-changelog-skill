@@ -1,0 +1,41 @@
+#
+#  Copyright © 2020 Atomist, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# 
+    
+skill:
+  name: "@atomist/changelog-skill"
+  title: Changelog Managment
+  version: 0.1.0
+  author: Atomist
+  description: |
+    Automatically keep a CHANGELOG.md file to update based on labels added to
+    issues, pull requests and commits
+  category:
+    - productivity
+  license: Apache-2.0
+  homepage: https://github.com/atomist-skills/changelog-skill
+  repository: https://github.com/atomist-skills/changelog-skill.git
+  icon: https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/npm-512.png
+
+  package:
+    - use: '@atomist/package-sdm-skill/package'
+      parameters:
+        main: 'node_modules/@atomist/skill/lib/function.js'
+
+  runtime:
+    timeout: 540
+    memory: 1024
+    name: nodejs10
+    entry_point: entryPoint
