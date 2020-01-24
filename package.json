@@ -55,7 +55,7 @@
     "lint": "tslint --config tslint.json --format verbose --project .",
     "lint:fix": "npm run lint -- --fix",
     "start": "functions-framework --target=sdm --signature-type=event",
-    "test": "echo no tests",
+    "test": "mocha --require espower-typescript/guess --require source-map-support/register \"test/**/*.test.ts\"",
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
     "typedoc": "npm run doc"
   },
