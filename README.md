@@ -1,28 +1,16 @@
-# `@atomist/github-auto-merge-skill`
+# `@atomist/changelog-skill`
 
-Atomist Skill to automatically merge Pull Requests on GitHub based on assigned labels.
+Automatically keep a CHANGELOG.md file to update based on labels added to issues, pull requests and commits.
 
 ## Usage
 
-### Enable Auto-Merge
+### Enable Changelog Management
 
-To enable auto-merging, one the following labels has to be assigned to the pull request:
+tba
 
- * `auto-merge:on-approve` triggers auto-merge if all requested reviews are approved and all status checks are green
- * `auto-merge:on-check-success` triggers auto-merge if all status checks are green 
-
-### Specify Merge Method
-
-To specify the desired merge method, one of the following optional labels can be used:
-
- * `auto-merge-method:merge`
- * `auto-merge-method:rebase`
- * `auto-merge-method:squash`
- 
 ### Label Management
 
-The labels are automatically added to and removed from the repository depending on its settings.
-E.g. disabling the _rebase_ merge method will automatically remove the label.
+The labels are automatically added to the repository.
 
 ---
 
