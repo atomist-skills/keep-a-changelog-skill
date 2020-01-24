@@ -20,10 +20,10 @@ skill:
   version: 0.1.0
   author: Atomist
   description: |
-    Automatically keep a CHANGELOG.md file to update based on labels added to
+    Automatically keep a CHANGELOG.md file updated based on labels added to
     issues, pull requests and commits
   documentation: |
-    Automatically keep a CHANGELOG.md file to update based on labels added to
+    Automatically keep a CHANGELOG.md file updated based on labels added to
     issues, pull requests and commits.
 
     Based on https://keepachangelog.com.
