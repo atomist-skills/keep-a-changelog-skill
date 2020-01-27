@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200124142410",
+    "@atomist/skill": "0.1.0-master.20200127141400",
     "@atomist/slack-messages": "1.1.1-master.20190217194316",
     "@octokit/rest": "^16.38.1",
     "@types/lodash": "^4.14.149",
@@ -54,7 +54,7 @@
     "gql:gen": "graphql-codegen",
     "lint": "tslint --config tslint.json --format verbose --project .",
     "lint:fix": "npm run lint -- --fix",
-    "start": "functions-framework --target=sdm --signature-type=event",
+    "start": "functions-framework --target=entryPoint --signature-type=event",
     "test": "mocha --require espower-typescript/guess --require source-map-support/register \"test/**/*.test.ts\"",
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
     "typedoc": "npm run doc"
@@ -62,5 +62,6 @@
   "engines": {
     "node": ">=8.2.0",
     "npm": ">=5.0.0"
-  }
+  },
+  "main": "node_modules/@atomist/skill/lib/function.js"
 }
