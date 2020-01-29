@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200127141400",
+    "@atomist/skill": "0.1.0-master.20200129165822",
     "@atomist/slack-messages": "1.1.1-master.20190217194316",
     "@octokit/rest": "^16.38.1",
     "@types/lodash": "^4.14.149",
