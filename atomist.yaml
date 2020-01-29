@@ -15,7 +15,7 @@
 # 
     
 skill:
-  name: "@atomist/changelog-skill"
+  name: "atomist/changelog-skill"
   title: Changelog Managment
   version: 0.1.0
   author: Atomist
@@ -35,7 +35,7 @@ skill:
   icon: https://keepachangelog.com/assets/images/keep-a-changelog-mark-f8b06a42.svg
 
   package:
-    - use: '@atomist/package-sdm-skill/package'
+    - use: 'atomist/package-sdm-skill/package'
       parameters:
         main: 'node_modules/@atomist/skill/lib/function.js'
 
