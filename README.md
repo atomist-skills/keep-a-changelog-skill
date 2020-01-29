@@ -1,4 +1,4 @@
-# `@atomist/changelog-skill`
+# `atomist/changelog-skill`
 
 Automatically keep a CHANGELOG.md file updated based on labels added to issues, pull requests and commits.
 
