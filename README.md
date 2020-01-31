@@ -11,7 +11,7 @@ tba
 ### Label Management
 
 The labels are automatically added to the repository.
-
+ 
 ---
 
 Created by [Atomist][atomist].
