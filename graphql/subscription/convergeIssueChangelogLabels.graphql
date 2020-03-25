@@ -1,6 +1,7 @@
 subscription ConvergeIssueChangelogLabels {
     Issue {
         repo {
+            url
             owner
             name
             org {

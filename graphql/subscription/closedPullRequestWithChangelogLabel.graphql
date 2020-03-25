@@ -7,6 +7,7 @@ subscription ClosedPullRequestWithChangelogLabel {
       name @matches(re: "(changelog:.*|breaking)")
     }
     repo {
+      url
       owner
       name
       org {

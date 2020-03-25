@@ -41,7 +41,11 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription> = async ctx 
     await project.spawn("git", ["pull", remote, branch]);
 
     if (!(await project.hasFile(changelogPath))) {
-        return;
+        return {
+            code: 0,
+            visibility: "hidden",
+            reason: `No ${changelogPath} found in project`,
+        };
     }
 
     try {
@@ -49,18 +53,30 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription> = async ctx 
         const changelog = await changelogFile.getContent();
         const newChangelog = changelogAddRelease(changelog, versionRelease);
         if (newChangelog === changelog) {
-            return;
+            return {
+                code: 0,
+                visibility: "hidden",
+                reason: `No changes to ${changelogPath} found in project`,
+            };
         }
         await changelogFile.setContent(newChangelog);
     } catch (e) {
         console.error(`Failed to update changelog for release ${versionRelease}: ${e.message}`);
-        return;
+        return {
+            code: 1,
+            reason: `Failed to update ${changelogPath} for release ${versionRelease}`,
+        };
     }
     await project.setUserConfig("Atomist Bot", "bot@atomist.com");
     await project.commit(`Changelog: add release ${versionRelease}
 
 [atomist:generated]`);
     await project.push();
+
+    return {
+        code: 0,
+        reason: `Updated changelog in [${tag.commit.repo.owner}/${tag.commit.repo.name}](${tag.commit.repo.url}) for release ${versionRelease}`,
+    };
 };
 
 function releaseVersion(version: string): string {

@@ -6,6 +6,7 @@ subscription PushWithChangelogLabel {
       message @matches(re: "(?s).*\\[changelog:.*\\].*") @required
     }
     repo {
+      url
       owner
       name
       org {

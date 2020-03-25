@@ -2,6 +2,7 @@ subscription ConvergePullRequestChangelogLabels {
     PullRequest {
         action
         repo {
+            url
             owner
             name
             org {

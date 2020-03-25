@@ -19,5 +19,5 @@ import { addChangelogEntryForClosedIssue } from "./changelog/changelog";
 import { ClosedIssueWithChangelogLabelSubscription } from "./types";
 
 export const handler: EventHandler<ClosedIssueWithChangelogLabelSubscription> = async ctx => {
-    await addChangelogEntryForClosedIssue(ctx);
+    return addChangelogEntryForClosedIssue(ctx);
 };

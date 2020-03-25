@@ -6,6 +6,7 @@ subscription ClosedIssueWithChangelogLabel {
       name @matches(re: "(changelog:.*|breaking)")
     }
     repo {
+      url
       owner
       name
       org {

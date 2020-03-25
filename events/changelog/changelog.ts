@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { EventContext } from "@atomist/skill/lib/handler";
+import {
+    EventContext,
+    HandlerStatus,
+} from "@atomist/skill/lib/handler";
 import {
     gitHubComRepository,
     Project,
@@ -53,7 +56,7 @@ export interface ChangelogEntry {
 /**
  * Add entry to changelog for closed label or pull request
  */
-export async function addChangelogEntryForClosedIssue(ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription>): Promise<void> {
+export async function addChangelogEntryForClosedIssue(ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription>): Promise<HandlerStatus> {
     const issue = _.get(ctx.data, "Issue[0]") || _.get(ctx.data, "PullRequest[0]");
 
     const url = `https://github.com/${issue.repo.owner}/${issue.repo.name}/issues/${issue.number}`;
@@ -66,9 +69,17 @@ export async function addChangelogEntryForClosedIssue(ctx: EventContext<ClosedIs
         qualifiers,
     };
 
-    const credential = await ctx.credential.resolve(gitHubAppToken({ owner: issue.repo.owner, repo: issue.repo.name, apiUrl: issue.repo.org.provider.apiUrl }));
+    const credential = await ctx.credential.resolve(gitHubAppToken({
+        owner: issue.repo.owner,
+        repo: issue.repo.name,
+        apiUrl: issue.repo.org.provider.apiUrl,
+    }));
     const p = await ctx.project.clone(gitHubComRepository({ owner: issue.repo.owner, repo: issue.repo.name, credential }));
     await updateChangelog(p, categories, entry);
+    return {
+        code: 0,
+        reason: `Updated CHANGELOG.md in [${issue.repo.owner}/${issue.repo.name}](${issue.repo.url})`,
+    };
 }
 
 /**
@@ -77,8 +88,9 @@ export async function addChangelogEntryForClosedIssue(ctx: EventContext<ClosedIs
  * @param {string} token
  * @returns {Promise<HandlerResult>}
  */
-export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription>): Promise<void> {
+export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription>): Promise<HandlerStatus> {
     const push = ctx.data.Push[0];
+    let updated = false;
     for (const commit of push.commits) {
         const categories: string[] = [];
         ChangelogLabels.forEach(l => {
@@ -95,10 +107,27 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
         };
 
         if (categories.length > 0) {
-            const credential = await ctx.credential.resolve(gitHubAppToken({ owner: push.repo.owner, repo: push.repo.name, apiUrl: push.repo.org.provider.apiUrl }));
+            const credential = await ctx.credential.resolve(gitHubAppToken({
+                owner: push.repo.owner,
+                repo: push.repo.name,
+                apiUrl: push.repo.org.provider.apiUrl,
+            }));
             const p = await ctx.project.clone(gitHubComRepository({ owner: push.repo.owner, repo: push.repo.name, credential }));
             await updateChangelog(p, categories, entry);
+            updated = true;
         }
+    }
+    if (updated) {
+        return {
+            code: 0,
+            reason: `Updated CHANGELOG.md in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
+        };
+    } else {
+        return {
+            code: 0,
+            visibility: "hidden",
+            reason: `No updates to CHANGELOG.md in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
+        };
     }
 }
 
@@ -130,9 +159,9 @@ async function updateAndWriteChangelog(p: Project,
     let changelog = await readChangelog(p);
     for (const category of categories) {
         changelog = addEntryToChangelog({
-            ...entry,
-            category,
-        }
+                ...entry,
+                category,
+            }
             ,
             changelog,
             p);

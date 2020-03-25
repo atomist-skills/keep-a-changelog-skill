@@ -6,6 +6,7 @@ subscription CloseChangeLogOnTag {
         }
         commit {
             repo {
+                url
                 defaultBranch
                 owner
                 name

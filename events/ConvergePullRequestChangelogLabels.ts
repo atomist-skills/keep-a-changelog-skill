@@ -31,6 +31,11 @@ export const handler: EventHandler<ConvergePullRequestChangelogLabelsSubscriptio
 
     const api = gitHub(credentials.token, apiUrl(repo));
     await upsertChangelogLabels({ api, owner, repo: name });
+    return {
+        code: 0,
+        visibility: "hidden",
+        reason: `Converged changelog labels`,
+    };
 };
 
 /**
