@@ -47,7 +47,7 @@ describe("changelog", () => {
                 assert(result.title === "Changelog");
                 assert(result.versions.some((v: any) => v.version === "0.0.0"));
             })
-            .then(() => fs.removeSync(tcl), err => fs.removeSync(tcl));
+            .then(() => fs.removeSync(tcl), () => fs.removeSync(tcl));
     });
 
     it("should read changelog", () => {
@@ -100,7 +100,7 @@ describe("changelog", () => {
         const cl = addEntryToChangelog(entry, result, p);
         const out = changelogToString(cl);
         // tslint:disable:max-line-length
-        assert(/-   Something useful was added. \[#1\]\(https:\/\/github.com\/atomist\/test\/issues\/1\)/m.test(out));
+        assert(/- {3}Something useful was added. \[#1\]\(https:\/\/github.com\/atomist\/test\/issues\/1\)/m.test(out));
         assert(/\n$/.test(out));
     });
 

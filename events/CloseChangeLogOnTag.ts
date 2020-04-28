@@ -109,17 +109,17 @@ export function changelogAddRelease(changelog: string, version: string): string 
     }
     const date = formatDate();
     return changelog.replace(/^\[Unreleased\]:\s*(http.*\/compare)\/(\d+\.\d+\.\d+(?:-\S+)?)\.{3}HEAD/m,
-        `[Unreleased]: \$1/${version}...HEAD
+        `[Unreleased]: $1/${version}...HEAD
 
 ## [${version}][] - ${date}
 
-[${version}]: \$1/\$2...${version}`)
+[${version}]: $1/$2...${version}`)
         .replace(/^##\s*\[Unreleased\]\((http.*\/compare)\/(\d+\.\d+\.\d+(?:-\S+)?)\.{3}HEAD\)/m,
-            `## [Unreleased](\$1/${version}...HEAD)
+            `## [Unreleased]($1/${version}...HEAD)
 
-## [${version}](\$1/\$2...${version}) - ${date}`)
+## [${version}]($1/$2...${version}) - ${date}`)
         .replace(/^##\s*\[Unreleased\]\((http.*)\/tree\/HEAD\)/m,
-            `## [Unreleased](\$1/compare/${version}...HEAD)
+            `## [Unreleased]($1/compare/${version}...HEAD)
 
-## [${version}](\$1/tree/${version}) - ${date}`);
+## [${version}]($1/tree/${version}) - ${date}`);
 }

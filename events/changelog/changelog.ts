@@ -186,8 +186,8 @@ export async function readChangelog(p: Project): Promise<any> {
     }
 
     // Inline links as we would otherwise lose them
-    const remark = require("remark");
-    const links = require("remark-inline-links");
+    const remark = require("remark"); // eslint-disable-line @typescript-eslint/no-var-requires
+    const links = require("remark-inline-links"); // eslint-disable-line @typescript-eslint/no-var-requires
     const pr = promisify(remark().use(links).process);
 
     const inlined = await pr(await fs.readFile(changelogFile));
