@@ -65,8 +65,7 @@ export interface ChangelogEntry {
  * Add entry to changelog for closed label or pull request
  */
 export async function addChangelogEntryForClosedIssue(
-    ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription, ChangelogConfiguration>)
-    : Promise<HandlerStatus> {
+    ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
     const issue = _.get(ctx.event, "Issue[0]") || _.get(ctx.event, "PullRequest[0]");
 
     const url = `https://github.com/${issue.repo.owner}/${issue.repo.name}/issues/${issue.number}`;
