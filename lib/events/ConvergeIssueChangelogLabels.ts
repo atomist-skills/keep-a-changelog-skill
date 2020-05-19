@@ -15,20 +15,18 @@
  */
 
 import { EventHandler } from "@atomist/skill/lib/handler";
+import { gitHubComRepository } from "@atomist/skill/lib/project";
+import { gitHub } from "@atomist/skill/lib/project/github";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
 import { upsertChangelogLabels } from "./ConvergePullRequestChangelogLabels";
-import {
-    apiUrl,
-    gitHub,
-} from "./github";
-import { ConvergeIssueChangelogLabelsSubscription } from "./types";
 
 export const handler: EventHandler<ConvergeIssueChangelogLabelsSubscription> = async ctx => {
-    const repo = ctx.data.Issue[0].repo;
+    const repo = ctx.event.Issue[0].repo;
     const { owner, name } = repo;
-    const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
+    const credential = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
 
-    const api = gitHub(credentials.token, apiUrl(repo));
+    const api = gitHub(gitHubComRepository({ owner, repo: name, credential }));
     await upsertChangelogLabels({ api, owner, repo: name });
     return {
         code: 0,

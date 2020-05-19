@@ -16,16 +16,24 @@
 
 import { EventHandler } from "@atomist/skill/lib/handler";
 import { gitHubComRepository } from "@atomist/skill/lib/project";
+import {
+    commit,
+    push,
+} from "@atomist/skill/lib/project/git";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
-import { CloseChangeLogOnTagSubscription } from "./types";
+import * as fs from "fs-extra";
+import {
+    ChangelogConfiguration,
+    DefaultFileName,
+} from "../configuration";
+import { CloseChangeLogOnTagSubscription } from "../typings/types";
 
-export const handler: EventHandler<CloseChangeLogOnTagSubscription> = async ctx => {
-    const tag = ctx.data.Tag[0];
+export const handler: EventHandler<CloseChangeLogOnTagSubscription, ChangelogConfiguration> = async ctx => {
+    const tag = ctx.event.Tag[0];
     const version = tag.name;
     const versionRelease = releaseVersion(version);
     const branch = tag.commit.repo.defaultBranch;
     const remote = "origin";
-    const changelogPath = "CHANGELOG.md";
 
     const credential = await ctx.credential.resolve(gitHubAppToken({
         owner: tag.commit.repo.owner,
@@ -38,9 +46,11 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription> = async ctx 
         credential,
     }));
 
+    const changelogPath = project.path(ctx.configuration[0]?.parameters?.file || DefaultFileName);
+
     await project.spawn("git", ["pull", remote, branch]);
 
-    if (!(await project.hasFile(changelogPath))) {
+    if (!(await fs.pathExists(changelogPath))) {
         return {
             code: 0,
             visibility: "hidden",
@@ -49,8 +59,7 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription> = async ctx 
     }
 
     try {
-        const changelogFile = await project.getFile(changelogPath);
-        const changelog = await changelogFile.getContent();
+        const changelog = (await fs.readFile(changelogPath)).toString();
         const newChangelog = changelogAddRelease(changelog, versionRelease);
         if (newChangelog === changelog) {
             return {
@@ -59,7 +68,7 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription> = async ctx 
                 reason: `No changes to ${changelogPath} found in project`,
             };
         }
-        await changelogFile.setContent(newChangelog);
+        await fs.writeFile(changelogPath, newChangelog);
     } catch (e) {
         console.error(`Failed to update changelog for release ${versionRelease}: ${e.message}`);
         return {
@@ -67,11 +76,10 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription> = async ctx 
             reason: `Failed to update ${changelogPath} for release ${versionRelease}`,
         };
     }
-    await project.setUserConfig("Atomist Bot", "bot@atomist.com");
-    await project.commit(`Changelog: add release ${versionRelease}
+    await commit(project, `Changelog: add release ${versionRelease}
 
 [atomist:generated]`);
-    await project.push();
+    await push(project);
 
     return {
         code: 0,

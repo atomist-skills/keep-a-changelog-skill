@@ -18,7 +18,7 @@ import * as assert from "power-assert";
 import {
     changelogAddRelease,
     formatDate,
-} from "../../events/CloseChangeLogOnTag";
+} from "../../lib/events/CloseChangeLogOnTag";
 
 describe("release", () => {
 

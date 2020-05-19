@@ -15,21 +15,19 @@
  */
 
 import { EventHandler } from "@atomist/skill/lib/handler";
+import { gitHubComRepository } from "@atomist/skill/lib/project";
+import { gitHub } from "@atomist/skill/lib/project/github";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
-import * as github from "@octokit/rest";
-import { ChangelogLabels } from "./changelog/labels";
-import {
-    apiUrl,
-    gitHub,
-} from "./github";
-import { ConvergePullRequestChangelogLabelsSubscription } from "./types";
+import { Octokit } from "@octokit/rest";
+import { ConvergePullRequestChangelogLabelsSubscription } from "../typings/types";
+import { ChangelogLabels } from "../changelog/labels";
 
 export const handler: EventHandler<ConvergePullRequestChangelogLabelsSubscription> = async ctx => {
-    const repo = ctx.data.PullRequest[0].repo;
+    const repo = ctx.event.PullRequest[0].repo;
     const { owner, name } = repo;
-    const credentials = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
+    const credential = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
 
-    const api = gitHub(credentials.token, apiUrl(repo));
+    const api = gitHub(gitHubComRepository({ owner, repo: name, credential }));
     await upsertChangelogLabels({ api, owner, repo: name });
     return {
         code: 0,
@@ -43,7 +41,7 @@ export const handler: EventHandler<ConvergePullRequestChangelogLabelsSubscriptio
  */
 export interface UpsertChangelogLabelsInfo {
     /** @octokit/rest API to use to query and create label. */
-    api: github;
+    api: Octokit;
     /** Name of repository in which to create label */
     repo: string;
     /** Owner of repository in which to create label */

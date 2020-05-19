@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
-import { addChangelogEntryForClosedIssue } from "./changelog/changelog";
-import { ClosedPullRequestWithChangelogLabelSubscription } from "./types";
-
-export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscription> = async ctx => {
-    return addChangelogEntryForClosedIssue(ctx);
-};
+export const ChangelogLabels = [
+    "added",
+    "changed",
+    "deprecated",
+    "removed",
+    "fixed",
+    "security",
+];

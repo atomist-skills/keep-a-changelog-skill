@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { Project } from "@atomist/skill/lib/project";
-import * as appRoot from "app-root-path";
+import { Project } from "@atomist/skill/lib/project/project";
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as assert from "power-assert";
@@ -25,11 +24,12 @@ import {
     changelogToString,
     readChangelog,
     writeChangelog,
-} from "../../events/changelog/changelog";
+} from "../../lib/changelog/changelog";
+import { DefaultFileName } from "../../lib/configuration";
 
 describe("changelog", () => {
 
-    const clPath = path.join(appRoot.path, "CHANGELOG.md");
+    const clPath = path.join(process.cwd(), "CHANGELOG.md");
     const buPath = clPath + ".test-backup";
     before(() => {
         fs.copyFileSync(clPath, buPath);
@@ -40,9 +40,8 @@ describe("changelog", () => {
     });
 
     it("should create changelog", () => {
-        const p = { baseDir: "test" } as any as Project;
-        const tcl = path.join("test", "CHANGELOG.md");
-        return readChangelog(p)
+        const tcl = path.join("test", DefaultFileName);
+        return readChangelog(tcl)
             .then(result => {
                 assert(result.title === "Changelog");
                 assert(result.versions.some((v: any) => v.version === "0.0.0"));
@@ -51,7 +50,7 @@ describe("changelog", () => {
     });
 
     it("should read changelog", () => {
-        const p = { baseDir: appRoot.path } as any as Project;
+        const p = path.join(process.cwd(), DefaultFileName);
         return readChangelog(p)
             .then(result => {
                 assert(result.versions.length > 0);
@@ -60,8 +59,8 @@ describe("changelog", () => {
     });
 
     it("should add entry to changelog", () => {
+        const clp = path.join(process.cwd(), DefaultFileName);
         const p = {
-            baseDir: appRoot.path,
             id: {
                 owner: "atomist",
                 repo: "test",
@@ -74,7 +73,7 @@ describe("changelog", () => {
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: [],
         };
-        return readChangelog(p).then(result => {
+        return readChangelog(clp).then(result => {
             const cl = addEntryToChangelog(entry, result, p);
             assert.equal(cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
                 "-   This is a test label. [#1](https://github.com/atomist/test/issues/1)");
@@ -82,8 +81,8 @@ describe("changelog", () => {
     });
 
     it("should convert back to markdown", async () => {
+        const clp = path.join(process.cwd(), DefaultFileName);
         const p = {
-            baseDir: appRoot.path,
             id: {
                 owner: "atomist",
                 repo: "test",
@@ -96,7 +95,7 @@ describe("changelog", () => {
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: [],
         };
-        const result = await readChangelog(p);
+        const result = await readChangelog(clp);
         const cl = addEntryToChangelog(entry, result, p);
         const out = changelogToString(cl);
         // tslint:disable:max-line-length
@@ -105,8 +104,8 @@ describe("changelog", () => {
     });
 
     it("should write changes back to changelog", () => {
+        const clp = path.join(process.cwd(), DefaultFileName);
         const p = {
-            baseDir: appRoot.path,
             id: {
                 owner: "atomist",
                 repo: "test",
@@ -119,9 +118,9 @@ describe("changelog", () => {
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: ["breaking"],
         };
-        return readChangelog(p).then(result => {
+        return readChangelog(clp).then(result => {
             const cl = addEntryToChangelog(entry, result, p);
-            return writeChangelog(cl, p);
+            return writeChangelog(cl, clp);
         });
     });
 

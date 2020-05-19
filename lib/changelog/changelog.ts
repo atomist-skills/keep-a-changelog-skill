@@ -20,18 +20,26 @@ import {
 } from "@atomist/skill/lib/handler";
 import {
     gitHubComRepository,
-    Project,
 } from "@atomist/skill/lib/project";
+import {
+    commit,
+    push,
+    status,
+} from "@atomist/skill/lib/project/git";
+import { Project } from "@atomist/skill/lib/project/project";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
-import * as path from "path";
 import { promisify } from "util";
+import {
+    ChangelogConfiguration,
+    DefaultFileName,
+} from "../configuration";
 import {
     ClosedIssueWithChangelogLabelSubscription,
     ClosedPullRequestWithChangelogLabelSubscription,
     PushWithChangelogLabelSubscription,
-} from "../types";
+} from "../typings/types";
 import * as parseChangelog from "./changelogParser";
 import { ChangelogLabels } from "./labels";
 
@@ -56,8 +64,10 @@ export interface ChangelogEntry {
 /**
  * Add entry to changelog for closed label or pull request
  */
-export async function addChangelogEntryForClosedIssue(ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription>): Promise<HandlerStatus> {
-    const issue = _.get(ctx.data, "Issue[0]") || _.get(ctx.data, "PullRequest[0]");
+export async function addChangelogEntryForClosedIssue(
+    ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription, ChangelogConfiguration>)
+    : Promise<HandlerStatus> {
+    const issue = _.get(ctx.event, "Issue[0]") || _.get(ctx.event, "PullRequest[0]");
 
     const url = `https://github.com/${issue.repo.owner}/${issue.repo.name}/issues/${issue.number}`;
     const categories = issue.labels.filter(l => l.name.startsWith("changelog:")).map(l => l.name.split(":")[1]);
@@ -75,7 +85,7 @@ export async function addChangelogEntryForClosedIssue(ctx: EventContext<ClosedIs
         apiUrl: issue.repo.org.provider.apiUrl,
     }));
     const p = await ctx.project.clone(gitHubComRepository({ owner: issue.repo.owner, repo: issue.repo.name, credential }));
-    await updateChangelog(p, categories, entry);
+    await updateChangelog(p, categories, entry, ctx.configuration[0]?.parameters || {});
     return {
         code: 0,
         reason: `Updated CHANGELOG.md in [${issue.repo.owner}/${issue.repo.name}](${issue.repo.url})`,
@@ -88,8 +98,8 @@ export async function addChangelogEntryForClosedIssue(ctx: EventContext<ClosedIs
  * @param {string} token
  * @returns {Promise<HandlerResult>}
  */
-export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription>): Promise<HandlerStatus> {
-    const push = ctx.data.Push[0];
+export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
+    const push = ctx.event.Push[0];
     let updated = false;
     for (const commit of push.commits) {
         const categories: string[] = [];
@@ -113,7 +123,7 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
                 apiUrl: push.repo.org.provider.apiUrl,
             }));
             const p = await ctx.project.clone(gitHubComRepository({ owner: push.repo.owner, repo: push.repo.name, credential }));
-            await updateChangelog(p, categories, entry);
+            await updateChangelog(p, categories, entry, ctx.configuration[0]?.parameters || {});
             updated = true;
         }
     }
@@ -133,30 +143,32 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
 
 async function updateChangelog(p: Project,
                                categories: string[],
-                               entry: ChangelogEntry): Promise<void> {
-    const cl = await p.getFile("CHANGELOG.md");
-    if (cl) {
+                               entry: ChangelogEntry,
+                               cfg: ChangelogConfiguration): Promise<void> {
+    const changelogPath = p.path(cfg.file || DefaultFileName);
+    if (await fs.pathExists(changelogPath)) {
         // If changelog exists make sure it doesn't already contain the label
-        const content = await cl.getContent();
+        const content = (await fs.readFile(changelogPath)).toString();
         if (!content.includes(entry.url)) {
-            await updateAndWriteChangelog(p, categories, entry);
+            await updateAndWriteChangelog(p, categories, entry, changelogPath);
         }
     } else {
-        await updateAndWriteChangelog(p, categories, entry);
+        await updateAndWriteChangelog(p, categories, entry, changelogPath);
     }
 
-    if (!(await p.isClean())) {
-        await p.commit(`Changelog: ${entry.label} to ${categories.join(", ")}
+    if (!(await status(p)).isClean) {
+        await commit(p, `Changelog: ${entry.label} to ${categories.join(", ")}
 
 [atomist:generated]`);
-        await p.push();
+        await push(p);
     }
 }
 
 async function updateAndWriteChangelog(p: Project,
                                        categories: string[],
-                                       entry: ChangelogEntry): Promise<any> {
-    let changelog = await readChangelog(p);
+                                       entry: ChangelogEntry,
+                                       changelogPath: string): Promise<any> {
+    let changelog = await readChangelog(changelogPath);
     for (const category of categories) {
         changelog = addEntryToChangelog({
                 ...entry,
@@ -166,7 +178,7 @@ async function updateAndWriteChangelog(p: Project,
             changelog,
             p);
     }
-    return writeChangelog(changelog, p);
+    return writeChangelog(changelog, changelogPath);
 }
 
 /**
@@ -178,11 +190,10 @@ async function updateAndWriteChangelog(p: Project,
  * @param p project with changelog file, or not
  * @return an object representing the parsed changelog
  */
-export async function readChangelog(p: Project): Promise<any> {
-    const changelogFile = path.join(p.baseDir, "CHANGELOG.md");
+export async function readChangelog(changelogPath: string): Promise<any> {
 
-    if (!fs.existsSync(changelogFile)) {
-        await fs.writeFile(changelogFile, ChangelogTemplate);
+    if (!(await fs.pathExists(changelogPath))) {
+        await fs.writeFile(changelogPath, ChangelogTemplate);
     }
 
     // Inline links as we would otherwise lose them
@@ -190,10 +201,10 @@ export async function readChangelog(p: Project): Promise<any> {
     const links = require("remark-inline-links"); // eslint-disable-line @typescript-eslint/no-var-requires
     const pr = promisify(remark().use(links).process);
 
-    const inlined = await pr(await fs.readFile(changelogFile));
-    await fs.writeFile(changelogFile, inlined.contents);
+    const inlined = await pr(await fs.readFile(changelogPath));
+    await fs.writeFile(changelogPath, inlined.contents);
 
-    return parseChangelog(changelogFile);
+    return parseChangelog(changelogPath);
 }
 
 export function addEntryToChangelog(entry: ChangelogEntry,
@@ -256,15 +267,11 @@ ${v.parsed[category].join("\n")}`;
 
 /**
  * Write changelog back out to the CHANGELOG.md file
- * @param changelog
- * @param {GitProject} p
- * @returns {Promise<void>}
  */
 export async function writeChangelog(changelog: any,
-                                     p: Project): Promise<void> {
+                                     changelogPath: string): Promise<void> {
     const content = changelogToString(changelog);
-    const changelogFile = path.join(p.baseDir, "CHANGELOG.md");
-    return fs.writeFile(changelogFile, content);
+    return fs.writeFile(changelogPath, content);
 }
 
 function readUnreleasedVersion(cl: any, p: Project): any {
