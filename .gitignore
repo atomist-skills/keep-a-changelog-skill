@@ -17,4 +17,7 @@ node_modules/
 /doc/
 /log/
 git-info.json
-/lib/typings/types.ts
+lib/typings/types.ts
+skill.ts
+atomist.yaml
+/dist

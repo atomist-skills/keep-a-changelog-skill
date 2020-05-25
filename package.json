@@ -1,6 +1,39 @@
 {
+  "name": "@atomist/changelog-skill",
+  "description": "Changelog Management",
+  "version": "1.0.0",
+  "author": "Atomist",
+  "license": "Apache-2",
+  "homepage": "https://github.com/atomist-skills/changelog-skill",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
+    "build": "run-s compile test lint doc",
+    "clean": "run-p clean:compile clean:test clean:doc clean:run",
+    "clean:compile": "rimraf git-info.json \"*.{d.ts,js}{,.map}\" \"{lib,test}/**/*.{d.ts,js}{,.map}\" lib/typings/types.ts",
+    "clean:dist": "run-s clean clean:npm",
+    "clean:doc": "rimraf doc",
+    "clean:npm": "rimraf node_modules",
+    "clean:run": "rimraf *-v8.log profile.txt log",
+    "clean:test": "rimraf .nyc_output coverage",
+    "compile": "run-s gql:gen compile:ts skill:generate skill:bundle",
+    "compile:ts": "tsc --project .",
+    "doc": "typedoc --mode modules --excludeExternals --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
+    "git:info": "atm-git-info",
+    "gql:gen": "graphql-codegen",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "npm run lint -- --fix",
+    "start": "functions-framework --target=entryPoint --signature-type=event",
+    "test": "mocha --require espower-typescript/guess --require source-map-support/register \"test/**/*.test.ts\"",
+    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
+    "typedoc": "npm run doc",
+    "skill:generate": "atm-skill generate",
+    "skill:bundle": "atm-skill bundle --minify --source-map"
+  },
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200516100639",
+    "@atomist/skill": "0.1.0-issue-6.20200525163400",
     "@atomist/slack-messages": "^1.1.1",
     "@octokit/rest": "^17.9.2",
     "@types/lodash": "^4.14.150",
@@ -35,35 +68,6 @@
     "ts-node": "^8.10.1",
     "typedoc": "^0.17.7",
     "typescript": "^3.9.2"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
-    "build": "run-s compile test lint doc",
-    "clean": "run-p clean:compile clean:test clean:doc clean:run",
-    "clean:compile": "rimraf git-info.json \"*.{d.ts,js}{,.map}\" \"{lib,test}/**/*.{d.ts,js}{,.map}\" lib/typings/types.ts",
-    "clean:dist": "run-s clean clean:npm",
-    "clean:doc": "rimraf doc",
-    "clean:npm": "rimraf node_modules",
-    "clean:run": "rimraf *-v8.log profile.txt log",
-    "clean:test": "rimraf .nyc_output coverage",
-    "compile": "run-s gql:gen compile:ts",
-    "compile:ts": "tsc --project .",
-    "doc": "typedoc --mode modules --excludeExternals --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
-    "git:info": "atm-git-info",
-    "gql:gen": "graphql-codegen",
-    "lint": "eslint --ext .ts .",
-    "lint:fix": "npm run lint -- --fix",
-    "start": "functions-framework --target=entryPoint --signature-type=event",
-    "test": "mocha --require espower-typescript/guess --require source-map-support/register \"test/**/*.test.ts\"",
-    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
-    "typedoc": "npm run doc"
-  },
-  "engines": {
-    "node": ">=8.2.0",
-    "npm": ">=5.0.0"
   },
   "main": "node_modules/@atomist/skill/lib/function.js"
 }
