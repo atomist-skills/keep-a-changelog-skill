@@ -2,6 +2,8 @@
 
 Automatically keep a CHANGELOG.md file updated based on labels added to issues, pull requests and commits.
 
+<!---atomist-skill-readme:start--->
+
 ## Usage
 
 ### Enable Changelog Management
@@ -11,6 +13,8 @@ tba
 ### Label Management
 
 The labels are automatically added to the repository.
+ 
+<!---atomist-skill-readme:end--->
  
 ---
 
