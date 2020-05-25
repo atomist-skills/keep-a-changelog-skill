@@ -22,11 +22,11 @@ export const Skill = skill({
             type: ParameterType.RepoFilter,
             displayName: "Which repositories",
             required: false,
-        }
+        },
     },
 
     subscriptions: [
         "file://graphql/subscription/*.graphql",
-    ]
+    ],
 
 });
