@@ -1,61 +1,6 @@
-#
-#  Copyright © 2020 Atomist, Inc.
-#
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
-# 
-    
-skill:
-  name: atomist/changelog-skill
-  title: Changelog Management
-  version: 1.0.0
-  author: Atomist
-  description: |
-    Automatically keep a CHANGELOG.md file updated based on labels added to
-    issues, pull requests and commits
-  documentation: |
-    Automatically keep a CHANGELOG.md file updated based on labels added to
-    issues, pull requests and commits.
-
-    Based on https://keepachangelog.com.
-  category:
-    - productivity
-  license: Apache-2.0
-  homepage: https://github.com/atomist-skills/changelog-skill
-  repository: https://github.com/atomist-skills/changelog-skill.git
-  icon: file://docs/images/icon.svg
-
-  package:
-    use: atomist/package-npm-skill
-    parameters:
-      bundle: true
-      sourceMaps: true
-      minify: true
-
-  runtime:
-    memory: 1024
-    name: nodejs10
-    entry_point: entryPoint
-    timeout: 60
-
-parameters:
-  - string:
-      name: file
-      display_name: Name of changelog file
-      description: Relative path to the changelog file inside the repository (defaults to `CHANGELOG.md`)
-      place_holder: CHANGELOG.md
-      required: false
-  - repo_filter:
-      name: repos
-      display_name: Which repositories
-      description: ''
-      required: false
+apiVersion: 1
+package:
+  type: '@atomist/package-npm-skill'
+  parameters:
+    command: npm ci && npm run skill
+    destination: ./skill

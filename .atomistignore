@@ -1,6 +1,12 @@
-.gitignore
+.git*
 .atomistignore
+.eslint*
 *.md
 tsconfig.json
-tslint.json
 codegen.yml
+test/
+lib/
+legal/
+docs/
+skill/
+/index.*
