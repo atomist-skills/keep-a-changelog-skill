@@ -1,6 +1,6 @@
 apiVersion: 1
 package:
-  type: '@atomist/package-npm-skill'
+  type: '@atomist/npm-skill'
   parameters:
     command: npm ci && npm run skill
-    destination: ./skill
+    output: ./.atomist
