@@ -9,7 +9,9 @@
     "url": "https://github.com/atomist-skills/changelog-skill.git"
   },
   "keywords": [
-    "DEV_EX"
+    "DEV_EX",
+    "CODE_QUALITY",
+    "PRODUCTIVITY"
   ],
   "dependencies": {
     "@atomist/skill": "0.1.0-issue-6.20200527135724",
