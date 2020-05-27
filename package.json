@@ -1,7 +1,6 @@
 {
   "name": "@atomist/changelog-skill",
   "description": "Changelog Management",
-  "version": "1.0.0",
   "author": "Atomist",
   "license": "Apache-2.0",
   "homepage": "https://github.com/atomist-skills/changelog-skill",
@@ -13,7 +12,7 @@
     "DEV_EX"
   ],
   "dependencies": {
-    "@atomist/skill": "0.1.0-issue-6.20200526192544",
+    "@atomist/skill": "0.1.0-issue-6.20200527100701",
     "@atomist/slack-messages": "^1.1.1",
     "@octokit/rest": "^17.9.2",
     "@types/lodash": "^4.14.150",
