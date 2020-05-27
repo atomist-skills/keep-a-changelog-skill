@@ -1,6 +1,6 @@
 # `atomist/changelog-skill`
 
-Automatically keep a CHANGELOG.md file updated based on labels added to issues, pull requests and commits.
+Automatically keep a changelog updated based on labels added to issues, pull requests and commits.
 
 <!---atomist-skill-readme:start--->
 
