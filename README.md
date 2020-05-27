@@ -4,16 +4,8 @@ Automatically keep a changelog updated based on labels added to issues, pull req
 
 <!---atomist-skill-readme:start--->
 
-## Usage
+tba
 
-### Enable Changelog Management
-
-tba tba
-
-### Label Management
-
-The labels are automatically added to the repository.
- 
 <!---atomist-skill-readme:end--->
  
 ---
