@@ -99,7 +99,7 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
     const entries: Array<{ entry: ChangelogEntry, categories: string[]}> = [];
     for (const commit of push.commits) {
         const categories: string[] = [];
-        const qualifiers: string[] = []
+        const qualifiers: string[] = [];
         ChangelogLabels.forEach(l => {
             if (commit.message.toLowerCase().includes(`[changelog:${l}]`)) {
                 categories.push(l);
