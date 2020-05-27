@@ -8,7 +8,7 @@ Automatically keep a changelog updated based on labels added to issues, pull req
 
 ### Enable Changelog Management
 
-tba
+tba tba
 
 ### Label Management
 
