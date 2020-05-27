@@ -48,14 +48,14 @@ The **GitHub** integration must be configured in order to use this skill. At lea
 
 1. **Configure the name of the changelog file**
 
-    ![Default auto-merge policy expanded](docs/images/default-auto-merge-policy-expanded.png)
+    ![Default auto-merge policy expanded](docs/images/changelog-name.png)
     
     The default name of the changelog file in the repository is `CHANGELOG.md` in the root of the project.
     Use this setting to change the name and path.
 
 2. **Create optional mapping rules to map commits into changelog categories**
 
-    ![Default auto-merge method](docs/images/default-auto-merge-method.png)
+    ![Default auto-merge method](docs/images/mapping.png)
     
     Your project may have some established commit message convention like [AngularJS](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines)
     in place. In this case you can use the mapping parameters to configure regular expressions to categorize commits 
