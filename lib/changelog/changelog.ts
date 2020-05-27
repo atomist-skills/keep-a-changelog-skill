@@ -228,7 +228,7 @@ export async function readChangelog(changelogPath: string): Promise<any> {
     return parseChangelog(changelogPath);
 }
 
-export function addEntryToChangelog(entry: ChangelogEntry,
+export function addEntryToChangelog(entry: ChangelogEntry, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
                                     cl: any,
                                     p: Project): any {
     const version = readUnreleasedVersion(cl, p);
@@ -255,7 +255,7 @@ export function addEntryToChangelog(entry: ChangelogEntry,
  * @param changelog parsed changelog object
  * @return markdown formatted changelog file contents
  */
-export function changelogToString(changelog: any): string {
+export function changelogToString(changelog: any): string { // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
     let content = `# ${changelog.title}`;
     if (changelog.description) {
         content = `${content}
@@ -289,7 +289,7 @@ ${v.parsed[category].join("\n")}`;
 /**
  * Write changelog back out to the CHANGELOG.md file
  */
-export async function writeChangelog(changelog: any,
+export async function writeChangelog(changelog: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
                                      changelogPath: string): Promise<void> {
     const content = changelogToString(changelog);
     return fs.writeFile(changelogPath, content);
