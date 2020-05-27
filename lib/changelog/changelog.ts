@@ -21,11 +21,7 @@ import {
 import {
     gitHubComRepository,
 } from "@atomist/skill/lib/project";
-import {
-    commit,
-    push,
-    status,
-} from "@atomist/skill/lib/project/git";
+import * as git from "@atomist/skill/lib/project/git";
 import { Project } from "@atomist/skill/lib/project/project";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import * as fs from "fs-extra";
@@ -99,34 +95,61 @@ export async function addChangelogEntryForClosedIssue(
  */
 export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
     const push = ctx.event.Push[0];
-    let updated = false;
+    const cfg = ctx.configuration[0]?.parameters;
+    const entries: Array<{ entry: ChangelogEntry, categories: string[]}> = [];
     for (const commit of push.commits) {
         const categories: string[] = [];
+        const qualifiers: string[] = []
         ChangelogLabels.forEach(l => {
             if (commit.message.toLowerCase().includes(`[changelog:${l}]`)) {
                 categories.push(l);
             }
         });
+        if (cfg.mapAdded?.some(m => commit.message.match(m))) {
+            categories.push("added");
+        }
+        if (cfg.mapChanged?.some(m => commit.message.match(m))) {
+            categories.push("changed");
+        }
+        if (cfg.mapDeprecated?.some(m => commit.message.match(m))) {
+            categories.push("deprecated");
+        }
+        if (cfg.mapRemoved?.some(m => commit.message.match(m))) {
+            categories.push("removed");
+        }
+        if (cfg.mapFixed?.some(m => commit.message.match(m))) {
+            categories.push("fixed");
+        }
+        if (cfg.mapSecurity?.some(m => commit.message.match(m))) {
+            categories.push("security");
+        }
+        if (cfg.mapBreaking?.some(m => commit.message.match(m))) {
+            qualifiers.push("breaking");
+        }
 
         const entry: ChangelogEntry = {
             title: commit.message.split("\n")[0],
             label: commit.sha.slice(0, 7),
-            url: `https://github.com/${push.repo.owner}/${push.repo.name}/commit/${commit.sha}`,
-            qualifiers: [],
+            url: commit.url,
+            qualifiers,
         };
 
         if (categories.length > 0) {
-            const credential = await ctx.credential.resolve(gitHubAppToken({
-                owner: push.repo.owner,
-                repo: push.repo.name,
-                apiUrl: push.repo.org.provider.apiUrl,
-            }));
-            const p = await ctx.project.clone(gitHubComRepository({ owner: push.repo.owner, repo: push.repo.name, credential }));
-            await updateChangelog(p, categories, entry, ctx.configuration[0]?.parameters || {});
-            updated = true;
+            entries.push({ entry, categories });
         }
     }
-    if (updated) {
+
+    if (entries.length > 0) {
+        const credential = await ctx.credential.resolve(gitHubAppToken({
+            owner: push.repo.owner,
+            repo: push.repo.name,
+            apiUrl: push.repo.org.provider.apiUrl,
+        }));
+        const p = await ctx.project.clone(gitHubComRepository({ owner: push.repo.owner, repo: push.repo.name, credential }));
+        for (const entry of entries) {
+            await updateChangelog(p, entry.categories, entry.entry, ctx.configuration[0]?.parameters || {});
+        }
+        await git.push(p);
         return {
             code: 0,
             reason: `Updated CHANGELOG.md in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
@@ -155,11 +178,10 @@ async function updateChangelog(p: Project,
         await updateAndWriteChangelog(p, categories, entry, changelogPath);
     }
 
-    if (!(await status(p)).isClean) {
-        await commit(p, `Changelog: ${entry.label} to ${categories.join(", ")}
+    if (!(await git.status(p)).isClean) {
+        await git.commit(p, `Changelog: ${entry.label} to ${categories.join(", ")}
 
 [atomist:generated]`);
-        await push(p);
     }
 }
 
