@@ -22,7 +22,7 @@ import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
 import { upsertChangelogLabels } from "./ConvergePullRequestChangelogLabels";
 
 export const handler: EventHandler<ConvergeIssueChangelogLabelsSubscription> = async ctx => {
-    const repo = ctx.event.Issue[0].repo;
+    const repo = ctx.data.Issue[0].repo;
     const { owner, name } = repo;
     const credential = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
 

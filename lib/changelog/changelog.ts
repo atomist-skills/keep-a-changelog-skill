@@ -62,7 +62,7 @@ export interface ChangelogEntry {
  */
 export async function addChangelogEntryForClosedIssue(
     ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
-    const issue = _.get(ctx.event, "Issue[0]") || _.get(ctx.event, "PullRequest[0]");
+    const issue = _.get(ctx.data, "Issue[0]") || _.get(ctx.data, "PullRequest[0]");
 
     const url = `https://github.com/${issue.repo.owner}/${issue.repo.name}/issues/${issue.number}`;
     const categories = issue.labels.filter(l => l.name.startsWith("changelog:")).map(l => l.name.split(":")[1]);
@@ -94,7 +94,7 @@ export async function addChangelogEntryForClosedIssue(
  * @returns {Promise<HandlerResult>}
  */
 export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
-    const push = ctx.event.Push[0];
+    const push = ctx.data.Push[0];
     const cfg = ctx.configuration[0]?.parameters;
     const entries: Array<{ entry: ChangelogEntry, categories: string[]}> = [];
     for (const commit of push.commits) {
