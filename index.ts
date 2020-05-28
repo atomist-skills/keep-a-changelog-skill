@@ -17,6 +17,8 @@
 import {
     gitHubResourceProvider,
     ParameterType,
+    ParameterVisibility,
+    repoFilter,
     skill,
     slackResourceProvider,
 } from "@atomist/skill/lib/skill";
@@ -46,49 +48,51 @@ export const Skill = skill({
             displayName: "Map commits to Added",
             description: "Regular expressions to match against commit message to map into the _Added_ category",
             required: false,
+            visibility: ParameterVisibility.Hidden,
         },
         mapChanged: {
             type: ParameterType.StringArray,
             displayName: "Map commits to Change",
             description: "Regular expressions to match against commit message to map into the _Changed_ category",
             required: false,
+            visibility: ParameterVisibility.Hidden,
         },
         mapDeprecated: {
             type: ParameterType.StringArray,
             displayName: "Map commits to Deprecated",
             description: "Regular expressions to match against commit message to map into the _Deprecated_ category",
             required: false,
+            visibility: ParameterVisibility.Hidden,
         },
         mapRemoved: {
             type: ParameterType.StringArray,
             displayName: "Map commits to Removed",
             description: "Regular expressions to match against commit message to map into the _Removed_ category",
             required: false,
+            visibility: ParameterVisibility.Hidden,
         },
         mapFixed: {
             type: ParameterType.StringArray,
             displayName: "Map commits to Fixed",
             description: "Regular expressions to match against commit message to map into the _Fixed_ category",
             required: false,
+            visibility: ParameterVisibility.Hidden,
         },
         mapSecurity: {
             type: ParameterType.StringArray,
             displayName: "Map commits to Security",
             description: "Regular expressions to match against commit message to map into the _Security_ category",
             required: false,
+            visibility: ParameterVisibility.Hidden,
         },
         mapBreaking: {
             type: ParameterType.StringArray,
             displayName: "Map commits to Breaking",
             description: "Regular expressions to match against commit message to add BREAKING label to changelog entry",
             required: false,
+            visibility: ParameterVisibility.Hidden,
         },
-        repos: {
-            type: ParameterType.RepoFilter,
-            displayName: "Which repositories",
-            description: "",
-            required: false,
-        },
+        repos: repoFilter(),
     },
 
     subscriptions: [

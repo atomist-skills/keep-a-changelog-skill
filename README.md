@@ -53,21 +53,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
     The default name of the changelog file in the repository is `CHANGELOG.md` in the root of the project.
     Use this setting to change the name and path.
 
-2. **Create optional mapping rules to map commits into changelog categories**
-
-    ![Default auto-merge method](docs/images/mapping.png)
-    
-    Your project may have some established commit message convention like [AngularJS](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines)
-    in place. In this case you can use the mapping parameters to configure regular expressions to categorize commits 
-    into changelog categories.
-    
-    For example the following regular expressions can be used to map the AngularJS conventions:
-    
-    * _Added_: `^feat\(.*\):.*$` for new features
-    * _Fixed_: `^fix\(.*\):.*$` for a bug fix
-    * _Changed_: `^docs|style|refactor|perf|test|chore\(.*\):.*$` for changes that don't introduce new features
-
-3. **Determine repository scope**
+2. **Determine repository scope**
 
     ![Repository filter](docs/images/repo-filter.png)
 
@@ -78,7 +64,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
 
 # How to use Changelog Management
 
-1. **Configure skill, set changelog file and configure mappings for commit messages** 
+1. **Configure skill, set changelog file path** 
 
 2. **Add `changelog:` labels to issues or pull requests or include changelog markers in your commits**
 
