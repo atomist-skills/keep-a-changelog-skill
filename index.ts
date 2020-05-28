@@ -36,7 +36,7 @@ export const Skill = skill({
             typeName: "SlackResourceProvider",
             description: "Slack",
             minRequired: 0,
-        }
+        },
     },
 
     parameters: {
