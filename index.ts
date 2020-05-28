@@ -15,8 +15,10 @@
  */
 
 import {
+    gitHubResourceProvider,
     ParameterType,
     skill,
+    slackResourceProvider,
 } from "@atomist/skill/lib/skill";
 
 export const Skill = skill({
@@ -27,16 +29,8 @@ export const Skill = skill({
     },
 
     resourceProviders: {
-        github: {
-            typeName: "GitHubAppResourceProvider",
-            description: "GitHub",
-            minRequired: 1,
-        },
-        slack: {
-            typeName: "SlackResourceProvider",
-            description: "Slack",
-            minRequired: 0,
-        }
+        github: gitHubResourceProvider(),
+        slack: slackResourceProvider(),
     },
 
     parameters: {
