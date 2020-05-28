@@ -31,8 +31,12 @@ export const Skill = skill({
             typeName: "GitHubAppResourceProvider",
             description: "GitHub",
             minRequired: 1,
-            maxAllowed: 1,
         },
+        slack: {
+            typeName: "SlackResourceProvider",
+            description: "Slack",
+            minRequired: 0,
+        }
     },
 
     parameters: {
