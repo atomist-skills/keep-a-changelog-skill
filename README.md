@@ -1,5 +1,5 @@
 # `atomist/changelog-skill`
-
+          
 <!---atomist-skill-description:start--->
 
 Automatically keep a changelog updated based on labels added to issues, pull requests and commits.
