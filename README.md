@@ -1,4 +1,4 @@
-# `atomist/changelog-skill`
+# `atomist/keep-a-changelog-skill`
           
 <!---atomist-skill-description:start--->
 
@@ -62,7 +62,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
     To restrict the organizations or specific repositories on which the skill will run, you can explicitly choose 
     organization(s) and repositories.
 
-# How to use Changelog Management
+# How to keep a changelog
 
 1. **Configure skill, set changelog file path** 
 
