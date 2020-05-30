@@ -1,12 +1,12 @@
 {
-  "name": "@atomist/changelog-skill",
-  "description": "Changelog Management",
+  "name": "@atomist/keep-a-changelog-skill",
+  "description": "Keep a Changelog",
   "author": "Atomist",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/atomist-skills/changelog-skill",
+  "homepage": "https://github.com/atomist-skills/keep-a-changelog-skill",
   "repository": {
     "type": "git",
-    "url": "https://github.com/atomist-skills/changelog-skill.git"
+    "url": "https://github.com/atomist-skills/keep-a-changelog-skill.git"
   },
   "keywords": [
     "DEV_EX",
@@ -14,7 +14,7 @@
     "PRODUCTIVITY"
   ],
   "dependencies": {
-    "@atomist/skill": "0.1.0-issue-6.20200529114118",
+    "@atomist/skill": "0.1.0-issue-6.20200530072251",
     "@atomist/slack-messages": "^1.1.1",
     "@octokit/rest": "^17.9.2",
     "@types/lodash": "^4.14.150",
@@ -78,4 +78,3 @@
   },
   "main": "node_modules/@atomist/skill/lib/function.js"
 }
-
