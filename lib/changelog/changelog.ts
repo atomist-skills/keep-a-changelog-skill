@@ -152,13 +152,13 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
         await git.push(p);
         return {
             code: 0,
-            reason: `Updated CHANGELOG.md in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
+            reason: `Updated ${cfg.file || DefaultFileName} in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
         };
     } else {
         return {
             code: 0,
             visibility: "hidden",
-            reason: `No updates to CHANGELOG.md in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
+            reason: `No updates to ${cfg.file || DefaultFileName} in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
         };
     }
 }
