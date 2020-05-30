@@ -2,7 +2,7 @@
           
 <!---atomist-skill-description:start--->
 
-Automatically keep a changelog updated based on labels added to issues, pull requests and commits 
+Automatically keep a changelog updated based on labels added to issues, pull requests and commits  
 
 <!---atomist-skill-description:end--->
 
