@@ -19,5 +19,13 @@ import { ClosedPullRequestWithChangelogLabelSubscription } from "../typings/type
 import { addChangelogEntryForClosedIssue } from "../changelog/changelog";
 
 export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscription> = async ctx => {
-    return addChangelogEntryForClosedIssue(ctx);
+    if (ctx.data.PullRequest[0].merged) {
+        return addChangelogEntryForClosedIssue(ctx);
+    } else {
+        return {
+            visibility: "hidden",
+            code: 0,
+            reason: "Pull request closed but not merged. Ignoring...",
+        }
+    }
 };
