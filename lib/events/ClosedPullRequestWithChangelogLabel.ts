@@ -26,6 +26,6 @@ export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscripti
             visibility: "hidden",
             code: 0,
             reason: "Pull request closed but not merged. Ignoring...",
-        }
+        };
     }
 };
