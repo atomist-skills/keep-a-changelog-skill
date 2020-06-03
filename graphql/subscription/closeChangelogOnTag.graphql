@@ -1,23 +1,23 @@
 subscription CloseChangeLogOnTag {
-    Tag {
+    Release {
         name
-        release @required {
+        tag {
             name
-        }
-        commit {
-            repo {
-                url
-                defaultBranch
-                owner
-                name
-                org {
-                    provider {
-                        apiUrl
+            commit {
+                repo {
+                    url
+                    defaultBranch
+                    owner
+                    name
+                    org {
+                        provider {
+                            apiUrl
+                        }
                     }
                 }
-            }
-            pushes {
-                branch
+                pushes {
+                    branch
+                }
             }
         }
     }

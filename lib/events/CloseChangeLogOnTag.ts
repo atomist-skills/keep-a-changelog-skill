@@ -29,7 +29,8 @@ import {
 import { CloseChangeLogOnTagSubscription } from "../typings/types";
 
 export const handler: EventHandler<CloseChangeLogOnTagSubscription, ChangelogConfiguration> = async ctx => {
-    const tag = ctx.data.Tag[0];
+    const release = ctx.data.Release[0];
+    const tag = release.tag;
     const version = tag.name;
     const versionRelease = releaseVersion(version);
     const branch = tag.commit.repo.defaultBranch;
