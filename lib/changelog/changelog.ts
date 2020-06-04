@@ -130,7 +130,7 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
         }
 
         const entry: ChangelogEntry = {
-            title: commit.message.split("\n")[0],
+            title: commit.message.split("\n")[0].replace(/\[changelog:.*\]/g, "").trim(),
             label: commit.sha.slice(0, 7),
             url: commit.url,
             qualifiers,
