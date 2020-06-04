@@ -30,11 +30,21 @@ To mark an issue or pull request for one or more of those categories, apply the 
 Once this skill is enabled, the corresponding labels will be available on the selected repositories automatically.
 
 Additionally, you can embed markers in your commit message to add a commit to the changelog. For example adding
-`[changelog:removed]` to your commit message will add the commit to the changelog in the _Removed_ category. 
+`[changelog:removed]` to your commit message will add the commit to the changelog in the _Removed_ category:
 
-The changelog entries are written when issues or pull requests get closed, or a commit is being pushed. Those entries
-are kept in the _Unreleased_ section of the changelog until a GitHub release is created. The release will close the
-section in the changelog by adding the name of the release to it.   
+```shell script
+$ git commit -m "Remove build script
+>
+> [changelog:removed]"
+[master 90d2ad2] Remove build script
+ 1 file changed, 1 insertion(+)
+``` 
+
+The changelog entries are added when issues get closed, pull requests get merged, or a commit is being pushed. 
+Those entries are kept in the _Unreleased_ section of the changelog until a GitHub release is created. 
+The release will close the section in the changelog by adding the name of the release to it.
+
+Optionally the skill will append the changelog to the body of the GitHub release.   
 
 # Before you get started
 
@@ -48,7 +58,7 @@ The **GitHub** integration must be configured in order to use this skill. At lea
 
 1. **Configure the name of the changelog file**
 
-    ![Default auto-merge policy expanded](docs/images/changelog-name.png)
+    ![Changelog name](docs/images/changelog-name.png)
     
     The default name of the changelog file in the repository is `CHANGELOG.md` in the root of the project.
     Use this setting to change the name and path.
@@ -72,8 +82,8 @@ The **GitHub** integration must be configured in order to use this skill. At lea
 
 3. **Enjoy not having to manually maintain a changelog file!**
 
-To create feature requests or bug reports, create an [issue in the repository for this skill](https://github.com/atomist-skills/changelog-skill/issues). 
-See the [code](https://github.com/atomist-skills/changelog-skill) for the skill.
+To create feature requests or bug reports, create an [issue in the repository for this skill](https://github.com/atomist-skills/keep-a-changlog-skill/issues). 
+See the [code](https://github.com/atomist-skills/keep-a-changlog-skill) for the skill.
 
 <!---atomist-skill-readme:end--->
  
