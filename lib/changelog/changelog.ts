@@ -80,7 +80,9 @@ export async function addChangelogEntryForClosedIssue(
         apiUrl: issue.repo.org.provider.apiUrl,
     }));
     const p = await ctx.project.clone(gitHubComRepository({ owner: issue.repo.owner, repo: issue.repo.name, credential }));
-    await updateChangelog(p, categories, entry, ctx.configuration[0]?.parameters || {});
+    if (await updateChangelog(p, categories, entry, ctx.configuration[0]?.parameters || {})) {
+        await git.push(p);
+    }
     return {
         code: 0,
         reason: `Updated CHANGELOG.md in [${issue.repo.owner}/${issue.repo.name}](${issue.repo.url})`,
@@ -146,10 +148,13 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
             apiUrl: push.repo.org.provider.apiUrl,
         }));
         const p = await ctx.project.clone(gitHubComRepository({ owner: push.repo.owner, repo: push.repo.name, credential }));
+        const results = [];
         for (const entry of entries) {
-            await updateChangelog(p, entry.categories, entry.entry, ctx.configuration[0]?.parameters || {});
+            results.push(await updateChangelog(p, entry.categories, entry.entry, ctx.configuration[0]?.parameters || {}));
         }
-        await git.push(p);
+        if (results.some(r => !!r)) {
+            await git.push(p);
+        }
         return {
             code: 0,
             reason: `Updated ${cfg.file || DefaultFileName} in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
@@ -166,7 +171,7 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
 async function updateChangelog(p: Project,
                                categories: string[],
                                entry: ChangelogEntry,
-                               cfg: ChangelogConfiguration): Promise<void> {
+                               cfg: ChangelogConfiguration): Promise<boolean> {
     const changelogPath = p.path(cfg.file || DefaultFileName);
     if (await fs.pathExists(changelogPath)) {
         // If changelog exists make sure it doesn't already contain the label
@@ -182,7 +187,9 @@ async function updateChangelog(p: Project,
         await git.commit(p, `Changelog: ${entry.label} to ${categories.join(", ")}
 
 [atomist:generated]`);
+        return true;
     }
+    return false;
 }
 
 async function updateAndWriteChangelog(p: Project,
