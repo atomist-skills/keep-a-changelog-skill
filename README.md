@@ -41,18 +41,27 @@ $ git commit -m "Remove build script
 ``` 
 
 The changelog entries are added when issues get closed, pull requests get merged, or a commit is being pushed. 
-Those entries are kept in the _Unreleased_ section of the changelog until a GitHub release is created. 
+Those entries are kept in the _Unreleased_ section of the changelog until a GitHub Release is created. 
 The release will close the section in the changelog by adding the name of the release to it.
 
-Optionally the skill will append the changelog to the body of the GitHub release.   
+Optionally the skill will append the changelog to the body of the GitHub release.
+
+Besides GitHub Releases, a changelog section can be closed by running a command from chat. In a channel that is linked
+to one or more repositories, run the following command:
+
+```shell script
+> @atomist close changelog
+``` 
 
 # Before you get started
 
 Connect and configure these integrations:
 
 1. **GitHub**
+2. **Slack** 
 
-The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected. 
+The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected.
+The **Slack** integration is optional but can be useful to run commands to close changelog sections. 
 
 # How to configure
 

@@ -15,7 +15,9 @@
  */
 
 import { CommandHandler } from "@atomist/skill/lib/handler";
+import { slackSuccessMessage } from "@atomist/skill/lib/messages";
 import { linkedRepository } from "@atomist/skill/lib/repository";
+import { codeLine } from "@atomist/slack-messages";
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 
@@ -25,7 +27,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
     const cfgs = ctx.configuration;
     const params = await ctx.parameters.prompt<{ configuration: string; version: string }>({
         configuration: {
-            description: "Please select a configuration",
+            description: "Please select a Skill configuration",
             type: { kind: "single", options: cfgs.map(c => ({ value: c.name, description: c.name })) },
         },
         version: {
@@ -44,7 +46,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
     }
 
     await ctx.audit.log(`Closing changelog section for version '${params.version}'`);
-    return closeChangelog({
+    const result = await closeChangelog({
             owner: repository.owner,
             name: repository.repo,
             branch: repository.branch,
@@ -54,4 +56,13 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
         params.version,
         ctx,
         ctx.configuration.find(c => c.name === params.configuration)?.parameters);
+
+    if (result.code === 0 && result.visibility !== "hidden") {
+        await ctx.message.respond(slackSuccessMessage(
+            "Changelog",
+            `Successfully closed changelog section for version ${codeLine(params.version)}`,
+            ctx));
+    }
+
+    return result;
 };
