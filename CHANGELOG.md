@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/tree/HEAD)
 
+### Added
+
+-   Add changelog to GitHub release. [#10](https://github.com/atomist-skills/changelog-skill/issues/10)
+
 ### Changed
 
 -   Close release on Release events. [d8f4aec](https://github.com/atomist-skills/changelog-skill/commit/d8f4aec3d4ca704a30ed4e94b1af5781307a2e71)
