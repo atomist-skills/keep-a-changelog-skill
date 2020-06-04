@@ -20,6 +20,7 @@ import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 
 export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
+
     await ctx.audit.log("Checking configuration");
     const cfgs = ctx.configuration;
     const params = await ctx.parameters.prompt<{ configuration: string; version: string }>({
@@ -35,6 +36,12 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 
     await ctx.audit.log("Obtaining linked repository");
     const repository = await linkedRepository(ctx);
+    if (!repository) {
+        return {
+            code: 1,
+            reason: `No linked repository found`,
+        };
+    }
 
     await ctx.audit.log(`Closing changelog section for version '${params.version}'`);
     return closeChangelog({
