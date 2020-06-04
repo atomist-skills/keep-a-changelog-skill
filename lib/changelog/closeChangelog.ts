@@ -14,42 +14,43 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
+import {
+    Contextual,
+    HandlerStatus,
+} from "@atomist/skill/lib/handler";
 import { gitHubComRepository } from "@atomist/skill/lib/project";
 import {
     commit,
     push,
 } from "@atomist/skill/lib/project/git";
+import { gitHub } from "@atomist/skill/lib/project/github";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import * as fs from "fs-extra";
 import {
     ChangelogConfiguration,
     DefaultFileName,
 } from "../configuration";
-import { CloseChangeLogOnTagSubscription } from "../typings/types";
+import { readChangelog } from "./changelog";
 
-export const handler: EventHandler<CloseChangeLogOnTagSubscription, ChangelogConfiguration> = async ctx => {
-    const release = ctx.data.Release[0];
-    const tag = release.tag;
-    const version = tag.name;
-    const versionRelease = releaseVersion(version);
-    const branch = tag.commit.repo.defaultBranch;
-    const remote = "origin";
+export async function closeChangelog(repo: { owner: string; name: string; apiUrl: string; url: string; branch: string },
+                                     version: string,
+                                     ctx: Contextual<any, any>,
+                                     cfg: ChangelogConfiguration): Promise<HandlerStatus> {
 
     const credential = await ctx.credential.resolve(gitHubAppToken({
-        owner: tag.commit.repo.owner,
-        repo: tag.commit.repo.name,
-        apiUrl: tag.commit.repo.org.provider.apiUrl,
+        owner: repo.owner,
+        repo: repo.name,
+        apiUrl: repo.apiUrl,
     }));
     const project = await ctx.project.clone(gitHubComRepository({
-        owner: tag.commit.repo.owner,
-        repo: tag.commit.repo.name,
+        owner: repo.owner,
+        repo: repo.name,
         credential,
     }));
 
-    const changelogPath = project.path(ctx.configuration[0]?.parameters?.file || DefaultFileName);
+    const changelogPath = project.path(cfg?.file || DefaultFileName);
 
-    await project.spawn("git", ["pull", remote, branch]);
+    await project.spawn("git", ["pull", "origin", repo.branch]);
 
     if (!(await fs.pathExists(changelogPath))) {
         return {
@@ -61,7 +62,7 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription, ChangelogCon
 
     try {
         const changelog = (await fs.readFile(changelogPath)).toString();
-        const newChangelog = changelogAddRelease(changelog, versionRelease);
+        const newChangelog = changelogAddRelease(changelog, version);
         if (newChangelog === changelog) {
             return {
                 code: 0,
@@ -71,25 +72,44 @@ export const handler: EventHandler<CloseChangeLogOnTagSubscription, ChangelogCon
         }
         await fs.writeFile(changelogPath, newChangelog);
     } catch (e) {
-        console.error(`Failed to update changelog for release ${versionRelease}: ${e.message}`);
+        console.error(`Failed to update changelog for release ${version}: ${e.message}`);
         return {
             code: 1,
-            reason: `Failed to update ${changelogPath} for release ${versionRelease}`,
+            reason: `Failed to update ${changelogPath} for release ${version}`,
         };
     }
-    await commit(project, `Changelog: add release ${versionRelease}
+    await commit(project, `Changelog: add release ${version}
 
 [atomist:generated]`);
     await push(project);
 
+    if (cfg?.addChangelogToRelease !== false) {
+        const changelog = await readChangelog(changelogPath);
+        const body = changelog?.versions?.find(v => v.version === version).body;
+        if (body) {
+            const api = gitHub(project.id);
+            try {
+                const release = (await api.repos.getReleaseByTag({
+                    owner: project.id.owner,
+                    repo: project.id.repo,
+                    tag: version,
+                })).data;
+                await api.repos.updateRelease({
+                    owner: project.id.owner,
+                    repo: project.id.repo,
+                    release_id: release.id,
+                    body: `${(release.body || "").trim()}\n\n${body.trim()}`,
+                });
+            } catch (e) {
+                // Release not found to update
+            }
+        }
+    }
+
     return {
         code: 0,
-        reason: `Updated changelog in [${tag.commit.repo.owner}/${tag.commit.repo.name}](${tag.commit.repo.url}) for release ${versionRelease}`,
+        reason: `Updated changelog in [${repo.owner}/${repo.name}](${repo.url}) for release ${version}`,
     };
-};
-
-function releaseVersion(version: string): string {
-    return version.replace(/-.*/, "");
 }
 
 /**

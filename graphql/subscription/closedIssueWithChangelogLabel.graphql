@@ -1,4 +1,4 @@
-subscription ClosedIssueWithChangelogLabel {
+subscription closedIssueWithChangelogLabel {
   Issue(state: closed) {
     number
     title

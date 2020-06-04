@@ -1,4 +1,4 @@
-subscription CloseChangeLogOnTag {
+subscription closeChangeLogOnRelease {
     Release {
         name
         tag {

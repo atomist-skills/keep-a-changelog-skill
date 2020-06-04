@@ -16,14 +16,17 @@
 
 import {
     gitHubResourceProvider,
+    slackResourceProvider,
+} from "@atomist/skill/lib/resource_providers";
+import {
     ParameterType,
     ParameterVisibility,
     repoFilter,
     skill,
-    slackResourceProvider,
 } from "@atomist/skill/lib/skill";
+import { ChangelogConfiguration } from "./lib/configuration";
 
-export const Skill = skill({
+export const Skill = skill<ChangelogConfiguration>({
 
     runtime: {
         memory: 1024,
@@ -31,7 +34,7 @@ export const Skill = skill({
     },
 
     resourceProviders: {
-        github: gitHubResourceProvider(),
+        github: gitHubResourceProvider({ minRequired: 1 }),
         slack: slackResourceProvider(),
     },
 
@@ -41,6 +44,12 @@ export const Skill = skill({
             displayName: "Name of changelog file",
             description: "Relative path to the changelog file inside the repository (defaults to `CHANGELOG.md`)",
             placeHolder: "CHANGELOG.md",
+            required: false,
+        },
+        addChangelogToRelease: {
+            type: ParameterType.Boolean,
+            displayName: "Add changelog to GitHub release",
+            description: "When a changelog section gets closed, the changelog contents of the release will be added to a corresponding GitHub release",
             required: false,
         },
         mapAdded: {

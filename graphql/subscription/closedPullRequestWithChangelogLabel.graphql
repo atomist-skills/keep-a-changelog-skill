@@ -1,4 +1,4 @@
-subscription ClosedPullRequestWithChangelogLabel {
+subscription closedPullRequestWithChangelogLabel {
   PullRequest(state: "closed") {
     number
     title

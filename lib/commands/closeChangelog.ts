@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-export const DefaultFileName = "CHANGELOG.md";
+import { CommandHandler } from "@atomist/skill/lib/handler";
+import { ChangelogConfiguration } from "../configuration";
 
-export interface ChangelogConfiguration {
-    file?: string;
-    addChangelogToRelease?: boolean;
-    mapAdded?: string[];
-    mapChanged?: string[];
-    mapDeprecated?: string[];
-    mapRemoved?: string[];
-    mapFixed?: string[];
-    mapSecurity?: string[];
-    mapBreaking?: string[];
-    repos?: any[];
-}
+export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
+    // const params = await ctx.parameters.prompt<{ version: string }>(
+    //     {
+    //         version: {
+    //             description: "Version to release in changelog",
+    //         },
+    //     });
+    
+};

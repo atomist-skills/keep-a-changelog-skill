@@ -1,4 +1,4 @@
-subscription ConvergeIssueChangelogLabels {
+subscription convergeIssueChangelogLabels {
     Issue {
         repo {
             url

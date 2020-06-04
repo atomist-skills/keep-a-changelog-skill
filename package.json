@@ -14,7 +14,7 @@
     "PRODUCTIVITY"
   ],
   "dependencies": {
-    "@atomist/skill": "0.1.0-issue-6.20200530072251",
+    "@atomist/skill": "0.1.0-master.20200604061313",
     "@atomist/slack-messages": "^1.1.1",
     "@octokit/rest": "^17.9.2",
     "@types/lodash": "^4.14.150",

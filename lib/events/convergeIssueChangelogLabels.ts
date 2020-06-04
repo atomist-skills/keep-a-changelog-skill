@@ -19,7 +19,7 @@ import { gitHubComRepository } from "@atomist/skill/lib/project";
 import { gitHub } from "@atomist/skill/lib/project/github";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
-import { upsertChangelogLabels } from "./ConvergePullRequestChangelogLabels";
+import { upsertChangelogLabels } from "./convergePullRequestChangelogLabels";
 
 export const handler: EventHandler<ConvergeIssueChangelogLabelsSubscription> = async ctx => {
     const repo = ctx.data.Issue[0].repo;

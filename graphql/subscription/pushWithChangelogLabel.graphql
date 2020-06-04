@@ -1,4 +1,4 @@
-subscription PushWithChangelogLabel {
+subscription pushWithChangelogLabel {
   Push {
     branch
     commits {

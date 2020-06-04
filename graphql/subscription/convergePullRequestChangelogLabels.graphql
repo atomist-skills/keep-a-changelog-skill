@@ -1,4 +1,4 @@
-subscription ConvergePullRequestChangelogLabels {
+subscription convergePullRequestChangelogLabels {
     PullRequest {
         action
         repo {
