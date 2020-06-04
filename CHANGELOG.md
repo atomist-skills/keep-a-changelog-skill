@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 -   Add changelog to GitHub release. [#10](https://github.com/atomist-skills/changelog-skill/issues/10)
+-   Add command to close section. [#8](https://github.com/atomist-skills/keep-a-changelog-skill/issues/8)
 
 ### Changed
 
