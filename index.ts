@@ -104,6 +104,13 @@ export const Skill = skill<ChangelogConfiguration>({
         repos: repoFilter(),
     },
 
+    commands: [{
+        name: "closeChangelog",
+        displayName: "Close Changelog Section",
+        description: "Closes the unreleased section of a changelog with a new release",
+        pattern: /^close changelog$/,
+    }],
+
     subscriptions: [
         "file://graphql/subscription/*.graphql",
     ],

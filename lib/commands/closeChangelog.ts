@@ -15,14 +15,36 @@
  */
 
 import { CommandHandler } from "@atomist/skill/lib/handler";
+import { linkedRepository } from "@atomist/skill/lib/repository";
+import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 
 export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
-    // const params = await ctx.parameters.prompt<{ version: string }>(
-    //     {
-    //         version: {
-    //             description: "Version to release in changelog",
-    //         },
-    //     });
-    
+    await ctx.audit.log("Checking configuration");
+    const cfgs = ctx.configuration;
+    const params = await ctx.parameters.prompt<{ configuration: string; version: string }>({
+        configuration: {
+            description: "Please select a configuration",
+            type: { kind: "single", options: cfgs.map(c => ({ value: c.name, description: c.name })) },
+        },
+        version: {
+            description: "Version to release in changelog",
+        },
+    });
+    await ctx.audit.log(`Configuration to invoke '${params.configuration}'`);
+
+    await ctx.audit.log("Obtaining linked repository");
+    const repository = await linkedRepository(ctx);
+
+    await ctx.audit.log(`Closing changelog section for version '${params.version}'`);
+    return closeChangelog({
+            owner: repository.owner,
+            name: repository.repo,
+            branch: repository.branch,
+            url: `https://github.com/${repository.owner}/${repository.repo}`,
+            apiUrl: repository.apiUrl,
+        },
+        params.version,
+        ctx,
+        ctx.configuration.find(c => c.name === params.configuration)?.parameters);
 };
