@@ -85,7 +85,7 @@ export async function closeChangelog(repo: { owner: string; name: string; apiUrl
 
     if (cfg?.addChangelogToRelease !== false) {
         const changelog = await readChangelog(changelogPath);
-        const body = changelog?.versions?.find(v => v.version === version).body;
+        const body = changelog?.versions?.find(v => v.version === version).body.trim();
         if (body) {
             const api = gitHub(project.id);
             try {
@@ -94,12 +94,15 @@ export async function closeChangelog(repo: { owner: string; name: string; apiUrl
                     repo: project.id.repo,
                     tag: version,
                 })).data;
-                await api.repos.updateRelease({
-                    owner: project.id.owner,
-                    repo: project.id.repo,
-                    release_id: release.id,
-                    body: `${(release.body || "").trim()}\n\n${body.trim()}`,
-                });
+                if (!(release.body || "").includes(body)) {
+                    const existingBody = release.body ? `${release.body.trim()}\n\n` : "";
+                    await api.repos.updateRelease({
+                        owner: project.id.owner,
+                        repo: project.id.repo,
+                        release_id: release.id,
+                        body: `${existingBody}${body.trim()}`,
+                    });
+                }
             } catch (e) {
                 // Release not found to update
             }
