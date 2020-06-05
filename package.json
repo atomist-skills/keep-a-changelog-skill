@@ -9,9 +9,7 @@
     "url": "https://github.com/atomist-skills/keep-a-changelog-skill.git"
   },
   "keywords": [
-    "DEV_EX",
-    "CODE_QUALITY",
-    "PRODUCTIVITY"
+    "DEV_EX"
   ],
   "dependencies": {
     "@atomist/skill": "0.1.0-master.20200604214252",
