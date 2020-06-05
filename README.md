@@ -17,16 +17,16 @@ The changelog file follows the [Keep A Changelog](https://keepachangelog.com) co
 
 Applying the `changelog:added` label to an issue or pull request will add a corresponding entry to the _Added_ section 
 of the changelog when the issue or pull request gets closed. _Keep A Changelog_ suggests the following categories of 
-entries which this skill supports:
+entries which this skill supports via corresponding labels or commit markers:
 
-* `Added` for new features.
-* `Changed` for changes in existing functionality.
-* `Deprecated` for soon-to-be removed features.
-* `Removed` for now removed features.
-* `Fixed` for any bug fixes.
-* `Security` in case of vulnerabilities.
+* `Added` for new features. (label: `changelog:added`, commit marker: `[changelog:added]`)
+* `Changed` for changes in existing functionality. (label: `changelog:changed`, commit marker: `[changelog:changed]`)
+* `Deprecated` for soon-to-be removed features. (label: `changelog:deprecated`, commit marker: `[changelog:deprecated]`)
+* `Removed` for now removed features. (label: `changelog:removed`, commit marker: `[changelog:removed]`)
+* `Fixed` for any bug fixes. (label: `changelog:fixed`, commit marker: `[changelog:fixed]`)
+* `Security` in case of vulnerabilities. (label: `changelog:security`, commit marker: `[changelog:security]`)
 
-To mark an issue or pull request for one or more of those categories, apply the matching `changelog:` labels to it. 
+To mark an issue or pull request for one or more of those categories, apply the matching `changelog:*` labels to it. 
 Once this skill is enabled, the corresponding labels will be available on the selected repositories automatically.
 
 Additionally, you can embed markers in your commit message to add a commit to the changelog. For example adding
@@ -85,11 +85,13 @@ The **Slack** integration is optional but can be useful to run commands to close
 
 1. **Configure skill, set changelog file path** 
 
-2. **Add `changelog:` labels to issues or pull requests or include changelog markers in your commits**
+2. **Add `changelog:*` labels to issues or pull requests or include changelog markers in your commits**
 
-3. **Close issues or merge pull requests marked with `changelog:` labels**
+3. **Close issues or merge pull requests marked with `changelog:*` labels**
 
-3. **Enjoy not having to manually maintain a changelog file!**
+4. **Create a GitHub release to close a release in the changelog. Alternatively run `@atomist close changelog` from chat.**
+
+5. **Enjoy not having to manually maintain a changelog file!**
 
 To create feature requests or bug reports, create an [issue in the repository for this skill](https://github.com/atomist-skills/keep-a-changlog-skill/issues). 
 See the [code](https://github.com/atomist-skills/keep-a-changlog-skill) for the skill.

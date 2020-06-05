@@ -12,7 +12,7 @@
     "DEV_EX"
   ],
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200604214252",
+    "@atomist/skill": "0.1.0-master.20200605084540",
     "@atomist/slack-messages": "^1.1.1",
     "@octokit/rest": "^17.9.2",
     "@types/lodash": "^4.14.150",
