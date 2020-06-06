@@ -15,6 +15,10 @@ issues and pull requests as well as keywords in commit messages.
 
 The changelog file follows the [Keep A Changelog](https://keepachangelog.com) conventions. 
 
+As a reference, this [`CHANGELOG.md`](https://github.com/atomist-skills/keep-a-changelog-skill/blob/master/CHANGELOG.md) 
+file is managed by this skill. Querying for the [list of issues and pull requests](https://github.com/atomist-skills/keep-a-changelog-skill/issues?q=-no%3Alabels)
+demonstrates how we use labels to maintain the changelog.
+
 Applying the `changelog:added` label to an issue or pull request will add a corresponding entry to the _Added_ section 
 of the changelog when the issue or pull request gets closed. _Keep A Changelog_ suggests the following categories of 
 entries which this skill supports via corresponding labels or commit markers:
