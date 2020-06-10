@@ -255,8 +255,8 @@ export async function readChangelog(changelogPath: string): Promise<any> {
     return parseChangelog(changelogPath);
 }
 
-export function addEntryToChangelog(entry: ChangelogEntry, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
-                                    cl: any,
+export function addEntryToChangelog(entry: ChangelogEntry,
+                                    cl: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
                                     p: Project): any {
     const version = readUnreleasedVersion(cl, p);
 
@@ -323,6 +323,7 @@ export async function writeChangelog(changelog: any, // eslint-disable-line @typ
     return fs.writeFile(changelogPath, content);
 }
 
+
 function readUnreleasedVersion(cl: any, p: Project): any {
     let version;
     // Get Unreleased section or create if not already available
@@ -339,5 +340,5 @@ function readUnreleasedVersion(cl: any, p: Project): any {
         };
         cl.versions = [version, ...cl.versions];
     }
-    return version
+    return version;
 }
