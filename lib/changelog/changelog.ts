@@ -202,7 +202,7 @@ async function updateChangelog(p: Project,
             options = {
                 name: entry.authors[0].name,
                 email: entry.authors[0].email,
-            }
+            };
         }
         await git.commit(p, `Changelog: ${entry.label} to ${categories.join(", ")}
 
@@ -274,7 +274,7 @@ export function addEntryToChangelog(entry: ChangelogEntry, // eslint-disable-lin
         version.parsed[category] = [line];
     }
 
-    return cl;
+    return cl
 }
 
 /**
