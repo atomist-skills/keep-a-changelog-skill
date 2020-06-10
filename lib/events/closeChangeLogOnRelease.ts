@@ -34,5 +34,5 @@ export const handler: EventHandler<CloseChangeLogOnReleaseSubscription, Changelo
         },
         version,
         ctx,
-        ctx.configuration?.[0]?.parameters)
+        ctx.configuration?.[0]?.parameters);
 };
