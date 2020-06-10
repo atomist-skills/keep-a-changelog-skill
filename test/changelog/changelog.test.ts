@@ -72,11 +72,12 @@ describe("changelog", () => {
             category: "added",
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: [],
+            authors: ["foo"],
         };
         return readChangelog(clp).then(result => {
             const cl = addEntryToChangelog(entry, result, p);
             assert.equal(cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
-                "-   This is a test label. [#1](https://github.com/atomist/test/issues/1)");
+                "-   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)");
         });
     });
 

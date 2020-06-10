@@ -18,9 +18,7 @@ import {
     EventContext,
     HandlerStatus,
 } from "@atomist/skill/lib/handler";
-import {
-    gitHubComRepository,
-} from "@atomist/skill/lib/project";
+import { gitHubComRepository } from "@atomist/skill/lib/project";
 import * as git from "@atomist/skill/lib/project/git";
 import { Project } from "@atomist/skill/lib/project/project";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
@@ -51,6 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 export interface ChangelogEntry {
     category?: string; // "added" | "changed" | "deprecated" | "removed" | "fixed" | "security";
+    authors?: string[];
     title: string;
     label: string;
     url: string;
@@ -64,6 +63,15 @@ export async function addChangelogEntryForClosedIssue(
     ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
     const issue = _.get(ctx.data, "Issue[0]") || _.get(ctx.data, "PullRequest[0]");
 
+    const authors = [];
+    if ((ctx.data as ClosedIssueWithChangelogLabelSubscription).Issue) {
+        const i = (ctx.data as ClosedIssueWithChangelogLabelSubscription).Issue[0];
+        authors.push(i.closedBy.login);
+    } else if ((ctx.data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest) {
+        const p = (ctx.data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest[0];
+        authors.push(_.uniq(p.commits.map(c => c.author.login)));
+    }
+
     const url = `https://github.com/${issue.repo.owner}/${issue.repo.name}/issues/${issue.number}`;
     const categories = issue.labels.filter(l => l.name.startsWith("changelog:")).map(l => l.name.split(":")[1]);
     const qualifiers = issue.labels.some(l => l.name.toLocaleLowerCase() === "breaking") ? ["breaking"] : [];
@@ -72,6 +80,7 @@ export async function addChangelogEntryForClosedIssue(
         label: `#${issue.number.toString()}`,
         url,
         qualifiers,
+        authors,
     };
 
     const credential = await ctx.credential.resolve(gitHubAppToken({
@@ -98,7 +107,7 @@ export async function addChangelogEntryForClosedIssue(
 export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
     const push = ctx.data.Push[0];
     const cfg = ctx.configuration[0]?.parameters;
-    const entries: Array<{ entry: ChangelogEntry, categories: string[]}> = [];
+    const entries: Array<{ entry: ChangelogEntry, categories: string[] }> = [];
     for (const commit of push.commits) {
         const categories: string[] = [];
         const qualifiers: string[] = [];
@@ -133,6 +142,7 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
             title: commit.message.split("\n")[0].replace(/\[changelog:.*\]/g, "").trim(),
             label: commit.sha.slice(0, 7),
             url: commit.url,
+            authors: [commit.author.login],
             qualifiers,
         };
 
@@ -173,6 +183,9 @@ async function updateChangelog(p: Project,
                                entry: ChangelogEntry,
                                cfg: ChangelogConfiguration): Promise<boolean> {
     const changelogPath = p.path(cfg.file || DefaultFileName);
+    if (!cfg.addAuthor) {
+         entry.authors = [];
+    }
     if (await fs.pathExists(changelogPath)) {
         // If changelog exists make sure it doesn't already contain the label
         const content = (await fs.readFile(changelogPath)).toString();
@@ -198,11 +211,11 @@ async function updateAndWriteChangelog(p: Project,
                                        changelogPath: string): Promise<any> {
     let changelog = await readChangelog(changelogPath);
     for (const category of categories) {
-        changelog = addEntryToChangelog({
+        changelog = addEntryToChangelog(
+            {
                 ...entry,
                 category,
-            }
-            ,
+            },
             changelog,
             p);
     }
@@ -245,7 +258,8 @@ export function addEntryToChangelog(entry: ChangelogEntry, // eslint-disable-lin
     const qualifiers = (entry.qualifiers || []).map(q => `**${q.toLocaleUpperCase()}**`).join(" ");
     const title = entry.title.endsWith(".") ? entry.title : `${entry.title}.`;
     const prefix = (qualifiers && qualifiers.length > 0) ? `${qualifiers} ` : "";
-    const line = `-   ${prefix}${title} [${entry.label}](${entry.url})`;
+    const line = `-   ${prefix}${_.upperFirst(title)} [${entry.label}](${entry.url})${entry.authors?.length > 0 ? ` by ${
+        entry.authors.map(a => `[@${a}](https://github.com/${a})`).join(", ")}`: ""}`;
     if (version.parsed[category]) {
         version.parsed[category].push(line);
 

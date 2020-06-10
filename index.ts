@@ -46,6 +46,12 @@ export const Skill = skill<ChangelogConfiguration>({
             placeHolder: "CHANGELOG.md",
             required: false,
         },
+        addAuthor: {
+            type: ParameterType.Boolean,
+            displayName: "Include users in changelog",
+            description: "Add names of commit authors and users that close issues to changelog",
+            required: false,
+        },
         addChangelogToRelease: {
             type: ParameterType.Boolean,
             displayName: "Add changelog to GitHub release",

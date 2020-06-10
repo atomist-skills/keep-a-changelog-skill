@@ -5,6 +5,9 @@ subscription pushWithChangelogLabel {
       url
       sha
       message
+      author {
+        login
+      }
     }
     repo {
       url

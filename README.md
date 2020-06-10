@@ -76,7 +76,12 @@ The **Slack** integration is optional but can be useful to run commands to close
     The default name of the changelog file in the repository is `CHANGELOG.md` in the root of the project.
     Use this setting to change the name and path.
 
-2. **Determine repository scope**
+2. **Add user names to changelog entries**
+    
+    Decide if you want to mention GitHub user names for committers and issue resolvers to be added to 
+    changelog entries.    
+    
+3. **Determine repository scope**
 
     ![Repository filter](docs/images/repo-filter.png)
 
