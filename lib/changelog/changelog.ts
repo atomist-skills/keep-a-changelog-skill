@@ -339,5 +339,5 @@ function readUnreleasedVersion(cl: any, p: Project): any {
         };
         cl.versions = [version, ...cl.versions];
     }
-    return version
+    return version;
 }
