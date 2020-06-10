@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 export interface ChangelogEntry {
     category?: string; // "added" | "changed" | "deprecated" | "removed" | "fixed" | "security";
-    authors?: string[];
+    authors?: Array<{ login: string; name?: string; email?: string }>;
     title: string;
     label: string;
     url: string;
@@ -63,13 +63,13 @@ export async function addChangelogEntryForClosedIssue(
     ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
     const issue = _.get(ctx.data, "Issue[0]") || _.get(ctx.data, "PullRequest[0]");
 
-    const authors = [];
+    const authors: ChangelogEntry["authors"] = [];
     if ((ctx.data as ClosedIssueWithChangelogLabelSubscription).Issue) {
         const i = (ctx.data as ClosedIssueWithChangelogLabelSubscription).Issue[0];
-        authors.push(i.closedBy.login);
+        authors.push({ login: i.closedBy.login, name: i.closedBy.name, email: i.closedBy.emails?.[0]?.address });
     } else if ((ctx.data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest) {
         const p = (ctx.data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest[0];
-        authors.push(_.uniq(p.commits.map(c => c.author.login)));
+        authors.push(..._.uniqBy(p.commits.map(c => ({ login: c.author.login, name: c.author.name, email: c.author.emails?.[0]?.address })), "login"));
     }
 
     const url = `https://github.com/${issue.repo.owner}/${issue.repo.name}/issues/${issue.number}`;
@@ -142,7 +142,7 @@ export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChang
             title: commit.message.split("\n")[0].replace(/\[changelog:.*\]/g, "").trim(),
             label: commit.sha.slice(0, 7),
             url: commit.url,
-            authors: [commit.author.login],
+            authors: [{ login: commit.author.login, name: commit.author.name, email: commit.author.emails?.[0]?.address }],
             qualifiers,
         };
 
@@ -184,7 +184,7 @@ async function updateChangelog(p: Project,
                                cfg: ChangelogConfiguration): Promise<boolean> {
     const changelogPath = p.path(cfg.file || DefaultFileName);
     if (!cfg.addAuthor) {
-         entry.authors = [];
+        entry.authors = [];
     }
     if (await fs.pathExists(changelogPath)) {
         // If changelog exists make sure it doesn't already contain the label
@@ -197,9 +197,16 @@ async function updateChangelog(p: Project,
     }
 
     if (!(await git.status(p)).isClean) {
+        let options = {};
+        if (entry.authors && entry.authors.length > 0) {
+            options = {
+                name: entry.authors[0].name,
+                email: entry.authors[0].email,
+            }
+        }
         await git.commit(p, `Changelog: ${entry.label} to ${categories.join(", ")}
 
-[atomist:generated]`);
+[atomist:generated]`, options);
         return true;
     }
     return false;
@@ -259,7 +266,7 @@ export function addEntryToChangelog(entry: ChangelogEntry, // eslint-disable-lin
     const title = entry.title.endsWith(".") ? entry.title : `${entry.title}.`;
     const prefix = (qualifiers && qualifiers.length > 0) ? `${qualifiers} ` : "";
     const line = `-   ${prefix}${_.upperFirst(title)} [${entry.label}](${entry.url})${entry.authors?.length > 0 ? ` by ${
-        entry.authors.map(a => `[@${a}](https://github.com/${a})`).join(", ")}`: ""}`;
+        entry.authors.map(a => `[@${a}](https://github.com/${a})`).join(", ")}` : ""}`;
     if (version.parsed[category]) {
         version.parsed[category].push(line);
 

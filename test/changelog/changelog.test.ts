@@ -72,7 +72,7 @@ describe("changelog", () => {
             category: "added",
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: [],
-            authors: ["foo"],
+            authors: [{ login: "foo", name: "Super Foo", email: "foo@bar.com" }],
         };
         return readChangelog(clp).then(result => {
             const cl = addEntryToChangelog(entry, result, p);

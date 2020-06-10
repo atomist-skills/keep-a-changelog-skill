@@ -7,6 +7,10 @@ subscription pushWithChangelogLabel {
       message
       author {
         login
+        name
+        emails {
+          address
+        }
       }
     }
     repo {

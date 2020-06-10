@@ -18,6 +18,10 @@ subscription closedIssueWithChangelogLabel {
     }
     closedBy {
       login
+      name
+      emails {
+        address
+      }
     }
   }
 }

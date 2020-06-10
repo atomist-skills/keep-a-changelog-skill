@@ -20,6 +20,10 @@ subscription closedPullRequestWithChangelogLabel {
     commits {
       author {
         login
+        name
+        emails {
+          address
+        }
       }
     }
   }
