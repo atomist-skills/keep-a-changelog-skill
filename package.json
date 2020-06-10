@@ -9,7 +9,7 @@
     "url": "https://github.com/atomist-skills/keep-a-changelog-skill.git"
   },
   "categories": [
-    "DEV_EX"
+    "DEVEX"
   ],
   "dependencies": {
     "@atomist/skill": "0.1.0-master.20200610094650",
