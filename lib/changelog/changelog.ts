@@ -266,7 +266,7 @@ export function addEntryToChangelog(entry: ChangelogEntry, // eslint-disable-lin
     const title = entry.title.endsWith(".") ? entry.title : `${entry.title}.`;
     const prefix = (qualifiers && qualifiers.length > 0) ? `${qualifiers} ` : "";
     const line = `-   ${prefix}${_.upperFirst(title)} [${entry.label}](${entry.url})${entry.authors?.length > 0 ? ` by ${
-        entry.authors.map(a => `[@${a}](https://github.com/${a})`).join(", ")}` : ""}`;
+        entry.authors.map(a => `[@${a.login}](https://github.com/${a.login})`).join(", ")}` : ""}`;
     if (version.parsed[category]) {
         version.parsed[category].push(line);
 
