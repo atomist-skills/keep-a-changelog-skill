@@ -274,7 +274,7 @@ export function addEntryToChangelog(entry: ChangelogEntry, // eslint-disable-lin
         version.parsed[category] = [line];
     }
 
-    return cl
+    return cl;
 }
 
 /**
