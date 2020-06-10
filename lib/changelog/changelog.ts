@@ -57,7 +57,7 @@ export interface ChangelogEntry {
 }
 
 /**
- * Add entry to changelog for closed label or pull request
+ * Add entry to changelog for closed issue or pull request
  */
 export async function addChangelogEntryForClosedIssue(
     ctx: EventContext<ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
