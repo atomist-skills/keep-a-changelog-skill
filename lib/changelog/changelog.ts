@@ -183,6 +183,7 @@ async function updateChangelog(p: Project,
                                entry: ChangelogEntry,
                                cfg: ChangelogConfiguration): Promise<boolean> {
     const changelogPath = p.path(cfg.file || DefaultFileName);
+    const authors = entry.authors || [];
     if (!cfg.addAuthor) {
         entry.authors = [];
     }
@@ -198,7 +199,7 @@ async function updateChangelog(p: Project,
 
     if (!(await git.status(p)).isClean) {
         let options = {};
-        if (entry.authors && entry.authors.length > 0) {
+        if (authors.length > 0) {
             options = {
                 name: entry.authors[0].name,
                 email: entry.authors[0].email,
