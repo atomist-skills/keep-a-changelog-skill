@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.1.1...HEAD)
 
+### Fixed
+
+-   Fix invalid access to commit authors. [5f3987](https://github.com/atomist-skills/keep-a-changelog-skill/commit/5f3987c13f930df4f8272c647f1efd2ea0f7826f)
+
 ## [1.1.1](https://github.com/atomist-skills/changelog-skill/compare/1.1.0...1.1.1) - 2020-06-11
 
 ### Fixed
