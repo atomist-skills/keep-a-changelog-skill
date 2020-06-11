@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.1.0...HEAD)
 
+### Fixed
+
+-   Preserve commit author information. [24b9088](https://github.com/atomist-skills/keep-a-changelog-skill/commit/24b9088c84ea15c149b7ede8ec0454a24564cb2b)
+
 ## [1.1.0](https://github.com/atomist-skills/changelog-skill/compare/1.0.3...1.1.0) - 2020-06-11
 
 ### Added
