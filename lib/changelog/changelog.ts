@@ -201,8 +201,8 @@ async function updateChangelog(p: Project,
         let options = {};
         if (authors.length > 0) {
             options = {
-                name: entry.authors[0].name,
-                email: entry.authors[0].email,
+                name: authors[0].name,
+                email: authors[0].email,
             };
         }
         await git.commit(p, `Changelog: ${entry.label} to ${categories.join(", ")}
