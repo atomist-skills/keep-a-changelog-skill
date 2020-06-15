@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export const DefaultFileName = "CHANGELOG.md"
+export const DefaultFileName = "CHANGELOG.md";
 
 export interface ChangelogConfiguration {
     file?: string;
