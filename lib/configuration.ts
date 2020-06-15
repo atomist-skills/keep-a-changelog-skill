@@ -27,5 +27,5 @@ export interface ChangelogConfiguration {
     mapFixed?: string[];
     mapSecurity?: string[];
     mapBreaking?: string[];
-    repos?: any[];
+    repos?: any[]
 }
