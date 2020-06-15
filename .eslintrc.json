@@ -38,6 +38,8 @@
     "@typescript-eslint/semi": [
       "error"
     ],
-    "@typescript-eslint/no-use-before-define": "off"
+    "@typescript-eslint/member-delimiter-style": [
+      "error"
+    ]
   }
 }
