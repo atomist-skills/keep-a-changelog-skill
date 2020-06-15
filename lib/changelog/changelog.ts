@@ -107,7 +107,7 @@ export async function addChangelogEntryForClosedIssue(
 export async function addChangelogEntryForCommit(ctx: EventContext<PushWithChangelogLabelSubscription, ChangelogConfiguration>): Promise<HandlerStatus> {
     const push = ctx.data.Push[0];
     const cfg = ctx.configuration[0]?.parameters;
-    const entries: Array<{ entry: ChangelogEntry, categories: string[] }> = [];
+    const entries: Array<{ entry: ChangelogEntry; categories: string[] }> = [];
     for (const commit of push.commits) {
         const categories: string[] = [];
         const qualifiers: string[] = [];
