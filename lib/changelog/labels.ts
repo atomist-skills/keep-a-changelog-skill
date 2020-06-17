@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-export const ChangelogLabels = [
-    "added",
-    "changed",
-    "deprecated",
-    "removed",
-    "fixed",
-    "security",
-];
+export const ChangelogLabels = ["added", "changed", "deprecated", "removed", "fixed", "security"];

@@ -15,26 +15,19 @@
  */
 
 import * as assert from "power-assert";
-import {
-    changelogAddRelease,
-    formatDate,
-} from "../../lib/changelog/closeChangelog";
+import { changelogAddRelease, formatDate } from "../../lib/changelog/closeChangelog";
 
 describe("release", () => {
-
     describe("formatDate", () => {
-
         it("should return a properly formatted date", () => {
             const d = new Date("August 6, 1969");
             const e = "1969-08-06";
             const f = formatDate(d);
             assert(f === e);
         });
-
     });
 
     describe("changelogAddRelease", () => {
-
         const date = formatDate();
         const c = `# Change Log
 
@@ -435,7 +428,5 @@ Initial release
             const n = changelogAddRelease(cl, "1.0.0-M.2");
             assert(n === el);
         });
-
     });
-
 });

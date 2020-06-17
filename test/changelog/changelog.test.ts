@@ -28,7 +28,6 @@ import {
 import { DefaultFileName } from "../../lib/configuration";
 
 describe("changelog", () => {
-
     const clPath = path.join(process.cwd(), "CHANGELOG.md");
     const buPath = clPath + ".test-backup";
     before(() => {
@@ -46,26 +45,28 @@ describe("changelog", () => {
                 assert(result.title === "Changelog");
                 assert(result.versions.some((v: any) => v.version === "0.0.0"));
             })
-            .then(() => fs.removeSync(tcl), () => fs.removeSync(tcl));
+            .then(
+                () => fs.removeSync(tcl),
+                () => fs.removeSync(tcl),
+            );
     });
 
     it("should read changelog", () => {
         const p = path.join(process.cwd(), DefaultFileName);
-        return readChangelog(p)
-            .then(result => {
-                assert(result.versions.length > 0);
-                assert.equal(result.title, "Changelog");
-            });
+        return readChangelog(p).then(result => {
+            assert(result.versions.length > 0);
+            assert.equal(result.title, "Changelog");
+        });
     });
 
     it("should add entry to changelog", () => {
         const clp = path.join(process.cwd(), DefaultFileName);
-        const p = {
+        const p = ({
             id: {
                 owner: "atomist",
                 repo: "test",
             },
-        } as any as Project;
+        } as any) as Project;
         const entry: ChangelogEntry = {
             label: "#1",
             title: "This is a test label",
@@ -76,19 +77,21 @@ describe("changelog", () => {
         };
         return readChangelog(clp).then(result => {
             const cl = addEntryToChangelog(entry, result, p);
-            assert.equal(cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
-                "-   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)");
+            assert.equal(
+                cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
+                "-   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)",
+            );
         });
     });
 
     it("should convert back to markdown", async () => {
         const clp = path.join(process.cwd(), DefaultFileName);
-        const p = {
+        const p = ({
             id: {
                 owner: "atomist",
                 repo: "test",
             },
-        } as any as Project;
+        } as any) as Project;
         const entry: ChangelogEntry = {
             label: "#1",
             title: "Something useful was added",
@@ -106,15 +109,16 @@ describe("changelog", () => {
 
     it("should write changes back to changelog", () => {
         const clp = path.join(process.cwd(), DefaultFileName);
-        const p = {
+        const p = ({
             id: {
                 owner: "atomist",
                 repo: "test",
             },
-        } as any as Project;
+        } as any) as Project;
         const entry: ChangelogEntry = {
             label: "1",
-            title: "This is a test label with some really long text and some more bla bla bla. And even some more and more and more.",
+            title:
+                "This is a test label with some really long text and some more bla bla bla. And even some more and more and more.",
             category: "added",
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: ["breaking"],
@@ -124,5 +128,4 @@ describe("changelog", () => {
             return writeChangelog(cl, clp);
         });
     });
-
 });

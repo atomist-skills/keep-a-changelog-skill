@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-import {
-    gitHubResourceProvider,
-    slackResourceProvider,
-} from "@atomist/skill/lib/resource_providers";
-import {
-    ParameterType,
-    ParameterVisibility,
-    repoFilter,
-    skill,
-} from "@atomist/skill/lib/skill";
+import { gitHubResourceProvider, slackResourceProvider } from "@atomist/skill/lib/resource_providers";
+import { ParameterType, ParameterVisibility, repoFilter, skill } from "@atomist/skill/lib/skill";
 import { ChangelogConfiguration } from "./lib/configuration";
 
 export const Skill = skill<ChangelogConfiguration>({
-
     runtime: {
         memory: 1024,
         timeout: 60,
@@ -55,7 +46,8 @@ export const Skill = skill<ChangelogConfiguration>({
         addChangelogToRelease: {
             type: ParameterType.Boolean,
             displayName: "Add changelog to GitHub release",
-            description: "When a changelog section gets closed, the changelog contents of the release will be added to a corresponding GitHub release",
+            description:
+                "When a changelog section gets closed, the changelog contents of the release will be added to a corresponding GitHub release",
             required: false,
         },
         mapAdded: {
@@ -110,15 +102,14 @@ export const Skill = skill<ChangelogConfiguration>({
         repos: repoFilter(),
     },
 
-    commands: [{
-        name: "closeChangelog",
-        displayName: "Close Changelog Section",
-        description: "Closes the unreleased section of a changelog with a new release",
-        pattern: /^close changelog$/,
-    }],
-
-    subscriptions: [
-        "file://graphql/subscription/*.graphql",
+    commands: [
+        {
+            name: "closeChangelog",
+            displayName: "Close Changelog Section",
+            description: "Closes the unreleased section of a changelog with a new release",
+            pattern: /^close changelog$/,
+        },
     ],
 
+    subscriptions: ["file://graphql/subscription/*.graphql"],
 });

@@ -55,6 +55,7 @@ export async function upsertChangelogLabels(info: UpsertChangelogLabelsInfo): Pr
         repo: info.repo,
         name: `changelog:${l}`,
         color: "C5DB71",
+        description: `Add this issue or pull request to ${l} changelog section`,
     }));
     labels.push({
         api: info.api,
@@ -62,6 +63,7 @@ export async function upsertChangelogLabels(info: UpsertChangelogLabelsInfo): Pr
         repo: info.repo,
         name: "breaking",
         color: "B60205",
+        description: `Mark this issue or pull request as breaking`,
     });
     await Promise.all(labels.map(upsertLabel));
 }
@@ -74,6 +76,8 @@ interface UpsertLabelInfo extends UpsertChangelogLabelsInfo {
     name: string;
     /** Color of label */
     color: string;
+    /** Description of label */
+    description: string;
 }
 
 /**
@@ -83,10 +87,12 @@ interface UpsertLabelInfo extends UpsertChangelogLabelsInfo {
  */
 async function upsertLabel(info: UpsertLabelInfo): Promise<void> {
     try {
-        await info.api.issues.getLabel({
+        await info.api.issues.updateLabel({
             name: info.name,
             repo: info.repo,
             owner: info.owner,
+            color: info.color,
+            description: info.description,
         });
     } catch (err) {
         await info.api.issues.createLabel({
@@ -94,7 +100,7 @@ async function upsertLabel(info: UpsertLabelInfo): Promise<void> {
             repo: info.repo,
             name: info.name,
             color: info.color,
+            description: info.description,
         });
     }
-
 }

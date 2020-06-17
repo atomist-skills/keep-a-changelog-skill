@@ -22,7 +22,6 @@ import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 
 export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
-
     await ctx.audit.log("Checking configuration");
     const cfgs = ctx.configuration;
     const params = await ctx.parameters.prompt<{ configuration: string; version: string }>({
@@ -46,7 +45,8 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
     }
 
     await ctx.audit.log(`Closing changelog section for version '${params.version}'`);
-    const result = await closeChangelog({
+    const result = await closeChangelog(
+        {
             owner: repository.owner,
             name: repository.repo,
             branch: repository.branch,
@@ -55,13 +55,17 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
         },
         params.version,
         ctx,
-        ctx.configuration.find(c => c.name === params.configuration)?.parameters);
+        ctx.configuration.find(c => c.name === params.configuration)?.parameters,
+    );
 
     if (result.code === 0 && result.visibility !== "hidden") {
-        await ctx.message.respond(slackSuccessMessage(
-            "Changelog",
-            `Successfully closed changelog section for version ${codeLine(params.version)}`,
-            ctx));
+        await ctx.message.respond(
+            slackSuccessMessage(
+                "Changelog",
+                `Successfully closed changelog section for version ${codeLine(params.version)}`,
+                ctx,
+            ),
+        );
     }
 
     return result;

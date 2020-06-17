@@ -14,39 +14,35 @@
  * limitations under the License.
  */
 
-import {
-    Contextual,
-    HandlerStatus,
-} from "@atomist/skill/lib/handler";
+import { Contextual, HandlerStatus } from "@atomist/skill/lib/handler";
 import { gitHubComRepository } from "@atomist/skill/lib/project";
-import {
-    commit,
-    push,
-} from "@atomist/skill/lib/project/git";
+import { commit, push } from "@atomist/skill/lib/project/git";
 import { gitHub } from "@atomist/skill/lib/project/github";
 import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import * as fs from "fs-extra";
-import {
-    ChangelogConfiguration,
-    DefaultFileName,
-} from "../configuration";
+import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import { readChangelog } from "./changelog";
 
-export async function closeChangelog(repo: { owner: string; name: string; apiUrl: string; url: string; branch: string },
-                                     version: string,
-                                     ctx: Contextual<any, any>,
-                                     cfg: ChangelogConfiguration): Promise<HandlerStatus> {
-
-    const credential = await ctx.credential.resolve(gitHubAppToken({
-        owner: repo.owner,
-        repo: repo.name,
-        apiUrl: repo.apiUrl,
-    }));
-    const project = await ctx.project.clone(gitHubComRepository({
-        owner: repo.owner,
-        repo: repo.name,
-        credential,
-    }));
+export async function closeChangelog(
+    repo: { owner: string; name: string; apiUrl: string; url: string; branch: string },
+    version: string,
+    ctx: Contextual<any, any>,
+    cfg: ChangelogConfiguration,
+): Promise<HandlerStatus> {
+    const credential = await ctx.credential.resolve(
+        gitHubAppToken({
+            owner: repo.owner,
+            repo: repo.name,
+            apiUrl: repo.apiUrl,
+        }),
+    );
+    const project = await ctx.project.clone(
+        gitHubComRepository({
+            owner: repo.owner,
+            repo: repo.name,
+            credential,
+        }),
+    );
 
     const changelogPath = project.path(cfg?.file || DefaultFileName);
 
@@ -78,9 +74,12 @@ export async function closeChangelog(repo: { owner: string; name: string; apiUrl
             reason: `Failed to update ${changelogPath} for release ${version}`,
         };
     }
-    await commit(project, `Changelog: add release ${version}
+    await commit(
+        project,
+        `Changelog: add release ${version}
 
-[atomist:generated]`);
+[atomist:generated]`,
+    );
     await push(project);
 
     if (cfg?.addChangelogToRelease !== false) {
@@ -89,11 +88,13 @@ export async function closeChangelog(repo: { owner: string; name: string; apiUrl
         if (body) {
             const api = gitHub(project.id);
             try {
-                const release = (await api.repos.getReleaseByTag({
-                    owner: project.id.owner,
-                    repo: project.id.repo,
-                    tag: version,
-                })).data;
+                const release = (
+                    await api.repos.getReleaseByTag({
+                        owner: project.id.owner,
+                        repo: project.id.repo,
+                        tag: version,
+                    })
+                ).data;
                 if (!(release.body || "").includes(body)) {
                     const existingBody = release.body ? `${release.body.trim()}\n\n` : "";
                     await api.repos.updateRelease({
@@ -121,7 +122,7 @@ export async function closeChangelog(repo: { owner: string; name: string; apiUrl
  * @return today's date in YYYY-MM-DD format
  */
 export function formatDate(date?: Date): string {
-    const now = (date) ? date : new Date();
+    const now = date ? date : new Date();
     const year = now.getFullYear();
     const monthDay = now.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit" }).replace("/", "-");
     return `${year}-${monthDay}`;
@@ -140,18 +141,25 @@ export function changelogAddRelease(changelog: string, version: string): string 
         return changelog;
     }
     const date = formatDate();
-    return changelog.replace(/^\[Unreleased\]:\s*(http.*\/compare)\/(\d+\.\d+\.\d+(?:-\S+)?)\.{3}HEAD/m,
-        `[Unreleased]: $1/${version}...HEAD
+    return changelog
+        .replace(
+            /^\[Unreleased\]:\s*(http.*\/compare)\/(\d+\.\d+\.\d+(?:-\S+)?)\.{3}HEAD/m,
+            `[Unreleased]: $1/${version}...HEAD
 
 ## [${version}][] - ${date}
 
-[${version}]: $1/$2...${version}`)
-        .replace(/^##\s*\[Unreleased\]\((http.*\/compare)\/(\d+\.\d+\.\d+(?:-\S+)?)\.{3}HEAD\)/m,
+[${version}]: $1/$2...${version}`,
+        )
+        .replace(
+            /^##\s*\[Unreleased\]\((http.*\/compare)\/(\d+\.\d+\.\d+(?:-\S+)?)\.{3}HEAD\)/m,
             `## [Unreleased]($1/${version}...HEAD)
 
-## [${version}]($1/$2...${version}) - ${date}`)
-        .replace(/^##\s*\[Unreleased\]\((http.*)\/tree\/HEAD\)/m,
+## [${version}]($1/$2...${version}) - ${date}`,
+        )
+        .replace(
+            /^##\s*\[Unreleased\]\((http.*)\/tree\/HEAD\)/m,
             `## [Unreleased]($1/compare/${version}...HEAD)
 
-## [${version}]($1/tree/${version}) - ${date}`);
+## [${version}]($1/tree/${version}) - ${date}`,
+        );
 }
