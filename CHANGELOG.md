@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.1.2...HEAD)
 
+### Added
+
+-   Converge label descriptions. [e0c1aee](https://github.com/atomist-skills/keep-a-changelog-skill/commit/e0c1aeee005a30aad93496d8d8b0cb21c1325cb4)
+
 ## [1.1.2](https://github.com/atomist-skills/changelog-skill/compare/1.1.1...1.1.2) - 2020-06-11
 
 ### Fixed
