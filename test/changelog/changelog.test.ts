@@ -51,15 +51,14 @@ describe("changelog", () => {
             );
     });
 
-    it("should read changelog", () => {
+    it("should read changelog", async () => {
         const p = path.join(process.cwd(), DefaultFileName);
-        return readChangelog(p).then(result => {
-            assert(result.versions.length > 0);
-            assert.equal(result.title, "Changelog");
-        });
+        const result = await readChangelog(p);
+        assert(result.versions.length > 0);
+        assert(result.title === "Changelog");
     });
 
-    it("should add entry to changelog", () => {
+    it("should add entry to changelog", async () => {
         const clp = path.join(process.cwd(), DefaultFileName);
         const p = ({
             id: {
@@ -75,13 +74,12 @@ describe("changelog", () => {
             qualifiers: [],
             authors: [{ login: "foo", name: "Super Foo", email: "foo@bar.com" }],
         };
-        return readChangelog(clp).then(result => {
-            const cl = addEntryToChangelog(entry, result, p);
-            assert.equal(
-                cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
-                "-   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)",
-            );
-        });
+        const result = await readChangelog(clp);
+        const cl = addEntryToChangelog(entry, result, p);
+        assert.equal(
+            cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
+            "-   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)",
+        );
     });
 
     it("should convert back to markdown", async () => {
@@ -107,7 +105,7 @@ describe("changelog", () => {
         assert(/\n$/.test(out));
     });
 
-    it("should write changes back to changelog", () => {
+    it("should write changes back to changelog", async () => {
         const clp = path.join(process.cwd(), DefaultFileName);
         const p = ({
             id: {
@@ -123,9 +121,8 @@ describe("changelog", () => {
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: ["breaking"],
         };
-        return readChangelog(clp).then(result => {
-            const cl = addEntryToChangelog(entry, result, p);
-            return writeChangelog(cl, clp);
-        });
+        const result = await readChangelog(clp);
+        const cl = addEntryToChangelog(entry, result, p);
+        return writeChangelog(cl, clp);
     });
 });
