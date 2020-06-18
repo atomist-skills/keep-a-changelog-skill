@@ -17,6 +17,17 @@
 export = changelogParser;
 export as namespace changelogParser;
 
-declare function changelogParser(c: string): Promise<any>;
+declare function changelogParser(c: string): Promise<changelogParser.Changelog>;
 declare namespace changelogParser {
+    interface Changelog {
+        description?: string;
+        title?: string;
+        versions?: Array<{
+            version?: string;
+            title?: string;
+            date?: string;
+            body: string;
+            parsed: Record<string, string[]>;
+        }>;
+    }
 }
