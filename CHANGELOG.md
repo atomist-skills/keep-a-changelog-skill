@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Converge label descriptions. [e0c1aee](https://github.com/atomist-skills/keep-a-changelog-skill/commit/e0c1aeee005a30aad93496d8d8b0cb21c1325cb4)
 
+### Fixed
+
+-   Flexible release tag. [#20](https://github.com/atomist-skills/keep-a-changelog-skill/issues/20)
+
 ## [1.1.2](https://github.com/atomist-skills/changelog-skill/compare/1.1.1...1.1.2) - 2020-06-11
 
 ### Fixed
