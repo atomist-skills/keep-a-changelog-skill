@@ -276,7 +276,7 @@ async function updateAndWriteChangelog(
  * @param p project with changelog file, or not
  * @return an object representing the parsed changelog
  */
-export async function readChangelog(changelogPath: string): Promise<any> {
+export async function readChangelog(changelogPath: string): Promise<parseChangelog.Changelog> {
     if (!(await fs.pathExists(changelogPath))) {
         await fs.writeFile(changelogPath, ChangelogTemplate);
     }

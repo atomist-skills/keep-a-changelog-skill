@@ -30,32 +30,30 @@ import { DefaultFileName } from "../../lib/configuration";
 describe("changelog", () => {
     const clPath = path.join(process.cwd(), "CHANGELOG.md");
     const buPath = clPath + ".test-backup";
-    before(() => {
-        fs.copyFileSync(clPath, buPath);
+    before(async () => {
+        await fs.copyFile(clPath, buPath);
     });
 
-    after(() => {
-        fs.moveSync(buPath, clPath, { overwrite: true });
+    after(async () => {
+        await fs.move(buPath, clPath, { overwrite: true });
     });
 
-    it("should create changelog", () => {
+    it("should create changelog", async () => {
         const tcl = path.join("test", DefaultFileName);
-        return readChangelog(tcl)
-            .then(result => {
-                assert(result.title === "Changelog");
-                assert(result.versions.some((v: any) => v.version === "0.0.0"));
-            })
-            .then(
-                () => fs.removeSync(tcl),
-                () => fs.removeSync(tcl),
-            );
+        const cl = await readChangelog(tcl);
+        try {
+            assert(cl.title === "Changelog");
+            assert(cl.versions.some((v: any) => v.version === "0.0.0"));
+        } finally {
+            await fs.remove(tcl);
+        }
     });
 
     it("should read changelog", async () => {
         const p = path.join(process.cwd(), DefaultFileName);
-        const result = await readChangelog(p);
-        assert(result.versions.length > 0);
-        assert(result.title === "Changelog");
+        const cl = await readChangelog(p);
+        assert(cl.versions.length > 0);
+        assert(cl.title === "Changelog");
     });
 
     it("should add entry to changelog", async () => {
@@ -74,8 +72,8 @@ describe("changelog", () => {
             qualifiers: [],
             authors: [{ login: "foo", name: "Super Foo", email: "foo@bar.com" }],
         };
-        const result = await readChangelog(clp);
-        const cl = addEntryToChangelog(entry, result, p);
+        const ocl = await readChangelog(clp);
+        const cl = addEntryToChangelog(entry, ocl, p);
         assert.equal(
             cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
             "-   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)",
@@ -97,8 +95,8 @@ describe("changelog", () => {
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: [],
         };
-        const result = await readChangelog(clp);
-        const cl = addEntryToChangelog(entry, result, p);
+        const ocl = await readChangelog(clp);
+        const cl = addEntryToChangelog(entry, ocl, p);
         const out = changelogToString(cl);
         // tslint:disable:max-line-length
         assert(/- {3}Something useful was added. \[#1\]\(https:\/\/github.com\/atomist\/test\/issues\/1\)/m.test(out));
@@ -121,8 +119,24 @@ describe("changelog", () => {
             url: "https://github.com/atomist/test/issues/1",
             qualifiers: ["breaking"],
         };
-        const result = await readChangelog(clp);
-        const cl = addEntryToChangelog(entry, result, p);
+        const ocl = await readChangelog(clp);
+        const cl = addEntryToChangelog(entry, ocl, p);
         return writeChangelog(cl, clp);
+    });
+
+    it("should find non-semver release in changelog", async () => {
+        const vcl = path.join(__dirname, "vCHANGELOG.md");
+        const ocl = await readChangelog(vcl);
+        assert(ocl.title === "Changelog");
+        assert(
+            ocl.description ===
+                "All notable changes to this project will be documented in this file.\n" +
+                    "This project adheres to [Semantic Versioning](http://semver.org/).",
+        );
+        assert(ocl.versions.length === 4);
+        const vs = ocl.versions.map(v => v.version);
+        for (const ev of ["0.15.1", "0.15.0", "0.14.0"]) {
+            assert(vs.includes(ev));
+        }
     });
 });

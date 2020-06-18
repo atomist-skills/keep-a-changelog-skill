@@ -22,6 +22,7 @@ import { gitHubAppToken } from "@atomist/skill/lib/secrets";
 import * as fs from "fs-extra";
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import { readChangelog } from "./changelog";
+import * as parseChangelog from "./changelogParser";
 
 export async function closeChangelog(
     repo: { owner: string; name: string; apiUrl: string; url: string; branch: string },
@@ -84,7 +85,7 @@ export async function closeChangelog(
 
     if (cfg?.addChangelogToRelease !== false) {
         const changelog = await readChangelog(changelogPath);
-        const body = changelog?.versions?.find(v => v.version === version).body.trim();
+        const body = findVersionBody(version, changelog);
         if (body) {
             const api = gitHub(project.id);
             try {
@@ -114,6 +115,12 @@ export async function closeChangelog(
         code: 0,
         reason: `Updated changelog in [${repo.owner}/${repo.name}](${repo.url}) for release ${version}`,
     };
+}
+
+/** Find body of changelog version matching tag. */
+export function findVersionBody(tag: string, changelog?: parseChangelog.Changelog): string | undefined {
+    const tagRegExp = new RegExp(`^\\[${tag}\\]`);
+    return changelog?.versions?.find(v => tagRegExp.test(v.title))?.body.trim();
 }
 
 /**

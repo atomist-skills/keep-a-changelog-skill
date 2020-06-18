@@ -15,9 +15,9 @@
  */
 
 import * as assert from "power-assert";
-import { changelogAddRelease, formatDate } from "../../lib/changelog/closeChangelog";
+import { changelogAddRelease, findVersionBody, formatDate } from "../../lib/changelog/closeChangelog";
 
-describe("release", () => {
+describe("closeChangelog", () => {
     describe("formatDate", () => {
         it("should return a properly formatted date", () => {
             const d = new Date("August 6, 1969");
@@ -514,6 +514,104 @@ Initial release
         it("should do nothing if section for release with non-strict semver tags exists", () => {
             const n = changelogAddRelease(cv, "v0.1.1");
             assert(n === cv);
+        });
+    });
+
+    describe("findVersionBody", () => {
+        it("should find the right body for semver", () => {
+            const c: any = {
+                versions: [
+                    {
+                        title: "[5.6.0](https://g.com/a/k/compare/0.6.0...5.6.0) - 2018-03-03",
+                        body: "nope",
+                    },
+                    {
+                        title: "[0.6.0](https://g.com/a/k/compare/0.5.0...0.6.0) - 2018-03-02",
+                        body: "yes",
+                    },
+                    {
+                        title: "[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
+                        body: "no",
+                    },
+                ],
+            };
+            const b = findVersionBody("0.6.0", c);
+            assert(b === "yes");
+        });
+
+        it("should find the right body for semver starting with v", () => {
+            const c: any = {
+                versions: [
+                    {
+                        title: "[v5.6.0](https://g.com/a/k/compare/v0.6.0...v5.6.0) - 2018-03-03",
+                        body: "nope",
+                    },
+                    {
+                        title: "[v0.6.0](https://g.com/a/k/compare/v0.5.1...v0.6.0) - 2018-03-02",
+                        body: "negative",
+                    },
+                    {
+                        title: "[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
+                        body: "affirmative",
+                    },
+                    {
+                        title: "[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
+                        body: "no",
+                    },
+                ],
+            };
+            const b = findVersionBody("v0.5.1", c);
+            assert(b === "affirmative");
+        });
+
+        it("should find the right body for any release name", () => {
+            const c: any = {
+                versions: [
+                    {
+                        title: "[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
+                        body: "nope",
+                    },
+                    {
+                        title: "[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
+                        body: "oui",
+                    },
+                    {
+                        title: "[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
+                        body: "nil",
+                    },
+                    {
+                        title: "[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
+                        body: "no",
+                    },
+                ],
+            };
+            const b = findVersionBody("version9", c);
+            assert(b === "oui");
+        });
+
+        it("should safely find nothing", () => {
+            const c: any = {
+                versions: [
+                    {
+                        title: "[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
+                        body: "nope",
+                    },
+                    {
+                        title: "[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
+                        body: "negative",
+                    },
+                    {
+                        title: "[v0.5.1](https://g.com/a/k/compare/0.5.0...v0.5.1) - 2018-03-01",
+                        body: "nil",
+                    },
+                    {
+                        title: "[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
+                        body: "no",
+                    },
+                ],
+            };
+            const b = findVersionBody("1.0.0", c);
+            assert(b === undefined);
         });
     });
 });
