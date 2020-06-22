@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import { EventContext, HandlerStatus } from "@atomist/skill/lib/handler";
-import { gitHubComRepository } from "@atomist/skill/lib/project";
-import * as git from "@atomist/skill/lib/project/git";
-import { Project } from "@atomist/skill/lib/project/project";
-import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { EventContext, HandlerStatus, git, project, repository, secret } from "@atomist/skill";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
 import { promisify } from "util";
@@ -91,14 +87,14 @@ export async function addChangelogEntryForClosedIssue(
     };
 
     const credential = await ctx.credential.resolve(
-        gitHubAppToken({
+        secret.gitHubAppToken({
             owner: issue.repo.owner,
             repo: issue.repo.name,
             apiUrl: issue.repo.org.provider.apiUrl,
         }),
     );
     const p = await ctx.project.clone(
-        gitHubComRepository({ owner: issue.repo.owner, repo: issue.repo.name, credential }),
+        repository.gitHub({ owner: issue.repo.owner, repo: issue.repo.name, credential }),
     );
     if (await updateChangelog(p, categories, entry, ctx.configuration[0]?.parameters || {})) {
         await git.push(p);
@@ -171,14 +167,14 @@ export async function addChangelogEntryForCommit(
 
     if (entries.length > 0) {
         const credential = await ctx.credential.resolve(
-            gitHubAppToken({
+            secret.gitHubAppToken({
                 owner: push.repo.owner,
                 repo: push.repo.name,
                 apiUrl: push.repo.org.provider.apiUrl,
             }),
         );
         const p = await ctx.project.clone(
-            gitHubComRepository({ owner: push.repo.owner, repo: push.repo.name, credential }),
+            repository.gitHub({ owner: push.repo.owner, repo: push.repo.name, credential }),
         );
         const results = [];
         for (const entry of entries) {
@@ -207,7 +203,7 @@ export async function addChangelogEntryForCommit(
 }
 
 async function updateChangelog(
-    p: Project,
+    p: project.Project,
     categories: string[],
     entry: ChangelogEntry,
     cfg: ChangelogConfiguration,
@@ -248,7 +244,7 @@ async function updateChangelog(
 }
 
 async function updateAndWriteChangelog(
-    p: Project,
+    p: project.Project,
     categories: string[],
     entry: ChangelogEntry,
     changelogPath: string,
@@ -295,7 +291,7 @@ export async function readChangelog(changelogPath: string): Promise<parseChangel
 export function addEntryToChangelog(
     entry: ChangelogEntry,
     cl: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
-    p: Project,
+    p: project.Project,
 ): any {
     const version = readUnreleasedVersion(cl, p);
 
@@ -372,7 +368,7 @@ export async function writeChangelog(
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-function readUnreleasedVersion(cl: any, p: Project): any {
+function readUnreleasedVersion(cl: any, p: project.Project): any {
     let version;
     // Get Unreleased section or create if not already available
     if (

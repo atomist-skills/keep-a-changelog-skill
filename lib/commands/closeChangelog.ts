@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { CommandHandler } from "@atomist/skill/lib/handler";
-import { slackSuccessMessage } from "@atomist/skill/lib/messages";
-import { linkedRepository } from "@atomist/skill/lib/repository";
+import { CommandHandler, repository, slack } from "@atomist/skill";
 import { codeLine } from "@atomist/slack-messages";
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
@@ -36,8 +34,8 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
     await ctx.audit.log(`Configuration to invoke '${params.configuration}'`);
 
     await ctx.audit.log("Obtaining linked repository");
-    const repository = await linkedRepository(ctx);
-    if (!repository) {
+    const repo = await repository.linkedRepository(ctx);
+    if (!repo) {
         return {
             code: 1,
             reason: `No linked repository found`,
@@ -47,11 +45,11 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
     await ctx.audit.log(`Closing changelog section for version '${params.version}'`);
     const result = await closeChangelog(
         {
-            owner: repository.owner,
-            name: repository.repo,
-            branch: repository.branch,
-            url: `https://github.com/${repository.owner}/${repository.repo}`,
-            apiUrl: repository.apiUrl,
+            owner: repo.owner,
+            name: repo.repo,
+            branch: repo.branch,
+            url: `https://github.com/${repo.owner}/${repo.repo}`,
+            apiUrl: repo.apiUrl,
         },
         params.version,
         ctx,
@@ -60,7 +58,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 
     if (result.code === 0 && result.visibility !== "hidden") {
         await ctx.message.respond(
-            slackSuccessMessage(
+            slack.successMessage(
                 "Changelog",
                 `Successfully closed changelog section for version ${codeLine(params.version)}`,
                 ctx,

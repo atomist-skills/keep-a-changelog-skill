@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
+import { EventHandler } from "@atomist/skill";
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 import { CloseChangeLogOnReleaseSubscription } from "../typings/types";

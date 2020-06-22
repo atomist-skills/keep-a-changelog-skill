@@ -12,9 +12,9 @@
     "DEVEX"
   ],
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200617150530",
+    "@atomist/skill": "0.1.0-master.20200622142334",
     "@atomist/slack-messages": "^1.1.1",
-    "@octokit/rest": "^17.9.2",
+    "@octokit/rest": "^18.0.0",
     "@types/lodash": "^4.14.150",
     "@types/semver": "^7.1.0",
     "changelog-parser": "^2.8.0",

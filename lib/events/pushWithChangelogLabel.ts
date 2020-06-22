@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
+import { EventHandler } from "@atomist/skill";
 import { PushWithChangelogLabelSubscription } from "../typings/types";
 import { addChangelogEntryForCommit } from "../changelog/changelog";
 

@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-import { gitHubResourceProvider, slackResourceProvider } from "@atomist/skill/lib/resource_providers";
-import { ParameterType, ParameterVisibility, repoFilter, skill } from "@atomist/skill/lib/skill";
+import {
+    skill,
+    resourceProvider,
+    parameter,
+    ParameterType,
+    ParameterVisibility,
+} from "@atomist/skill";
 import { ChangelogConfiguration } from "./lib/configuration";
 
 export const Skill = skill<ChangelogConfiguration>({
@@ -25,8 +30,8 @@ export const Skill = skill<ChangelogConfiguration>({
     },
 
     resourceProviders: {
-        github: gitHubResourceProvider({ minRequired: 1 }),
-        slack: slackResourceProvider(),
+        github: resourceProvider.gitHub({ minRequired: 1 }),
+        slack: resourceProvider.chat(),
     },
 
     parameters: {
@@ -99,7 +104,7 @@ export const Skill = skill<ChangelogConfiguration>({
             required: false,
             visibility: ParameterVisibility.Hidden,
         },
-        repos: repoFilter(),
+        repos: parameter.repoFilter(),
     },
 
     commands: [

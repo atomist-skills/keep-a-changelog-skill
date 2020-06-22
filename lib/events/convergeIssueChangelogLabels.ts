@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
-import { gitHubComRepository } from "@atomist/skill/lib/project";
-import { gitHub } from "@atomist/skill/lib/project/github";
-import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { EventHandler, secret, repository, github} from "@atomist/skill";
 import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
 import { upsertChangelogLabels } from "./convergePullRequestChangelogLabels";
 
 export const handler: EventHandler<ConvergeIssueChangelogLabelsSubscription> = async ctx => {
     const repo = ctx.data.Issue[0].repo;
     const { owner, name } = repo;
-    const credential = await ctx.credential.resolve(gitHubAppToken({ owner, repo: name }));
+    const credential = await ctx.credential.resolve(secret.gitHubAppToken({ owner, repo: name }));
 
-    const api = gitHub(gitHubComRepository({ owner, repo: name, credential }));
+    const api = github.api(repository.gitHub({ owner, repo: name, credential }));
     await upsertChangelogLabels({ api, owner, repo: name });
     return {
         code: 0,

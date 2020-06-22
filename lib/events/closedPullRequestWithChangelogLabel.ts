@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill/lib/handler";
+import { EventHandler } from "@atomist/skill";
 import { ClosedPullRequestWithChangelogLabelSubscription } from "../typings/types";
 import { addChangelogEntryForClosedIssue } from "../changelog/changelog";
 

@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import { Contextual, HandlerStatus } from "@atomist/skill/lib/handler";
-import { gitHubComRepository } from "@atomist/skill/lib/project";
-import { commit, push } from "@atomist/skill/lib/project/git";
-import { gitHub } from "@atomist/skill/lib/project/github";
-import { gitHubAppToken } from "@atomist/skill/lib/secrets";
+import { Contextual, HandlerStatus, secret, repository, git, github } from "@atomist/skill";
 import * as fs from "fs-extra";
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import { readChangelog } from "./changelog";
@@ -31,14 +27,14 @@ export async function closeChangelog(
     cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
     const credential = await ctx.credential.resolve(
-        gitHubAppToken({
+        secret.gitHubAppToken({
             owner: repo.owner,
             repo: repo.name,
             apiUrl: repo.apiUrl,
         }),
     );
     const project = await ctx.project.clone(
-        gitHubComRepository({
+        repository.gitHub({
             owner: repo.owner,
             repo: repo.name,
             credential,
@@ -75,19 +71,19 @@ export async function closeChangelog(
             reason: `Failed to update ${changelogPath} for release ${version}`,
         };
     }
-    await commit(
+    await git.commit(
         project,
         `Changelog: add release ${version}
 
 [atomist:generated]`,
     );
-    await push(project);
+    await git.push(project);
 
     if (cfg?.addChangelogToRelease !== false) {
         const changelog = await readChangelog(changelogPath);
         const body = findVersionBody(version, changelog);
         if (body) {
-            const api = gitHub(project.id);
+            const api = github.api(project.id);
             try {
                 const release = (
                     await api.repos.getReleaseByTag({
