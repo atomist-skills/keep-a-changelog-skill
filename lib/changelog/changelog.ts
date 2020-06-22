@@ -121,7 +121,7 @@ export async function addChangelogEntryForCommit(
             code: 0,
             visibility: "hidden",
             reason: "Ignoring pushes to non-default branch",
-        }
+        };
     }
 
     const cfg = ctx.configuration?.[0]?.parameters;
