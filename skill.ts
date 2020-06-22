@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    skill,
-    resourceProvider,
-    parameter,
-    ParameterType,
-    ParameterVisibility,
-} from "@atomist/skill";
+import { skill, resourceProvider, parameter, ParameterType, ParameterVisibility } from "@atomist/skill";
 import { ChangelogConfiguration } from "./lib/configuration";
 
 export const Skill = skill<ChangelogConfiguration>({

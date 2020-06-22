@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EventHandler, secret, repository, github} from "@atomist/skill";
+import { EventHandler, secret, repository, github } from "@atomist/skill";
 import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
 import { upsertChangelogLabels } from "./convergePullRequestChangelogLabels";
 
