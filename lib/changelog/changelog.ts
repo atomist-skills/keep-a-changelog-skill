@@ -115,7 +115,16 @@ export async function addChangelogEntryForCommit(
     ctx: EventContext<PushWithChangelogLabelSubscription, ChangelogConfiguration>,
 ): Promise<HandlerStatus> {
     const push = ctx.data.Push[0];
-    const cfg = ctx.configuration[0]?.parameters;
+
+    if (push.branch !== push.repo.defaultBranch) {
+        return {
+            code: 0,
+            visibility: "hidden",
+            reason: "Ignoring pushes to non-default branch",
+        }
+    }
+
+    const cfg = ctx.configuration?.[0]?.parameters;
     const entries: Array<{ entry: ChangelogEntry; categories: string[] }> = [];
     for (const commit of push.commits) {
         const categories: string[] = [];
