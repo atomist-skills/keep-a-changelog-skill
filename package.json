@@ -1,18 +1,7 @@
 {
-  "name": "@atomist/keep-a-changelog-skill",
-  "description": "Keep a Changelog",
-  "author": "Atomist",
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/atomist-skills/keep-a-changelog-skill",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atomist-skills/keep-a-changelog-skill.git"
-  },
-  "categories": [
-    "DEVEX"
-  ],
+  "main": "node_modules/@atomist/skill/lib/function.js",
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200622142334",
+    "@atomist/skill": "0.1.0-master.20200623075110",
     "@atomist/slack-messages": "^1.1.1",
     "@octokit/rest": "^18.0.0",
     "@types/lodash": "^4.14.150",
@@ -76,6 +65,5 @@
     "skill:bundle": "atm-skill bundle --minify --source-map",
     "skill:package": "atm-skill package",
     "skill:register": "atm-skill register"
-  },
-  "main": "node_modules/@atomist/skill/lib/function.js"
+  }
 }

@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-import { skill, resourceProvider, parameter, ParameterType, ParameterVisibility } from "@atomist/skill";
+import { Category, parameter, ParameterType, ParameterVisibility, resourceProvider, skill } from "@atomist/skill";
 import { ChangelogConfiguration } from "./lib/configuration";
 
 export const Skill = skill<ChangelogConfiguration>({
+    name: "keep-a-changelog-skill",
+    namespace: "atomist",
+    displayName: "Keep a Changelog",
+    author: "Atomist",
+    license: "Apache-2.0",
+    homepageUrl: "https://github.com/atomist-skills/keep-a-changelog-skill",
+    repositoryUrl: "https://github.com/atomist-skills/keep-a-changelog-skill.git",
+    iconUrl: "file://docs/images/icon.svg",
+    categories: [Category.DevEx],
+
     runtime: {
         memory: 1024,
         timeout: 60,
@@ -25,7 +35,7 @@ export const Skill = skill<ChangelogConfiguration>({
 
     resourceProviders: {
         github: resourceProvider.gitHub({ minRequired: 1 }),
-        slack: resourceProvider.chat(),
+        slack: resourceProvider.chat({ minRequired: 0 }),
     },
 
     parameters: {

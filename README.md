@@ -6,6 +6,17 @@ Automatically keep a changelog updated based on labels added to issues, pull req
 
 <!---atomist-skill-description:end--->
 
+---
+
+<!---atomist-skill-long_description:start--->
+
+Automatically keep a changelog updated based on labels added to issues, pull requests and commits.
+Based on https://keepachangelog.com.
+
+<!---atomist-skill-long_description:end--->
+
+---
+
 <!---atomist-skill-readme:start--->
 
 # What it's useful for
