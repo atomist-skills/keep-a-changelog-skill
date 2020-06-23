@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.1.4...HEAD)
 
+### Changed
+
+-   Move to skill.ts. [0b79cf0](https://github.com/atomist-skills/keep-a-changelog-skill/commit/0b79cf0deabf4484f8da6e8a7176c1a4b5d61945)
+
 ### Fixed
 
 -   Add changelog on branch or not at all. [#22](https://github.com/atomist-skills/keep-a-changelog-skill/issues/22)
