@@ -10,7 +10,7 @@ Automate maintaining a changelog for your repositories
 
 <!---atomist-skill-long_description:start--->
 
-Automatically keep a changelog updated based on labels added to issues, pull requests and commits.
+Automate maintaining a changelog for your repositories based on labels added to issues, pull requests and commits.
 Based on https://keepachangelog.com.
 
 <!---atomist-skill-long_description:end--->
@@ -73,10 +73,11 @@ to one or more repositories, run the following command:
 Connect and configure these integrations:
 
 1. **GitHub**
-2. **Slack** 
+2. **Slack or Microsoft Teams** 
 
 The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected.
-The **Slack** integration is optional but can be useful to run commands to close changelog sections. 
+The **Slack** or **Microsoft Teams** integration is optional but can be useful to run commands to close changelog
+sections. 
 
 # How to configure
 

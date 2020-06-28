@@ -1,0 +1,30 @@
+query pullRequestByNumber($owner: String!, $repo: String!, $number: Float!) {
+    PullRequest(state: "closed", number: $number) {
+        number
+        title
+        merged
+        labels {
+            name
+        }
+        repo(owner: $owner, name: $repo) @required {
+            url
+            owner
+            name
+            org {
+                provider {
+                    url
+                    apiUrl
+                }
+            }
+        }
+        commits {
+            author {
+                login
+                name
+                emails {
+                    address
+                }
+            }
+        }
+    }
+}

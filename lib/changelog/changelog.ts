@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { EventContext, HandlerStatus, git, project, repository, secret } from "@atomist/skill";
+import { HandlerStatus, git, project, repository, secret, Contextual } from "@atomist/skill";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
 import { promisify } from "util";
@@ -50,19 +50,20 @@ export interface ChangelogEntry {
  * Add entry to changelog for closed issue or pull request
  */
 export async function addChangelogEntryForClosedIssue(
-    ctx: EventContext<
-        ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription,
-        ChangelogConfiguration
-    >,
+    data: ClosedIssueWithChangelogLabelSubscription | ClosedPullRequestWithChangelogLabelSubscription,
+    ctx: Contextual<any, any>,
+    cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
-    const issue = _.get(ctx.data, "Issue[0]") || _.get(ctx.data, "PullRequest[0]");
-
+    let issue:
+        | ClosedIssueWithChangelogLabelSubscription["Issue"][0]
+        | ClosedPullRequestWithChangelogLabelSubscription["PullRequest"][0];
     const authors: ChangelogEntry["authors"] = [];
-    if ((ctx.data as ClosedIssueWithChangelogLabelSubscription).Issue) {
-        const i = (ctx.data as ClosedIssueWithChangelogLabelSubscription).Issue[0];
+    if ((data as ClosedIssueWithChangelogLabelSubscription).Issue) {
+        const i = (data as ClosedIssueWithChangelogLabelSubscription).Issue[0];
         authors.push({ login: i.closedBy.login, name: i.closedBy.name, email: i.closedBy.emails?.[0]?.address });
-    } else if ((ctx.data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest) {
-        const p = (ctx.data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest[0];
+        issue = i;
+    } else if ((data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest) {
+        const p = (data as ClosedPullRequestWithChangelogLabelSubscription).PullRequest[0];
         authors.push(
             ..._.uniqBy(
                 p.commits.map(c => ({
@@ -73,6 +74,7 @@ export async function addChangelogEntryForClosedIssue(
                 "login",
             ),
         );
+        issue = p;
     }
 
     const url = `https://github.com/${issue.repo.owner}/${issue.repo.name}/issues/${issue.number}`;
@@ -96,7 +98,7 @@ export async function addChangelogEntryForClosedIssue(
     const p = await ctx.project.clone(
         repository.gitHub({ owner: issue.repo.owner, repo: issue.repo.name, credential }),
     );
-    if (await updateChangelog(p, categories, entry, ctx.configuration[0]?.parameters || {})) {
+    if (await updateChangelog(p, categories, entry, cfg || {})) {
         await git.push(p);
     }
     return {
@@ -112,10 +114,10 @@ export async function addChangelogEntryForClosedIssue(
  * @returns {Promise<HandlerResult>}
  */
 export async function addChangelogEntryForCommit(
-    ctx: EventContext<PushWithChangelogLabelSubscription, ChangelogConfiguration>,
+    push: PushWithChangelogLabelSubscription["Push"][0],
+    ctx: Contextual<any, any>,
+    cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
-    const push = ctx.data.Push[0];
-
     if (push.branch !== push.repo.defaultBranch) {
         return {
             code: 0,
@@ -124,7 +126,6 @@ export async function addChangelogEntryForCommit(
         };
     }
 
-    const cfg = ctx.configuration?.[0]?.parameters;
     const entries: Array<{ entry: ChangelogEntry; categories: string[] }> = [];
     for (const commit of push.commits) {
         const categories: string[] = [];

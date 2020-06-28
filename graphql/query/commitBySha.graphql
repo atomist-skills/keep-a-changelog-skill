@@ -1,0 +1,26 @@
+query CommitBySha($owner: String!, $repo: String!, $sha: String!) {
+    Commit(sha: $sha) @required {
+        url
+        sha
+        message
+        author {
+            login
+            name
+            emails {
+                address
+            }
+        }
+        repo(owner: $owner, name: $repo) @required {
+            defaultBranch
+            url
+            owner
+            name
+            org {
+                provider {
+                    url
+                    apiUrl
+                }
+            }
+        }
+    }
+}

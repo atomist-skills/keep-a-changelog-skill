@@ -20,7 +20,7 @@ import { addChangelogEntryForClosedIssue } from "../changelog/changelog";
 
 export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscription> = async ctx => {
     if (ctx.data.PullRequest[0].merged) {
-        return addChangelogEntryForClosedIssue(ctx);
+        return addChangelogEntryForClosedIssue(ctx.data, ctx, ctx.configuration[0].parameters);
     } else {
         return {
             visibility: "hidden",

@@ -19,5 +19,5 @@ import { PushWithChangelogLabelSubscription } from "../typings/types";
 import { addChangelogEntryForCommit } from "../changelog/changelog";
 
 export const handler: EventHandler<PushWithChangelogLabelSubscription> = async ctx => {
-    return addChangelogEntryForCommit(ctx);
+    return addChangelogEntryForCommit(ctx.data.Push?.[0], ctx, ctx.configuration?.[0]?.parameters);
 };

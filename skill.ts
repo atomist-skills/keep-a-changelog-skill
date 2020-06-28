@@ -116,7 +116,13 @@ export const Skill = skill<ChangelogConfiguration>({
             name: "closeChangelog",
             displayName: "Close Changelog Section",
             description: "Closes the unreleased section of a changelog with a new release",
-            pattern: /^close changelog$/,
+            pattern: /^close changelog.*$/,
+        },
+        {
+            name: "addToChangelog",
+            displayName: "Add to Changelog",
+            description: "Adds a commit, issue or pull request to the changelog",
+            pattern: /^add to changelog.*$/,
         },
     ],
 
