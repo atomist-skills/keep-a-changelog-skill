@@ -101,17 +101,23 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 
     let result;
     if (params.sha) {
-        const commit = await ctx.graphql.query<CommitByShaQuery, CommitByShaQueryVariables>("commitBySha.graphql", {
-            owner: repo.owner,
-            repo: repo.repo,
-            sha: params.sha,
-        });
-        if (commit.Commit?.[0]?.sha) {
-            commit.Commit[0].message = `${commit.Commit[0].message ? commit.Commit[0].message : ""}\n\n[changelog:${
-                params.category
-            }]`;
+        const commits = [];
+        for (const sha of params.sha.split(",")) {
+            const commit = await ctx.graphql.query<CommitByShaQuery, CommitByShaQueryVariables>("commitBySha.graphql", {
+                owner: repo.owner,
+                repo: repo.repo,
+                sha,
+            });
+            if (commit.Commit?.[0]?.sha) {
+                commit.Commit[0].message = `${commit.Commit[0].message ? commit.Commit[0].message : ""}\n\n[changelog:${
+                    params.category
+                }]`;
+                commits.push(commit.Commit[0]);
+            }
+        }
+        if (commits.length > 0) {
             result = await addChangelogEntryForCommit(
-                { branch: commit.Commit[0].repo.defaultBranch, commits: commit.Commit, repo: commit.Commit[0].repo },
+                { branch: commits[0].repo.defaultBranch, commits, repo: commits[0].repo },
                 ctx,
                 cfg.parameters,
             );
