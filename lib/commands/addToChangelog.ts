@@ -111,7 +111,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
                 params.category
             }]`;
             result = await addChangelogEntryForCommit(
-                { branch: undefined, commits: commit.Commit, repo: commit.Commit[0].repo },
+                { branch: commit.Commit[0].repo.defaultBranch, commits: commit.Commit, repo: commit.Commit[0].repo },
                 ctx,
                 cfg.parameters,
             );
