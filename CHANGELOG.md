@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 -   Move to skill.ts. [0b79cf0](https://github.com/atomist-skills/keep-a-changelog-skill/commit/0b79cf0deabf4484f8da6e8a7176c1a4b5d61945)
+-   Update description. [fb2b34a](https://github.com/atomist-skills/keep-a-changelog-skill/commit/fb2b34a81675ed853584fe55bcf778ba2c817e53)
 
 ### Fixed
 
