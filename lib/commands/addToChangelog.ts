@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CommandHandler, repository, slack } from "@atomist/skill";
+import { CommandHandler, prompt, repository, slack } from "@atomist/skill";
 import { codeLine } from "@atomist/slack-messages";
 import { addChangelogEntryForClosedIssue, addChangelogEntryForCommit } from "../changelog/changelog";
 import { ChangelogConfiguration } from "../configuration";
@@ -28,19 +28,10 @@ import {
 } from "../typings/types";
 
 export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
-    await ctx.audit.log("Checking configuration");
-    const cfgs = ctx.configuration;
-    const params = await ctx.parameters.prompt<{
-        configuration: string;
-        sha: string;
-        issue: string;
-        pr: string;
-        category: string;
-    }>({
-        configuration: {
-            description: "Please select a Skill configuration",
-            type: { kind: "single", options: cfgs.map(c => ({ value: c.name, description: c.name })) },
-        },
+    const params = await prompt.configurationWithParameters<
+        { sha: string; issue: string; pr: string; category: string },
+        ChangelogConfiguration
+    >(ctx, {
         sha: {
             description: "SHA of commit to add to changelog",
             required: false,
@@ -87,10 +78,9 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
             },
         },
     });
-    await ctx.audit.log(`Configuration to invoke '${params.configuration}'`);
-    const cfg = cfgs.find(c => c.name === params.configuration);
 
     await ctx.audit.log("Obtaining linked repository");
+    const cfg = params.configuration;
     const repo = await repository.linkedRepository(ctx);
     if (!repo) {
         return {

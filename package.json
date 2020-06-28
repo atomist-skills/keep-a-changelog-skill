@@ -1,7 +1,7 @@
 {
   "main": "node_modules/@atomist/skill/lib/function.js",
   "dependencies": {
-    "@atomist/skill": "0.1.0-master.20200625205605",
+    "@atomist/skill": "0.1.0-master.20200628100156",
     "@atomist/slack-messages": "^1.1.1",
     "@octokit/rest": "^18.0.0",
     "@types/lodash": "^4.14.150",
