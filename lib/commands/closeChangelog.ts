@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-import { CommandHandler, repository, slack } from "@atomist/skill";
+import { CommandHandler, repository, slack, prompt } from "@atomist/skill";
 import { codeLine } from "@atomist/slack-messages";
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 
 export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
-    await ctx.audit.log("Checking configuration");
-    const cfgs = ctx.configuration;
-    const params = await ctx.parameters.prompt<{ configuration: string; version: string }>({
-        configuration: {
-            description: "Please select a Skill configuration",
-            type: { kind: "single", options: cfgs.map(c => ({ value: c.name, description: c.name })) },
-        },
+    const params = await prompt.configurationWithParameters<{ version: string }, ChangelogConfiguration>(ctx, {
         version: {
             description: "Version to release in changelog",
         },
     });
-    await ctx.audit.log(`Configuration to invoke '${params.configuration}'`);
 
     await ctx.audit.log("Obtaining linked repository");
     const repo = await repository.linkedRepository(ctx);
@@ -53,7 +46,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
         },
         params.version,
         ctx,
-        ctx.configuration.find(c => c.name === params.configuration)?.parameters,
+        ctx.configuration.find(c => c.name === params.configuration.name)?.parameters,
     );
 
     if (result.code === 0 && result.visibility !== "hidden") {
