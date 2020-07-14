@@ -1,15 +1,15 @@
 subscription convergePullRequestChangelogLabels {
-    PullRequest {
-        action
-        repo {
-            url
-            owner
-            name
-            org {
-                provider {
-                    apiUrl
-                }
-            }
+  PullRequest {
+    action
+    repo {
+      url
+      owner
+      name
+      org {
+        provider {
+          apiUrl
         }
+      }
     }
+  }
 }

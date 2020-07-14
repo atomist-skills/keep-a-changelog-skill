@@ -1,27 +1,27 @@
 query issueByNumber($owner: String!, $repo: String!, $number: Float!) {
-    Issue(state: closed, number: $number) {
-        number
-        title
-        labels {
-            name
-        }
-        repo(owner: $owner, name: $repo) @required {
-            url
-            owner
-            name
-            org {
-                provider {
-                    url
-                    apiUrl
-                }
-            }
-        }
-        closedBy {
-            login
-            name
-            emails {
-                address
-            }
-        }
+  Issue(state: closed, number: $number) {
+    number
+    title
+    labels {
+      name
     }
+    repo(owner: $owner, name: $repo) @required {
+      url
+      owner
+      name
+      org {
+        provider {
+          url
+          apiUrl
+        }
+      }
+    }
+    closedBy {
+      login
+      name
+      emails {
+        address
+      }
+    }
+  }
 }
