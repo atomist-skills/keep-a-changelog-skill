@@ -1,24 +1,24 @@
 subscription closeChangeLogOnRelease {
-    Release {
-        name
-        tag {
-            name
-            commit {
-                repo {
-                    url
-                    defaultBranch
-                    owner
-                    name
-                    org {
-                        provider {
-                            apiUrl
-                        }
-                    }
-                }
-                pushes {
-                    branch
-                }
+  Release {
+    name
+    tag {
+      name
+      commit {
+        repo {
+          url
+          defaultBranch
+          owner
+          name
+          org {
+            provider {
+              apiUrl
             }
+          }
         }
+        pushes {
+          branch
+        }
+      }
     }
+  }
 }
