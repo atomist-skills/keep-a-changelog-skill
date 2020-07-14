@@ -54,7 +54,7 @@ describe("changelog", () => {
         const cl = await readChangelog(p);
         assert(cl.versions.length > 0);
         assert(cl.title === "Changelog");
-    });
+    }).timeout(10000);
 
     it("should add entry to changelog", async () => {
         const clp = path.join(process.cwd(), DefaultFileName);
