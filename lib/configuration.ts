@@ -17,15 +17,15 @@
 export const DefaultFileName = "CHANGELOG.md";
 
 export interface ChangelogConfiguration {
-    file?: string;
-    addAuthor?: boolean;
-    addChangelogToRelease?: boolean;
-    mapAdded?: string[];
-    mapChanged?: string[];
-    mapDeprecated?: string[];
-    mapRemoved?: string[];
-    mapFixed?: string[];
-    mapSecurity?: string[];
-    mapBreaking?: string[];
-    repos?: any[];
+	file?: string;
+	addAuthor?: boolean;
+	addChangelogToRelease?: boolean;
+	mapAdded?: string[];
+	mapChanged?: string[];
+	mapDeprecated?: string[];
+	mapRemoved?: string[];
+	mapFixed?: string[];
+	mapSecurity?: string[];
+	mapBreaking?: string[];
+	repos?: any[];
 }

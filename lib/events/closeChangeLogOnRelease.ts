@@ -19,21 +19,24 @@ import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 import { CloseChangeLogOnReleaseSubscription } from "../typings/types";
 
-export const handler: EventHandler<CloseChangeLogOnReleaseSubscription, ChangelogConfiguration> = async ctx => {
-    const release = ctx.data.Release[0];
-    const tag = release.tag;
-    const version = tag.name;
+export const handler: EventHandler<
+	CloseChangeLogOnReleaseSubscription,
+	ChangelogConfiguration
+> = async ctx => {
+	const release = ctx.data.Release[0];
+	const tag = release.tag;
+	const version = tag.name;
 
-    return closeChangelog(
-        {
-            owner: tag.commit.repo.owner,
-            name: tag.commit.repo.name,
-            apiUrl: tag.commit.repo.org.provider.apiUrl,
-            url: tag.commit.repo.url,
-            branch: tag.commit.repo.defaultBranch,
-        },
-        version,
-        ctx,
-        ctx.configuration?.[0]?.parameters,
-    );
+	return closeChangelog(
+		{
+			owner: tag.commit.repo.owner,
+			name: tag.commit.repo.name,
+			apiUrl: tag.commit.repo.org.provider.apiUrl,
+			url: tag.commit.repo.url,
+			branch: tag.commit.repo.defaultBranch,
+		},
+		version,
+		ctx,
+		ctx.configuration?.[0]?.parameters,
+	);
 };

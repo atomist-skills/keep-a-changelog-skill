@@ -19,15 +19,19 @@ import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
 import { upsertChangelogLabels } from "./convergePullRequestChangelogLabels";
 
 export const handler: EventHandler<ConvergeIssueChangelogLabelsSubscription> = async ctx => {
-    const repo = ctx.data.Issue[0].repo;
-    const { owner, name } = repo;
-    const credential = await ctx.credential.resolve(secret.gitHubAppToken({ owner, repo: name }));
+	const repo = ctx.data.Issue[0].repo;
+	const { owner, name } = repo;
+	const credential = await ctx.credential.resolve(
+		secret.gitHubAppToken({ owner, repo: name }),
+	);
 
-    const api = github.api(repository.gitHub({ owner, repo: name, credential }));
-    await upsertChangelogLabels({ api, owner, repo: name });
-    return {
-        code: 0,
-        visibility: "hidden",
-        reason: `Converged changelog labels`,
-    };
+	const api = github.api(
+		repository.gitHub({ owner, repo: name, credential }),
+	);
+	await upsertChangelogLabels({ api, owner, repo: name });
+	return {
+		code: 0,
+		visibility: "hidden",
+		reason: `Converged changelog labels`,
+	};
 };
