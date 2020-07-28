@@ -15,7 +15,6 @@
  */
 
 import { CommandHandler, prompt, repository, slack } from "@atomist/skill";
-import { codeLine } from "@atomist/slack-messages";
 import { addChangelogEntryForClosedIssue, addChangelogEntryForCommit } from "../changelog/changelog";
 import { ChangelogConfiguration } from "../configuration";
 import {
@@ -115,7 +114,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
                 await ctx.message.respond(
                     slack.successMessage(
                         "Changelog",
-                        `Successfully added commit ${codeLine(params.sha.slice(0, 7))} to changelog`,
+                        `Successfully added commit ${slack.codeLine(params.sha.slice(0, 7))} to changelog`,
                         ctx,
                     ),
                 );
@@ -138,7 +137,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
                 await ctx.message.respond(
                     slack.successMessage(
                         "Changelog",
-                        `Successfully added issue ${codeLine(params.issue)} to changelog`,
+                        `Successfully added issue ${slack.codeLine(params.issue)} to changelog`,
                         ctx,
                     ),
                 );
@@ -161,7 +160,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
                 await ctx.message.respond(
                     slack.successMessage(
                         "Changelog",
-                        `Successfully added pull request ${codeLine(params.issue)} to changelog`,
+                        `Successfully added pull request ${slack.codeLine(params.issue)} to changelog`,
                         ctx,
                     ),
                 );

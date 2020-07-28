@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { HandlerStatus, git, project, repository, secret, Contextual } from "@atomist/skill";
+import { HandlerStatus, git, project, repository, secret, Contextual, status } from "@atomist/skill";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
 import { promisify } from "util";
@@ -101,10 +101,7 @@ export async function addChangelogEntryForClosedIssue(
     if (await updateChangelog(p, categories, entry, cfg || {})) {
         await git.push(p);
     }
-    return {
-        code: 0,
-        reason: `Updated CHANGELOG.md in [${issue.repo.owner}/${issue.repo.name}](${issue.repo.url})`,
-    };
+    return status.success(`Updated CHANGELOG.md in [${issue.repo.owner}/${issue.repo.name}](${issue.repo.url})`);
 }
 
 /**
@@ -119,11 +116,7 @@ export async function addChangelogEntryForCommit(
     cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
     if (push.branch !== push.repo.defaultBranch) {
-        return {
-            code: 0,
-            visibility: "hidden",
-            reason: "Ignoring pushes to non-default branch",
-        };
+        return status.success("Ignoring pushes to non-default branch").hidden();
     }
 
     const entries: Array<{ entry: ChangelogEntry; categories: string[] }> = [];
@@ -195,20 +188,17 @@ export async function addChangelogEntryForCommit(
         if (results.some(r => !!r)) {
             await git.push(p);
         }
-        return {
-            code: 0,
-            reason: `Updated ${cfg.file || DefaultFileName} in [${push.repo.owner}/${push.repo.name}](${
-                push.repo.url
-            })`,
-        };
+        return status.success(
+            `Updated ${cfg.file || DefaultFileName} in [${push.repo.owner}/${push.repo.name}](${push.repo.url})`,
+        );
     } else {
-        return {
-            code: 0,
-            visibility: "hidden",
-            reason: `No updates to ${cfg.file || DefaultFileName} in [${push.repo.owner}/${push.repo.name}](${
-                push.repo.url
-            })`,
-        };
+        return status
+            .success(
+                `No updates to ${cfg.file || DefaultFileName} in [${push.repo.owner}/${push.repo.name}](${
+                    push.repo.url
+                })`,
+            )
+            .hidden();
     }
 }
 
