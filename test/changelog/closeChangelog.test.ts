@@ -15,21 +15,25 @@
  */
 
 import * as assert from "power-assert";
-import { changelogAddRelease, findVersionBody, formatDate } from "../../lib/changelog/closeChangelog";
+import {
+	changelogAddRelease,
+	findVersionBody,
+	formatDate,
+} from "../../lib/changelog/closeChangelog";
 
 describe("closeChangelog", () => {
-    describe("formatDate", () => {
-        it("should return a properly formatted date", () => {
-            const d = new Date("August 6, 1969");
-            const e = "1969-08-06";
-            const f = formatDate(d);
-            assert(f === e);
-        });
-    });
+	describe("formatDate", () => {
+		it("should return a properly formatted date", () => {
+			const d = new Date("August 6, 1969");
+			const e = "1969-08-06";
+			const f = formatDate(d);
+			assert(f === e);
+		});
+	});
 
-    describe("changelogAddRelease", () => {
-        const date = formatDate();
-        const c = `# Change Log
+	describe("changelogAddRelease", () => {
+		const date = formatDate();
+		const c = `# Change Log
 
 All notable changes to this project will be documented in this file.
 
@@ -72,7 +76,7 @@ Initial release
 -   Build and deploy lein projects
 -   Build TypeScript projects
 `;
-        const e = `# Change Log
+		const e = `# Change Log
 
 All notable changes to this project will be documented in this file.
 
@@ -120,17 +124,17 @@ Initial release
 -   Build TypeScript projects
 `;
 
-        it("should create a release section", () => {
-            const n = changelogAddRelease(c, "0.2.0");
-            assert(n === e);
-        });
+		it("should create a release section", () => {
+			const n = changelogAddRelease(c, "0.2.0");
+			assert(n === e);
+		});
 
-        it("should do nothing if section for release exists", () => {
-            const n = changelogAddRelease(c, "0.1.1");
-            assert(n === c);
-        });
+		it("should do nothing if section for release exists", () => {
+			const n = changelogAddRelease(c, "0.1.1");
+			assert(n === c);
+		});
 
-        const ci = `# Changelog
+		const ci = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -167,7 +171,7 @@ Initial release
 -   Build and deploy lein projects
 -   Build TypeScript projects
 `;
-        const ei = `# Changelog
+		const ei = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -207,18 +211,18 @@ Initial release
 -   Build TypeScript projects
 `;
 
-        it("should create a release section with inline links", () => {
-            const n = changelogAddRelease(ci, "0.2.0");
-            assert(n === ei);
-        });
+		it("should create a release section with inline links", () => {
+			const n = changelogAddRelease(ci, "0.2.0");
+			assert(n === ei);
+		});
 
-        it("should do nothing if section for release with inline links exists", () => {
-            const n = changelogAddRelease(ci, "0.1.1");
-            assert(n === ci);
-        });
+		it("should do nothing if section for release with inline links exists", () => {
+			const n = changelogAddRelease(ci, "0.1.1");
+			assert(n === ci);
+		});
 
-        it("should create an initial release", () => {
-            const ct = `# Changelog
+		it("should create an initial release", () => {
+			const ct = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -236,7 +240,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   adada. [#2](https://github.com/atomist/sentry-automation/issues/2
 `;
-            const et = `# Changelog
+			const et = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -257,12 +261,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   adada. [#2](https://github.com/atomist/sentry-automation/issues/2
 `;
 
-            const n = changelogAddRelease(ct, "0.1.0");
-            assert(n === et);
-        });
+			const n = changelogAddRelease(ct, "0.1.0");
+			assert(n === et);
+		});
 
-        it("should create a milestone release section", () => {
-            const cl = `# Changelog
+		it("should create a milestone release section", () => {
+			const cl = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -299,7 +303,7 @@ Initial release
 -   Build and deploy lein projects
 -   Build TypeScript projects
 `;
-            const el = `# Changelog
+			const el = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -339,12 +343,12 @@ Initial release
 -   Build TypeScript projects
 `;
 
-            const n = changelogAddRelease(cl, "1.0.0-M.2");
-            assert(n === el);
-        });
+			const n = changelogAddRelease(cl, "1.0.0-M.2");
+			assert(n === el);
+		});
 
-        it("should create a second milestone release section", () => {
-            const cl = `# Changelog
+		it("should create a second milestone release section", () => {
+			const cl = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -383,7 +387,7 @@ Initial release
 -   Build and deploy lein projects
 -   Build TypeScript projects
 `;
-            const el = `# Changelog
+			const el = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -425,11 +429,11 @@ Initial release
 -   Build TypeScript projects
 `;
 
-            const n = changelogAddRelease(cl, "1.0.0-M.2");
-            assert(n === el);
-        });
+			const n = changelogAddRelease(cl, "1.0.0-M.2");
+			assert(n === el);
+		});
 
-        const cv = `# Changelog
+		const cv = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -466,7 +470,7 @@ Initial release
 -   Build and deploy lein projects
 -   Build TypeScript projects
 `;
-        const ev = `# Changelog
+		const ev = `# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -506,112 +510,127 @@ Initial release
 -   Build TypeScript projects
 `;
 
-        it("should create a release section for non-strict semver tags", () => {
-            const n = changelogAddRelease(cv, "v0.2.0");
-            assert(n === ev);
-        });
+		it("should create a release section for non-strict semver tags", () => {
+			const n = changelogAddRelease(cv, "v0.2.0");
+			assert(n === ev);
+		});
 
-        it("should do nothing if section for release with non-strict semver tags exists", () => {
-            const n = changelogAddRelease(cv, "v0.1.1");
-            assert(n === cv);
-        });
-    });
+		it("should do nothing if section for release with non-strict semver tags exists", () => {
+			const n = changelogAddRelease(cv, "v0.1.1");
+			assert(n === cv);
+		});
+	});
 
-    describe("findVersionBody", () => {
-        it("should find the right body for semver", () => {
-            const c: any = {
-                versions: [
-                    {
-                        title: "[5.6.0](https://g.com/a/k/compare/0.6.0...5.6.0) - 2018-03-03",
-                        body: "nope",
-                    },
-                    {
-                        title: "[0.6.0](https://g.com/a/k/compare/0.5.0...0.6.0) - 2018-03-02",
-                        body: "yes",
-                    },
-                    {
-                        title: "[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
-                        body: "no",
-                    },
-                ],
-            };
-            const b = findVersionBody("0.6.0", c);
-            assert(b === "yes");
-        });
+	describe("findVersionBody", () => {
+		it("should find the right body for semver", () => {
+			const c: any = {
+				versions: [
+					{
+						title:
+							"[5.6.0](https://g.com/a/k/compare/0.6.0...5.6.0) - 2018-03-03",
+						body: "nope",
+					},
+					{
+						title:
+							"[0.6.0](https://g.com/a/k/compare/0.5.0...0.6.0) - 2018-03-02",
+						body: "yes",
+					},
+					{
+						title:
+							"[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
+						body: "no",
+					},
+				],
+			};
+			const b = findVersionBody("0.6.0", c);
+			assert(b === "yes");
+		});
 
-        it("should find the right body for semver starting with v", () => {
-            const c: any = {
-                versions: [
-                    {
-                        title: "[v5.6.0](https://g.com/a/k/compare/v0.6.0...v5.6.0) - 2018-03-03",
-                        body: "nope",
-                    },
-                    {
-                        title: "[v0.6.0](https://g.com/a/k/compare/v0.5.1...v0.6.0) - 2018-03-02",
-                        body: "negative",
-                    },
-                    {
-                        title: "[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
-                        body: "affirmative",
-                    },
-                    {
-                        title: "[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
-                        body: "no",
-                    },
-                ],
-            };
-            const b = findVersionBody("v0.5.1", c);
-            assert(b === "affirmative");
-        });
+		it("should find the right body for semver starting with v", () => {
+			const c: any = {
+				versions: [
+					{
+						title:
+							"[v5.6.0](https://g.com/a/k/compare/v0.6.0...v5.6.0) - 2018-03-03",
+						body: "nope",
+					},
+					{
+						title:
+							"[v0.6.0](https://g.com/a/k/compare/v0.5.1...v0.6.0) - 2018-03-02",
+						body: "negative",
+					},
+					{
+						title:
+							"[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
+						body: "affirmative",
+					},
+					{
+						title:
+							"[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
+						body: "no",
+					},
+				],
+			};
+			const b = findVersionBody("v0.5.1", c);
+			assert(b === "affirmative");
+		});
 
-        it("should find the right body for any release name", () => {
-            const c: any = {
-                versions: [
-                    {
-                        title: "[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
-                        body: "nope",
-                    },
-                    {
-                        title: "[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
-                        body: "oui",
-                    },
-                    {
-                        title: "[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
-                        body: "nil",
-                    },
-                    {
-                        title: "[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
-                        body: "no",
-                    },
-                ],
-            };
-            const b = findVersionBody("version9", c);
-            assert(b === "oui");
-        });
+		it("should find the right body for any release name", () => {
+			const c: any = {
+				versions: [
+					{
+						title:
+							"[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
+						body: "nope",
+					},
+					{
+						title:
+							"[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
+						body: "oui",
+					},
+					{
+						title:
+							"[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
+						body: "nil",
+					},
+					{
+						title:
+							"[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
+						body: "no",
+					},
+				],
+			};
+			const b = findVersionBody("version9", c);
+			assert(b === "oui");
+		});
 
-        it("should safely find nothing", () => {
-            const c: any = {
-                versions: [
-                    {
-                        title: "[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
-                        body: "nope",
-                    },
-                    {
-                        title: "[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
-                        body: "negative",
-                    },
-                    {
-                        title: "[v0.5.1](https://g.com/a/k/compare/0.5.0...v0.5.1) - 2018-03-01",
-                        body: "nil",
-                    },
-                    {
-                        title: "[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
-                        body: "no",
-                    },
-                ],
-            };
-            const b = findVersionBody("1.0.0", c);
-            assert(b === undefined);
-        });
-    });
+		it("should safely find nothing", () => {
+			const c: any = {
+				versions: [
+					{
+						title:
+							"[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
+						body: "nope",
+					},
+					{
+						title:
+							"[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
+						body: "negative",
+					},
+					{
+						title:
+							"[v0.5.1](https://g.com/a/k/compare/0.5.0...v0.5.1) - 2018-03-01",
+						body: "nil",
+					},
+					{
+						title:
+							"[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
+						body: "no",
+					},
+				],
+			};
+			const b = findVersionBody("1.0.0", c);
+			assert(b === undefined);
+		});
+	});
 });

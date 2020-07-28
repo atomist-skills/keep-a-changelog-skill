@@ -19,44 +19,52 @@ import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 
 export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
-    const params = await prompt.configurationWithParameters<{ version: string }, ChangelogConfiguration>(ctx, {
-        version: {
-            description: "Version to release in changelog",
-        },
-    });
+	const params = await prompt.configurationWithParameters<
+		{ version: string },
+		ChangelogConfiguration
+	>(ctx, {
+		version: {
+			description: "Version to release in changelog",
+		},
+	});
 
-    await ctx.audit.log("Obtaining linked repository");
-    const repo = await repository.linkedRepository(ctx);
-    if (!repo) {
-        return {
-            code: 1,
-            reason: `No linked repository found`,
-        };
-    }
+	await ctx.audit.log("Obtaining linked repository");
+	const repo = await repository.linkedRepository(ctx);
+	if (!repo) {
+		return {
+			code: 1,
+			reason: `No linked repository found`,
+		};
+	}
 
-    await ctx.audit.log(`Closing changelog section for version '${params.version}'`);
-    const result = await closeChangelog(
-        {
-            owner: repo.owner,
-            name: repo.repo,
-            branch: repo.branch,
-            url: `https://github.com/${repo.owner}/${repo.repo}`,
-            apiUrl: repo.apiUrl,
-        },
-        params.version,
-        ctx,
-        ctx.configuration.find(c => c.name === params.configuration.name)?.parameters,
-    );
+	await ctx.audit.log(
+		`Closing changelog section for version '${params.version}'`,
+	);
+	const result = await closeChangelog(
+		{
+			owner: repo.owner,
+			name: repo.repo,
+			branch: repo.branch,
+			url: `https://github.com/${repo.owner}/${repo.repo}`,
+			apiUrl: repo.apiUrl,
+		},
+		params.version,
+		ctx,
+		ctx.configuration.find(c => c.name === params.configuration.name)
+			?.parameters,
+	);
 
-    if (result.code === 0 && result.visibility !== "hidden") {
-        await ctx.message.respond(
-            slack.successMessage(
-                "Changelog",
-                `Successfully closed changelog section for version ${slack.codeLine(params.version)}`,
-                ctx,
-            ),
-        );
-    }
+	if (result.code === 0 && result.visibility !== "hidden") {
+		await ctx.message.respond(
+			slack.successMessage(
+				"Changelog",
+				`Successfully closed changelog section for version ${slack.codeLine(
+					params.version,
+				)}`,
+				ctx,
+			),
+		);
+	}
 
-    return result;
+	return result;
 };
