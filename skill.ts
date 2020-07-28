@@ -26,7 +26,7 @@ export const Skill = skill<ChangelogConfiguration>({
     homepageUrl: "https://github.com/atomist-skills/keep-a-changelog-skill",
     repositoryUrl: "https://github.com/atomist-skills/keep-a-changelog-skill.git",
     iconUrl: "file://docs/images/icon.svg",
-    categories: [Category.DevEx],
+    categories: [Category.ProjectManagement],
 
     runtime: {
         memory: 1024,

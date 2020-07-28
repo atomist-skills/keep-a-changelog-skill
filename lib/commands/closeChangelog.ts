@@ -15,7 +15,6 @@
  */
 
 import { CommandHandler, repository, slack, prompt } from "@atomist/skill";
-import { codeLine } from "@atomist/slack-messages";
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 
@@ -53,7 +52,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
         await ctx.message.respond(
             slack.successMessage(
                 "Changelog",
-                `Successfully closed changelog section for version ${codeLine(params.version)}`,
+                `Successfully closed changelog section for version ${slack.codeLine(params.version)}`,
                 ctx,
             ),
         );
