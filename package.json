@@ -15,7 +15,7 @@
     "semver": "^7.3.2"
   },
   "devDependencies": {
-    "@google-cloud/functions-framework": "^1.5.1",
+    "@google-cloud/functions-framework": "^1.6.0",
     "@graphql-codegen/cli": "^1.17.0",
     "@graphql-codegen/typescript": "^1.17.0",
     "@graphql-codegen/typescript-operations": "^1.17.0",
