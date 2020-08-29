@@ -3,7 +3,7 @@
   "dependencies": {
     "@atomist/skill": "0.1.1-13",
     "@octokit/rest": "^18.0.4",
-    "@types/lodash": "^4.14.160",
+    "@types/lodash": "^4.14.161",
     "@types/semver": "^7.3.3",
     "changelog-parser": "^2.8.0",
     "fs-extra": "^9.0.0",
