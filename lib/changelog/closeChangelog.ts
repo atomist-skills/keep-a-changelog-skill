@@ -62,7 +62,7 @@ export async function closeChangelog(
 			tag: version,
 		})
 	).data;
-	if (release.draft && release.prerelease) {
+	if (release.draft || release.prerelease) {
 		return status
 			.success(`Ignore draft or prerelease ${version} release`)
 			.hidden();
