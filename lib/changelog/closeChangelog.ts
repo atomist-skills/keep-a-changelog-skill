@@ -21,11 +21,13 @@ import {
 	repository,
 	git,
 	github,
+	status,
 } from "@atomist/skill";
 import * as fs from "fs-extra";
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import { readChangelog } from "./changelog";
 import * as parseChangelog from "./changelogParser";
+import semver = require("semver/preload");
 
 export async function closeChangelog(
 	repo: {
@@ -39,6 +41,12 @@ export async function closeChangelog(
 	ctx: Contextual<any, any>,
 	cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
+	if (semver.valid(version) && semver.prerelease(version)) {
+		return status
+			.success(`Non release version ${version} detected`)
+			.hidden();
+	}
+
 	const credential = await ctx.credential.resolve(
 		secret.gitHubAppToken({
 			owner: repo.owner,
@@ -46,45 +54,51 @@ export async function closeChangelog(
 			apiUrl: repo.apiUrl,
 		}),
 	);
-	const project = await ctx.project.clone(
-		repository.gitHub({
-			owner: repo.owner,
-			repo: repo.name,
-			credential,
-		}),
-	);
+
+	const id = repository.gitHub({
+		owner: repo.owner,
+		repo: repo.name,
+		credential,
+	});
+	const api = github.api(id);
+
+	const release = (
+		await api.repos.getReleaseByTag({
+			owner: id.owner,
+			repo: id.repo,
+			tag: version,
+		})
+	).data;
+	if (release.draft) {
+		return status.success(`Ignore draft ${version} release`).hidden();
+	}
+
+	const project = await ctx.project.clone(id);
 
 	const changelogPath = project.path(cfg?.file || DefaultFileName);
 
 	await project.spawn("git", ["pull", "origin", repo.branch]);
 
 	if (!(await fs.pathExists(changelogPath))) {
-		return {
-			code: 0,
-			visibility: "hidden",
-			reason: `No ${changelogPath} found in project`,
-		};
+		return status.success(`No ${changelogPath} found in project`).hidden();
 	}
 
 	try {
 		const changelog = (await fs.readFile(changelogPath)).toString();
 		const newChangelog = changelogAddRelease(changelog, version);
 		if (newChangelog === changelog) {
-			return {
-				code: 0,
-				visibility: "hidden",
-				reason: `No changes to ${changelogPath} found in project`,
-			};
+			return status.success(
+				`No changes to ${changelogPath} found in project`,
+			);
 		}
 		await fs.writeFile(changelogPath, newChangelog);
 	} catch (e) {
 		console.error(
 			`Failed to update changelog for release ${version}: ${e.message}`,
 		);
-		return {
-			code: 1,
-			reason: `Failed to update ${changelogPath} for release ${version}`,
-		};
+		return status.failure(
+			`Failed to update ${changelogPath} for release ${version}`,
+		);
 	}
 	await git.commit(
 		project,
@@ -124,10 +138,9 @@ export async function closeChangelog(
 		}
 	}
 
-	return {
-		code: 0,
-		reason: `Updated changelog in [${repo.owner}/${repo.name}](${repo.url}) for release ${version}`,
-	};
+	return status.success(
+		`Updated changelog in [${repo.owner}/${repo.name}](${repo.url}) for release ${version}`,
+	);
 }
 
 /** Find body of changelog version matching tag. */
