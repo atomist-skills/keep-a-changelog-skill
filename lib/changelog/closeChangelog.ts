@@ -27,7 +27,6 @@ import * as fs from "fs-extra";
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import { readChangelog } from "./changelog";
 import * as parseChangelog from "./changelogParser";
-import semver = require("semver/preload");
 
 export async function closeChangelog(
 	repo: {
