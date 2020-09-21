@@ -41,12 +41,6 @@ export async function closeChangelog(
 	ctx: Contextual<any, any>,
 	cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
-	if (semver.valid(version) && semver.prerelease(version)) {
-		return status
-			.success(`Non release version ${version} detected`)
-			.hidden();
-	}
-
 	const credential = await ctx.credential.resolve(
 		secret.gitHubAppToken({
 			owner: repo.owner,
@@ -69,8 +63,10 @@ export async function closeChangelog(
 			tag: version,
 		})
 	).data;
-	if (release.draft) {
-		return status.success(`Ignore draft ${version} release`).hidden();
+	if (release.draft && release.prerelease) {
+		return status
+			.success(`Ignore draft or prerelease ${version} release`)
+			.hidden();
 	}
 
 	const project = await ctx.project.clone(id);
