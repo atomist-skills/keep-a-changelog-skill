@@ -169,7 +169,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 		>("pullRequestByNumber.graphql", {
 			owner: repo.owner,
 			repo: repo.repo,
-			number: +params.issue,
+			number: +params.pr,
 		});
 		if (pr.PullRequest?.[0]?.number) {
 			pr.PullRequest[0].labels = [
