@@ -55,17 +55,22 @@ export async function closeChangelog(
 	});
 	const api = github.api(id);
 
-	const release = (
-		await api.repos.getReleaseByTag({
-			owner: id.owner,
-			repo: id.repo,
-			tag: version,
-		})
-	).data;
-	if (release.draft || release.prerelease) {
-		return status
-			.success(`Ignore draft or prerelease ${version} release`)
-			.hidden();
+	let release;
+	try {
+		release = (
+			await api.repos.getReleaseByTag({
+				owner: id.owner,
+				repo: id.repo,
+				tag: version,
+			})
+		).data;
+		if (release.draft || release.prerelease) {
+			return status
+				.success(`Ignore draft or prerelease ${version} release`)
+				.hidden();
+		}
+	} catch (e) {
+		// This can happen when the provided version is not a release on github
 	}
 
 	const project = await ctx.project.clone(id);
@@ -106,29 +111,17 @@ export async function closeChangelog(
 	if (cfg?.addChangelogToRelease !== false) {
 		const changelog = await readChangelog(changelogPath);
 		const body = findVersionBody(version, changelog);
-		if (body) {
-			const api = github.api(project.id);
-			try {
-				const release = (
-					await api.repos.getReleaseByTag({
-						owner: project.id.owner,
-						repo: project.id.repo,
-						tag: version,
-					})
-				).data;
-				if (!(release.body || "").includes(body)) {
-					const existingBody = release.body
-						? `${release.body.trim()}\n\n`
-						: "";
-					await api.repos.updateRelease({
-						owner: project.id.owner,
-						repo: project.id.repo,
-						release_id: release.id,
-						body: `${existingBody}${body.trim()}`,
-					});
-				}
-			} catch (e) {
-				// Release not found to update
+		if (body && release) {
+			if (!(release.body || "").includes(body)) {
+				const existingBody = release.body
+					? `${release.body.trim()}\n\n`
+					: "";
+				await api.repos.updateRelease({
+					owner: project.id.owner,
+					repo: project.id.repo,
+					release_id: release.id,
+					body: `${existingBody}${body.trim()}`,
+				});
 			}
 		}
 	}
