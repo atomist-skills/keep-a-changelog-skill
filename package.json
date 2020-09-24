@@ -1,8 +1,7 @@
 {
   "main": "node_modules/@atomist/skill/lib/function.js",
   "dependencies": {
-    "@atomist/skill": "0.1.1-13",
-    "@octokit/rest": "^18.0.6",
+    "@atomist/skill": "^0.1.1-164",
     "@types/lodash": "^4.14.161",
     "@types/semver": "^7.3.4",
     "changelog-parser": "^2.8.0",
