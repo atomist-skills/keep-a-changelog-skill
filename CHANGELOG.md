@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 -   Add repo slug to status messages. [#63](https://github.com/atomist-skills/keep-a-changelog-skill/issues/63)
+-   Use skill name from context. [c5eef0e](https://github.com/atomist-skills/keep-a-changelog-skill/commit/c5eef0eedf84c1a5489bcedb4a1c5f3faba3b93b)
 
 ## [1.1.7](https://github.com/atomist-skills/changelog-skill/compare/1.1.6...1.1.7) - 2020-09-22
 
