@@ -108,7 +108,7 @@ export async function closeChangelog(
 		project,
 		`Changelog: add release ${version}
 
-[atomist:generated] [atomist-skill:atomist/keep-a-changelog-skill]`,
+[atomist:generated] [atomist-skill:${ctx.skill.namespace}/${ctx.skill.name}]`,
 	);
 	await git.push(project);
 

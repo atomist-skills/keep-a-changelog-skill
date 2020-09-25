@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.1.7...HEAD)
 
+### Changed
+
+-   Add repo slug to status messages. [#63](https://github.com/atomist-skills/keep-a-changelog-skill/issues/63)
+
 ## [1.1.7](https://github.com/atomist-skills/changelog-skill/compare/1.1.6...1.1.7) - 2020-09-22
 
 ### Added
