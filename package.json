@@ -1,7 +1,7 @@
 {
   "main": "node_modules/@atomist/skill/lib/function.js",
   "dependencies": {
-    "@atomist/skill": "^0.1.1-165",
+    "@atomist/skill": "^0.1.1-atomist-npm-update-main.1",
     "@types/lodash": "^4.14.161",
     "@types/semver": "^7.3.4",
     "changelog-parser": "^2.8.0",
