@@ -54,6 +54,7 @@ export async function closeChangelog(
 		credential,
 	});
 	const api = github.api(id);
+	const repoSlug = `${repo.owner}/${repo.name}`;
 
 	let release;
 	try {
@@ -66,7 +67,9 @@ export async function closeChangelog(
 		).data;
 		if (release.draft || release.prerelease) {
 			return status
-				.success(`Ignore draft or prerelease ${version} release`)
+				.success(
+					`Ignore draft or prerelease ${version} release of ${repoSlug}`,
+				)
 				.hidden();
 		}
 	} catch (e) {
@@ -75,12 +78,16 @@ export async function closeChangelog(
 
 	const project = await ctx.project.clone(id);
 
-	const changelogPath = project.path(cfg?.file || DefaultFileName);
+	const changelogFile = cfg?.file || DefaultFileName;
+	const changelogPath = project.path(changelogFile);
 
 	await project.spawn("git", ["pull", "origin", repo.branch]);
 
 	if (!(await fs.pathExists(changelogPath))) {
-		return status.success(`No ${changelogPath} found in project`).hidden();
+		console.log(`${changelogPath} does not exist`);
+		return status
+			.success(`No ${changelogFile} found in ${repoSlug}`)
+			.hidden();
 	}
 
 	try {
@@ -88,23 +95,20 @@ export async function closeChangelog(
 		const newChangelog = changelogAddRelease(changelog, version);
 		if (newChangelog === changelog) {
 			return status.success(
-				`No changes to ${changelogPath} found in project`,
+				`No changes to ${changelogFile} found in ${repoSlug}`,
 			);
 		}
 		await fs.writeFile(changelogPath, newChangelog);
 	} catch (e) {
-		console.error(
-			`Failed to update changelog for release ${version}: ${e.message}`,
-		);
-		return status.failure(
-			`Failed to update ${changelogPath} for release ${version}`,
-		);
+		const reason = `Failed to update changelog in ${repoSlug} for release ${version} in ${repoSlug}`;
+		console.error(`${reason}: ${e.message}`);
+		return status.failure(reason);
 	}
 	await git.commit(
 		project,
 		`Changelog: add release ${version}
 
-[atomist:generated]`,
+[atomist:generated] [atomist-skill:atomist/keep-a-changelog-skill]`,
 	);
 	await git.push(project);
 
