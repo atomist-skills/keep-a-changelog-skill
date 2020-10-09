@@ -10,8 +10,8 @@ Automate maintaining a changelog for your repositories
 
 <!---atomist-skill-long_description:start--->
 
-Automate maintaining a changelog for your repositories based on labels added to issues, pull requests and commits.
-Based on https://keepachangelog.com.
+Automate maintaining a changelog for your repositories based on labels added to
+issues, pull requests and commits. Based on https://keepachangelog.com.
 
 <!---atomist-skill-long_description:end--->
 
@@ -21,31 +21,45 @@ Based on https://keepachangelog.com.
 
 # What it's useful for
 
-With this skill you can automatically keep a changelog file in your repository up to date by using labels on GitHub
-issues and pull requests as well as keywords in commit messages.
+With this skill you can automatically keep a changelog file in your repository
+up to date by using labels on GitHub issues and pull requests as well as
+keywords in commit messages.
 
-The changelog file follows the [Keep A Changelog](https://keepachangelog.com) conventions.
+The changelog file follows the [Keep A Changelog](https://keepachangelog.com)
+conventions.
 
-As a reference, this [`CHANGELOG.md`](https://github.com/atomist-skills/keep-a-changelog-skill/blob/master/CHANGELOG.md)
-file is managed by this skill. Querying for the [list of issues and pull requests](https://github.com/atomist-skills/keep-a-changelog-skill/issues?q=-no%3Alabels)
+As a reference, this
+[`CHANGELOG.md`](https://github.com/atomist-skills/keep-a-changelog-skill/blob/master/CHANGELOG.md)
+file is managed by this skill. Querying for the
+[list of issues and pull requests](https://github.com/atomist-skills/keep-a-changelog-skill/issues?q=-no%3Alabels)
 demonstrates how we use labels to maintain the changelog.
 
-Applying the `changelog:added` label to an issue or pull request will add a corresponding entry to the _Added_ section
-of the changelog when the issue or pull request gets closed. _Keep A Changelog_ suggests the following categories of
-entries which this skill supports via corresponding labels or commit markers:
+Applying the `changelog:added` label to an issue or pull request will add a
+corresponding entry to the _Added_ section of the changelog when the issue or
+pull request gets closed. _Keep A Changelog_ suggests the following categories
+of entries which this skill supports via corresponding labels or commit markers:
 
--   `Added` for new features. (label: `changelog:added`, commit marker: `[changelog:added]`)
--   `Changed` for changes in existing functionality. (label: `changelog:changed`, commit marker: `[changelog:changed]`)
--   `Deprecated` for soon-to-be removed features. (label: `changelog:deprecated`, commit marker: `[changelog:deprecated]`)
--   `Removed` for now removed features. (label: `changelog:removed`, commit marker: `[changelog:removed]`)
--   `Fixed` for any bug fixes. (label: `changelog:fixed`, commit marker: `[changelog:fixed]`)
--   `Security` in case of vulnerabilities. (label: `changelog:security`, commit marker: `[changelog:security]`)
+-   `Added` for new features. (label: `changelog:added`, commit marker:
+    `[changelog:added]`)
+-   `Changed` for changes in existing functionality. (label:
+    `changelog:changed`, commit marker: `[changelog:changed]`)
+-   `Deprecated` for soon-to-be removed features. (label:
+    `changelog:deprecated`, commit marker: `[changelog:deprecated]`)
+-   `Removed` for now removed features. (label: `changelog:removed`, commit
+    marker: `[changelog:removed]`)
+-   `Fixed` for any bug fixes. (label: `changelog:fixed`, commit marker:
+    `[changelog:fixed]`)
+-   `Security` in case of vulnerabilities. (label: `changelog:security`, commit
+    marker: `[changelog:security]`)
 
-To mark an issue or pull request for one or more of those categories, apply the matching `changelog:*` labels to it.
-Once this skill is enabled, the corresponding labels will be available on the selected repositories automatically.
+To mark an issue or pull request for one or more of those categories, apply the
+matching `changelog:*` labels to it. Once this skill is enabled, the
+corresponding labels will be available on the selected repositories
+automatically.
 
-Additionally, you can embed markers in your commit message to add a commit to the changelog. For example adding
-`[changelog:removed]` to your commit message will add the commit to the changelog in the _Removed_ category:
+Additionally, you can embed markers in your commit message to add a commit to
+the changelog. For example adding `[changelog:removed]` to your commit message
+will add the commit to the changelog in the _Removed_ category:
 
 ```shell script
 $ git commit -m "Remove build script
@@ -55,14 +69,17 @@ $ git commit -m "Remove build script
  1 file changed, 1 insertion(+)
 ```
 
-The changelog entries are added when issues get closed, pull requests get merged, or a commit is being pushed.
-Those entries are kept in the _Unreleased_ section of the changelog until a GitHub Release is created.
-The release will close the section in the changelog by adding the name of the release to it.
+The changelog entries are added when issues get closed, pull requests get
+merged, or a commit is being pushed. Those entries are kept in the _Unreleased_
+section of the changelog until a GitHub Release is created. The release will
+close the section in the changelog by adding the name of the release to it.
 
-Optionally the skill will append the changelog to the body of the GitHub release.
+Optionally the skill will append the changelog to the body of the GitHub
+release.
 
-Besides GitHub Releases, a changelog section can be closed by running a command from chat. In a channel that is linked
-to one or more repositories, run the following command:
+Besides GitHub Releases, a changelog section can be closed by running a command
+from chat. In a channel that is linked to one or more repositories, run the
+following command:
 
 ```shell script
 > @atomist close changelog
@@ -75,8 +92,9 @@ Connect and configure these integrations:
 1. **GitHub**
 2. **Slack or Microsoft Teams**
 
-The **GitHub** integration must be configured in order to use this skill. At least one repository must be selected.
-The **Slack** or **Microsoft Teams** integration is optional but can be useful to run commands to close changelog
+The **GitHub** integration must be configured in order to use this skill. At
+least one repository must be selected. The **Slack** or **Microsoft Teams**
+integration is optional but can be useful to run commands to close changelog
 sections.
 
 # How to configure
@@ -85,44 +103,48 @@ sections.
 
     ![Changelog name](docs/images/changelog-name.png)
 
-    The default name of the changelog file in the repository is `CHANGELOG.md` in the root of the project.
-    Use this setting to change the name and path.
+    The default name of the changelog file in the repository is `CHANGELOG.md`
+    in the root of the project. Use this setting to change the name and path.
 
 2. **Add user names to changelog entries**
 
-    Decide if you want to mention GitHub user names for committers and issue resolvers to be added to
-    changelog entries.
+    Decide if you want to mention GitHub user names for committers and issue
+    resolvers to be added to changelog entries.
 
 3. **Determine repository scope**
 
     ![Repository filter](docs/images/repo-filter.png)
 
-    By default, this skill will be enabled for all repositories in all organizations you have connected.
+    By default, this skill will be enabled for all repositories in all
+    organizations you have connected.
 
-    To restrict the organizations or specific repositories on which the skill will run, you can explicitly choose
-    organization(s) and repositories.
+    To restrict the organizations or specific repositories on which the skill
+    will run, you can explicitly choose organization(s) and repositories.
 
 # How to keep a changelog
 
 1. **Configure skill, set changelog file path**
 
-2. **Add `changelog:*` labels to issues or pull requests or include changelog markers in your commits**
+2. **Add `changelog:*` labels to issues or pull requests or include changelog
+   markers in your commits**
 
 3. **Close issues or merge pull requests marked with `changelog:*` labels**
 
-4. **Create a GitHub release to close a release in the changelog. Alternatively run `@atomist close changelog` from chat.**
+4. **Create a GitHub release to close a release in the changelog. Alternatively
+   run `@atomist close changelog` from chat.**
 
 5. **Enjoy not having to manually maintain a changelog file!**
 
-To create feature requests or bug reports, create an [issue in the repository for this skill](https://github.com/atomist-skills/keep-a-changlog-skill/issues).
-See the [code](https://github.com/atomist-skills/keep-a-changlog-skill) for the skill.
+To create feature requests or bug reports, create an
+[issue in the repository for this skill](https://github.com/atomist-skills/keep-a-changlog-skill/issues).
+See the [code](https://github.com/atomist-skills/keep-a-changlog-skill) for the
+skill.
 
 <!---atomist-skill-readme:end--->
 
 ---
 
-Created by [Atomist][atomist].
-Need Help? [Join our Slack workspace][slack].
+Created by [Atomist][atomist]. Need Help? [Join our Slack workspace][slack].
 
 [atomist]: https://atomist.com/ "Atomist - How Teams Deliver Software"
 [slack]: https://join.atomist.com/ "Atomist Community Slack"
