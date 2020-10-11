@@ -2,7 +2,7 @@
   "main": "node_modules/@atomist/skill/lib/function.js",
   "dependencies": {
     "@atomist/skill": "^0.2.3",
-    "@types/lodash": "^4.14.161",
+    "@types/lodash": "^4.14.162",
     "@types/semver": "^7.3.4",
     "changelog-parser": "^2.8.0",
     "fs-extra": "^9.0.1",
