@@ -134,10 +134,10 @@ describe("changelog", () => {
 		const vcl = path.join(__dirname, "vCHANGELOG.md");
 		const ocl = await readChangelog(vcl);
 		assert(ocl.title === "Changelog");
-		assert(
-			ocl.description ===
-				"All notable changes to this project will be documented in this file.\n" +
-					"This project adheres to [Semantic Versioning](http://semver.org/).",
+		assert.deepStrictEqual(
+			ocl.description,
+			"All notable changes to this project will be documented in this file. " +
+				"This\nproject adheres to [Semantic Versioning](http://semver.org/).",
 		);
 		assert(ocl.versions.length === 4);
 		const vs = ocl.versions.map(v => v.version);
