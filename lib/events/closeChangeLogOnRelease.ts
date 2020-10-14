@@ -37,6 +37,6 @@ export const handler: EventHandler<
 		},
 		version,
 		ctx,
-		ctx.configuration?.[0]?.parameters,
+		ctx.configuration?.parameters,
 	);
 };

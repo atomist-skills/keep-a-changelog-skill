@@ -30,10 +30,6 @@ export const Skill = skill<ChangelogConfiguration>({
 	displayName: "Keep a Changelog",
 	author: "Atomist",
 	license: "Apache-2.0",
-	homepageUrl: "https://github.com/atomist-skills/keep-a-changelog-skill",
-	repositoryUrl:
-		"https://github.com/atomist-skills/keep-a-changelog-skill.git",
-	iconUrl: "file://docs/images/icon.svg",
 	categories: [Category.ProjectManagement],
 
 	runtime: {
@@ -144,6 +140,4 @@ export const Skill = skill<ChangelogConfiguration>({
 			pattern: /^add to changelog.*$/,
 		},
 	],
-
-	subscriptions: ["file://graphql/subscription/*.graphql"],
 });

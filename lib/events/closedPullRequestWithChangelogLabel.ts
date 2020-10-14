@@ -23,7 +23,7 @@ export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscripti
 		return addChangelogEntryForClosedIssue(
 			ctx.data,
 			ctx,
-			ctx.configuration[0].parameters,
+			ctx.configuration?.parameters,
 		);
 	} else {
 		return {

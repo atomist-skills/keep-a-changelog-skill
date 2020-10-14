@@ -22,6 +22,6 @@ export const handler: EventHandler<ClosedIssueWithChangelogLabelSubscription> = 
 	return addChangelogEntryForClosedIssue(
 		ctx.data,
 		ctx,
-		ctx.configuration[0].parameters,
+		ctx.configuration?.parameters,
 	);
 };

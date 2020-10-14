@@ -22,6 +22,7 @@ import {
 	secret,
 	Contextual,
 	status,
+	toArray,
 } from "@atomist/skill";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
@@ -223,7 +224,7 @@ export async function addChangelogEntryForCommit(
 					p,
 					entry.categories,
 					entry.entry,
-					ctx.configuration[0]?.parameters || {},
+					toArray(ctx.configuration)?.[0]?.parameters || {},
 				),
 			);
 		}

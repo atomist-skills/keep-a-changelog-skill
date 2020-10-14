@@ -22,6 +22,6 @@ export const handler: EventHandler<PushWithChangelogLabelSubscription> = async c
 	return addChangelogEntryForCommit(
 		ctx.data.Push?.[0],
 		ctx,
-		ctx.configuration?.[0]?.parameters,
+		ctx.configuration?.parameters,
 	);
 };
