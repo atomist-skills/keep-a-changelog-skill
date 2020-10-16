@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.1.8...HEAD)
 
+### Changed
+
+-   Update skill category. [cacdd52](https://github.com/atomist-skills/keep-a-changelog-skill/commit/cacdd52e490c0424d7f50cc4c858e95a79891a2d)
+
 ## [1.1.8](https://github.com/atomist-skills/changelog-skill/compare/1.1.7...1.1.8) - 2020-10-14
 
 ### Changed
