@@ -30,7 +30,7 @@ export const Skill = skill<ChangelogConfiguration>({
 	displayName: "Keep a Changelog",
 	author: "Atomist",
 	license: "Apache-2.0",
-	categories: [Category.ProjectManagement],
+	categories: [Category.RepoManagement],
 
 	runtime: {
 		memory: 1024,
