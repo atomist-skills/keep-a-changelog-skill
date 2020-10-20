@@ -5,6 +5,12 @@ eliminate the toil of maintaining a changelog file by providing a simple means
 to have changelog entries and releases added via commits, issues, pull requests,
 and releases on GitHub.
 
+-   Create changelog entries from commits
+-   Create changelog entries when issues are closed
+-   Create changelog entries when pull requests are merged
+-   Create release headers when GitHub Releases are created
+-   Create release header using a chat command
+
 Changelog files managed by this skill follow the [Keep a Changelog][changelog]
 conventions. As an example, the [`CHANGELOG.md`][kac-changelog] file for this
 skill is managed by this skill.
