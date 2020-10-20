@@ -1,150 +1,84 @@
 # `atomist/keep-a-changelog-skill`
 
-<!---atomist-skill-description:start--->
+Maintain a [changelog][] for your repositories based on labels added to issues,
+pull requests and commits. Based on
 
-Automate maintaining a changelog for your repositories
+[changelog]: https://keepachangelog.com/ "Keep a Changelog"
 
-<!---atomist-skill-description:end--->
+:sparkles: [_**View this skill in the Atomist Skills Catalog**_][atomist-skill]
+to enable this skill on your repositories. :sparkles:
 
----
+See the [Atomist website][atomist] for general information about Atomist Skills
+and the [Atomist documentation site][atomist-doc] for instructions on how to get
+started using Atomist Skills.
 
-<!---atomist-skill-long_description:start--->
+[atomist-skill]:
+    https://go.atomist.com/catalog/skills/atomist/keep-a-changelog-skill
+    "Atomist Skills Catalog - Automate All Your Software Tasks"
+[atomist-doc]: https://docs.atomist.com/ "Atomist Documentation"
 
-Automate maintaining a changelog for your repositories based on labels added to
-issues, pull requests and commits. Based on https://keepachangelog.com.
+## Contributing
 
-<!---atomist-skill-long_description:end--->
+Contributions to this project from community members are encouraged and
+appreciated. Please review the [Contributing Guidelines](CONTRIBUTING.md) for
+more information. Also see the [Development](#development) section in this
+document.
 
----
+## Code of conduct
 
-<!---atomist-skill-readme:start--->
+This project is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). You are
+expected to act in accordance with this code by participating. Please report any
+unacceptable behavior to code-of-conduct@atomist.com.
 
-# What it's useful for
+## Connect
 
-With this skill you can automatically keep a changelog file in your repository
-up to date by using labels on GitHub issues and pull requests as well as
-keywords in commit messages.
+Follow [@atomist][atomist-twitter] on Twitter and [The Atomist
+Blog][atomist-blog].
 
-The changelog file follows the [Keep A Changelog](https://keepachangelog.com)
-conventions.
+[atomist-twitter]: https://twitter.com/atomist "Atomist on Twitter"
+[atomist-blog]: https://blog.atomist.com/ "The Atomist Blog"
 
-As a reference, this
-[`CHANGELOG.md`](https://github.com/atomist-skills/keep-a-changelog-skill/blob/master/CHANGELOG.md)
-file is managed by this skill. Querying for the
-[list of issues and pull requests](https://github.com/atomist-skills/keep-a-changelog-skill/issues?q=-no%3Alabels)
-demonstrates how we use labels to maintain the changelog.
+## Support
 
-Applying the `changelog:added` label to an issue or pull request will add a
-corresponding entry to the _Added_ section of the changelog when the issue or
-pull request gets closed. _Keep A Changelog_ suggests the following categories
-of entries which this skill supports via corresponding labels or commit markers:
+General support questions should be discussed in the `#support` channel in the
+[Atomist community Slack workspace][slack].
 
--   `Added` for new features. (label: `changelog:added`, commit marker:
-    `[changelog:added]`)
--   `Changed` for changes in existing functionality. (label:
-    `changelog:changed`, commit marker: `[changelog:changed]`)
--   `Deprecated` for soon-to-be removed features. (label:
-    `changelog:deprecated`, commit marker: `[changelog:deprecated]`)
--   `Removed` for now removed features. (label: `changelog:removed`, commit
-    marker: `[changelog:removed]`)
--   `Fixed` for any bug fixes. (label: `changelog:fixed`, commit marker:
-    `[changelog:fixed]`)
--   `Security` in case of vulnerabilities. (label: `changelog:security`, commit
-    marker: `[changelog:security]`)
+If you find a problem, please create an [issue](../../issues).
 
-To mark an issue or pull request for one or more of those categories, apply the
-matching `changelog:*` labels to it. Once this skill is enabled, the
-corresponding labels will be available on the selected repositories
-automatically.
+## Development
 
-Additionally, you can embed markers in your commit message to add a commit to
-the changelog. For example adding `[changelog:removed]` to your commit message
-will add the commit to the changelog in the _Removed_ category:
+You will need to install [Node.js][node] to build and test this project.
 
-```shell script
-$ git commit -m "Remove build script
->
-> [changelog:removed]"
-[master 90d2ad2] Remove build script
- 1 file changed, 1 insertion(+)
+[node]: https://nodejs.org/ "Node.js"
+
+### Build and test
+
+Install dependencies.
+
+```
+$ npm ci
 ```
 
-The changelog entries are added when issues get closed, pull requests get
-merged, or a commit is being pushed. Those entries are kept in the _Unreleased_
-section of the changelog until a GitHub Release is created. The release will
-close the section in the changelog by adding the name of the release to it.
+Use the `build` package script to compile, test, lint, and build the
+documentation.
 
-Optionally the skill will append the changelog to the body of the GitHub
-release.
-
-Besides GitHub Releases, a changelog section can be closed by running a command
-from chat. In a channel that is linked to one or more repositories, run the
-following command:
-
-```shell script
-> @atomist close changelog
+```
+$ npm run build
 ```
 
-# Before you get started
+### Release
 
-Connect and configure these integrations:
+Releases are created by pushing a release [semantic version][semver] tag to the
+repository, Atomist Skills take care of the rest.
 
-1. **GitHub**
-2. **Slack or Microsoft Teams**
+To make this skill globally available, set its maturity to "stable" via the set
+maturity drop-down in its Atomist Community Slack channel.
 
-The **GitHub** integration must be configured in order to use this skill. At
-least one repository must be selected. The **Slack** or **Microsoft Teams**
-integration is optional but can be useful to run commands to close changelog
-sections.
-
-# How to configure
-
-1. **Configure the name of the changelog file**
-
-    ![Changelog name](docs/images/changelog-name.png)
-
-    The default name of the changelog file in the repository is `CHANGELOG.md`
-    in the root of the project. Use this setting to change the name and path.
-
-2. **Add user names to changelog entries**
-
-    Decide if you want to mention GitHub user names for committers and issue
-    resolvers to be added to changelog entries.
-
-3. **Determine repository scope**
-
-    ![Repository filter](docs/images/repo-filter.png)
-
-    By default, this skill will be enabled for all repositories in all
-    organizations you have connected.
-
-    To restrict the organizations or specific repositories on which the skill
-    will run, you can explicitly choose organization(s) and repositories.
-
-# How to keep a changelog
-
-1. **Configure skill, set changelog file path**
-
-2. **Add `changelog:*` labels to issues or pull requests or include changelog
-   markers in your commits**
-
-3. **Close issues or merge pull requests marked with `changelog:*` labels**
-
-4. **Create a GitHub release to close a release in the changelog. Alternatively
-   run `@atomist close changelog` from chat.**
-
-5. **Enjoy not having to manually maintain a changelog file!**
-
-To create feature requests or bug reports, create an
-[issue in the repository for this skill](https://github.com/atomist-skills/keep-a-changlog-skill/issues).
-See the [code](https://github.com/atomist-skills/keep-a-changlog-skill) for the
-skill.
-
-<!---atomist-skill-readme:end--->
+[semver]: https://semver.org/ "Semantic Version"
 
 ---
 
 Created by [Atomist][atomist]. Need Help? [Join our Slack workspace][slack].
 
-[atomist]: https://atomist.com/ "Atomist - How Teams Deliver Software"
+[atomist]: https://atomist.com/ "Atomist - Automate All the Software Things"
 [slack]: https://join.atomist.com/ "Atomist Community Slack"

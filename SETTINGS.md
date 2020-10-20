@@ -1,20 +1,41 @@
-# How to configure
+## Before you get started
 
-1. **Configure the name of the changelog file**
+Connect and configure these integrations:
 
-    ![Changelog name](docs/images/changelog-name.png)
+1.  [**GitHub**][github] _(required)_
+2.  [**Slack**][slack] or [**Microsoft Teams**][msteams] _(optional)_
+
+[github]: https://go.atomist.com/catalog/integration/github "GitHub Integration"
+[slack]: https://go.atomist.com/catalog/integration/slack "Slack Integration"
+[msteams]:
+    https://go.atomist.com/catalog/integration/microsoft-teams
+    "Microsoft Teams Integration"
+
+## How to configure
+
+1.  **Configure the name of the changelog file**
 
     The default name of the changelog file in the repository is `CHANGELOG.md`
-    in the root of the project. Use this setting to change the name and path.
+    in the root of the project. Use this setting to customize the name and path,
+    if necessary.
 
-2. **Add user names to changelog entries**
+    ![Changelog file name](docs/images/changelog-file.png)
 
-    Decide if you want to mention GitHub user names for committers and issue
-    resolvers to be added to changelog entries.
+2.  **Add user names to changelog entries**
 
-3. **Determine repository scope**
+    Decide if you want to include GitHub user names for committers and issue
+    closers to be added to changelog entries.
 
-    ![Repository filter](docs/images/repo-filter.png)
+    ![Changelog include users](docs/images/include-users.png)
+
+3.  **Add changelog to GitHub release**
+
+    Decide if you would like the changelog file entries for a release to be
+    added to the GitHub release description.
+
+    ![Changelog add to release](docs/images/add-to-release.png)
+
+4.  **Determine repository scope**
 
     By default, this skill will be enabled for all repositories in all
     organizations you have connected.
@@ -22,21 +43,9 @@
     To restrict the organizations or specific repositories on which the skill
     will run, you can explicitly choose organization(s) and repositories.
 
-# How to keep a changelog
+    ![Repository filter](docs/images/repo-filter.png)
 
-1. **Configure skill, set changelog file path**
+5.  **Activate the skill**
 
-2. **Add `changelog:*` labels to issues or pull requests or include changelog
-   markers in your commits**
-
-3. **Close issues or merge pull requests marked with `changelog:*` labels**
-
-4. **Create a GitHub release to close a release in the changelog. Alternatively
-   run `@atomist close changelog` from chat.**
-
-5. **Enjoy not having to manually maintain a changelog file!**
-
-To create feature requests or bug reports, create an
-[issue in the repository for this skill](https://github.com/atomist-skills/keep-a-changlog-skill/issues).
-See the [code](https://github.com/atomist-skills/keep-a-changlog-skill) for the
-skill.
+    Save your configuration and activate the skill by clicking the "Enable
+    skill" button.

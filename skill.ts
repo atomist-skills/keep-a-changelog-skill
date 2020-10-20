@@ -27,6 +27,7 @@ import { ChangelogConfiguration } from "./lib/configuration";
 export const Skill = skill<ChangelogConfiguration>({
 	name: "keep-a-changelog-skill",
 	namespace: "atomist",
+	description: "Maintain a changelog for your repositories",
 	displayName: "Keep a Changelog",
 	author: "Atomist",
 	license: "Apache-2.0",

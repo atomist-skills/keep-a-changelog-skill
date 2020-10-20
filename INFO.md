@@ -1,77 +1,97 @@
-# What it's useful for
+Changelog files are useful to communicate to your users and other developers
+what is changing in your repository from one release to the next. Unfortunately,
+maintaining a changelog file can be a bit of a chore. This skill aims to
+eliminate the toil of maintaining a changelog file by providing a simple means
+to have changelog entries and releases added via commits, issues, pull requests,
+and releases on GitHub.
 
-With this skill you can automatically keep a changelog file in your repository
-up to date by using labels on GitHub issues and pull requests as well as
-keywords in commit messages.
+Changelog files managed by this skill follow the [Keep a Changelog][changelog]
+conventions. As an example, the [`CHANGELOG.md`][kac-changelog] file for this
+skill is managed by this skill.
 
-The changelog file follows the [Keep A Changelog](https://keepachangelog.com)
-conventions.
+[changelog]: https://keepachangelog.com/ "Keep a Changelog"
+[kac-changelog]:
+    https://github.com/atomist-skills/keep-a-changelog-skill/blob/master/CHANGELOG.md
+    "Keep a Changelog Skill Changelog"
 
-As a reference, this
-[`CHANGELOG.md`](https://github.com/atomist-skills/keep-a-changelog-skill/blob/master/CHANGELOG.md)
-file is managed by this skill. Querying for the
-[list of issues and pull requests](https://github.com/atomist-skills/keep-a-changelog-skill/issues?q=-no%3Alabels)
-demonstrates how we use labels to maintain the changelog.
+Changelog entries are created by this skill when commits are pushed with
+changelog markers in the commit message, e.g., `[changelog:fixed]`, and when
+issues and pull requests with changelog labels, e.g., <span
+style="background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:added</span>,
+are closed. The changelog entries are put in the **Unreleased** section of the
+changelog file. Releases are added to the changelog file when releases are
+created on GitHub. In other words, all you need to do is add some text to your
+commit messages and/or label your issues and pull requests to fully automate the
+management of your changelog files. you'll never need to manually edit a
+changelog file again!
 
-Applying the `changelog:added` label to an issue or pull request will add a
-corresponding entry to the _Added_ section of the changelog when the issue or
-pull request gets closed. _Keep A Changelog_ suggests the following categories
-of entries which this skill supports via corresponding labels or commit markers:
+As described on [Keep a Changelog][changelog], the following classes of changes
+are supported as changelog entries.
 
--   `Added` for new features. (label: `changelog:added`, commit marker:
-    `[changelog:added]`)
--   `Changed` for changes in existing functionality. (label:
-    `changelog:changed`, commit marker: `[changelog:changed]`)
--   `Deprecated` for soon-to-be removed features. (label:
-    `changelog:deprecated`, commit marker: `[changelog:deprecated]`)
--   `Removed` for now removed features. (label: `changelog:removed`, commit
-    marker: `[changelog:removed]`)
--   `Fixed` for any bug fixes. (label: `changelog:fixed`, commit marker:
-    `[changelog:fixed]`)
--   `Security` in case of vulnerabilities. (label: `changelog:security`, commit
-    marker: `[changelog:security]`)
+-   **Added**: new features
+    -   Issue/PR label:
+        <span style="background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;text-decoration:rgb(0,0,0);text-decoration-color:rgb(0,0,0);text-decoration-line:none;text-decoration-style:solid;text-decoration-thickness:auto;">changelog:added</span>
+    -   Commit message marker: `[changelog:added]`
+-   **Changed**: changes in existing functionality
+    -   Issue/PR label:
+        <span style="background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:changed</span>
+    -   Commit message marker: `[changelog:changed]`
+-   **Deprecated**: soon-to-be removed features
+    -   Issue/PR label:
+        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:deprecated</span>
+    -   Commit message marker: `[changelog:deprecated]`
+-   **Removed**: now removed features
+    -   Issue/PR label:
+        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:removed</span>
+    -   Commit message marker: `[changelog:removed]`
+-   **Fixed**: bug fixes
+    -   Issue/PR label:
+        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:Segoe UI,Helvetica,Arial,sans-serif;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:fixed</span>
+    -   Commit message marker: `[changelog:fixed]`
+-   **Security**: vulnerability fixes
+    -   Issue/PR label:
+        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:security</span>
+    -   Commit message marker: `[changelog:security]`
 
-To mark an issue or pull request for one or more of those categories, apply the
-matching `changelog:*` labels to it. Once this skill is enabled, the
-corresponding labels will be available on the selected repositories
-automatically.
+This skill adds the Issue/PR labels to each repository it is enabled on, so you
+simply need to apply the labels to your issues and pull requests at any time
+before they are closed. The changelog entry text will be the title of the issue
+or pull request. Applying multiple changelog labels, and therefore creating
+entries in multiple changelog sections, is supported.
 
-Additionally, you can embed markers in your commit message to add a commit to
-the changelog. For example adding `[changelog:removed]` to your commit message
-will add the commit to the changelog in the _Removed_ category:
+![Issue label](docs/images/issue-label.png)
 
-```shell script
-$ git commit -m "Remove build script
->
-> [changelog:removed]"
-[master 90d2ad2] Remove build script
+The changelog commit message marker can be included anywhere in the commit
+message. The changelog entry text will be the title, i.e., the first line, of
+the commit message. Including multiple changelog markers in the commit message,
+and therefore creating entries in multiple changelog sections, is supported.
+
+```
+$ git commit -m "Remove build script" -m "[changelog:removed]"
+[main 90d2ad2] Remove build script
  1 file changed, 1 insertion(+)
 ```
 
-The changelog entries are added when issues get closed, pull requests get
-merged, or a commit is being pushed. Those entries are kept in the _Unreleased_
-section of the changelog until a GitHub Release is created. The release will
-close the section in the changelog by adding the name of the release to it.
+If you are not using GitHub Releases, a release header can be added to the
+changelog file by running a command from chat. In a channel that is linked to
+one or more repositories, run the `@atomist close changelog` command.
 
-Optionally the skill will append the changelog to the body of the GitHub
-release.
+### Changelog entries created from closed issue
 
-Besides GitHub Releases, a changelog section can be closed by running a command
-from chat. In a channel that is linked to one or more repositories, run the
-following command:
+![Issue with changelog label](docs/images/issue-add.png)
 
-```shell script
-> @atomist close changelog
-```
+![Add commit for issue with changelog label](docs/images/issue-add-changelog.png)
 
-# Before you get started
+### Changelog entries created from commit message
 
-Connect and configure these integrations:
+![Commit with changelog marker](docs/images/commit-marker.png)
 
-1. **GitHub**
-2. **Slack or Microsoft Teams**
+![Add commit with changelog marker to changelog](docs/images/commit-marker-changelog.png)
 
-The **GitHub** integration must be configured in order to use this skill. At
-least one repository must be selected. The **Slack** or **Microsoft Teams**
-integration is optional but can be useful to run commands to close changelog
-sections.
+### Create release header in changelog file
+
+![Create header for release in changelog file](docs/images/create-release.png)
+
+### Add changelog entries to GitHub Release description
+
+![Add changelog entries to GitHub Release description](docs/images/github-release.png)
