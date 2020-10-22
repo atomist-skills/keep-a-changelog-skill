@@ -23,7 +23,7 @@ skill is managed by this skill.
 Changelog entries are created by this skill when commits are pushed with
 changelog markers in the commit message, e.g., `[changelog:fixed]`, and when
 issues and pull requests with changelog labels, e.g., <span
-style="background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:added</span>,
+style="border-radius:24px;background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:added</span>,
 are closed. The changelog entries are put in the **Unreleased** section of the
 changelog file. Releases are added to the changelog file when releases are
 created on GitHub. In other words, all you need to do is add some text to your
@@ -36,7 +36,7 @@ are supported as changelog entries.
 
 -   **Added**: new features
     -   Issue/PR label:
-        <span style="background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;text-decoration:rgb(0,0,0);text-decoration-color:rgb(0,0,0);text-decoration-line:none;text-decoration-style:solid;text-decoration-thickness:auto;">changelog:added</span>
+        <span style="border-radius:24px;background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;text-decoration:rgb(0,0,0);text-decoration-color:rgb(0,0,0);text-decoration-line:none;text-decoration-style:solid;text-decoration-thickness:auto;">changelog:added</span>
     -   Commit message marker: `[changelog:added]`
 -   **Changed**: changes in existing functionality
     -   Issue/PR label:
