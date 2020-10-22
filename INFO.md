@@ -40,23 +40,23 @@ are supported as changelog entries.
     -   Commit message marker: `[changelog:added]`
 -   **Changed**: changes in existing functionality
     -   Issue/PR label:
-        <span style="background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:changed</span>
+        <span style="border-radius:24px;background-color:rgb(197,219,113);box-shadow:none;box-sizing:border-box;color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:changed</span>
     -   Commit message marker: `[changelog:changed]`
 -   **Deprecated**: soon-to-be removed features
     -   Issue/PR label:
-        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:deprecated</span>
+        <span style="border-radius:24px;background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;overflow-wrap:break-word;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:deprecated</span>
     -   Commit message marker: `[changelog:deprecated]`
 -   **Removed**: now removed features
     -   Issue/PR label:
-        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:removed</span>
+        <span style="border-radius:24px;background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:removed</span>
     -   Commit message marker: `[changelog:removed]`
 -   **Fixed**: bug fixes
     -   Issue/PR label:
-        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:Segoe UI,Helvetica,Arial,sans-serif;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:fixed</span>
+        <span style="border-radius:24px;background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-family:Segoe UI,Helvetica,Arial,sans-serif;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:fixed</span>
     -   Commit message marker: `[changelog:fixed]`
 -   **Security**: vulnerability fixes
     -   Issue/PR label:
-        <span style="background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:security</span>
+        <span style="border-radius:24px;background-color:rgb(197,219,113);color:rgb(0,0,0);display:inline-block;font-size:12px;font-weight:500;line-height:18px;margin-bottom:2px;margin-left:0px;margin-right:2px;margin-top:2px;padding-bottom:0px;padding-left:7px;padding-right:7px;padding-top:0px;">changelog:security</span>
     -   Commit message marker: `[changelog:security]`
 
 This skill adds the Issue/PR labels to each repository it is enabled on, so you
