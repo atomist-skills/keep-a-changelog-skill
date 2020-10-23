@@ -1,7 +1,7 @@
 # `atomist/keep-a-changelog-skill`
 
 Maintain a [changelog][] for your repositories based on labels added to issues,
-pull requests and commits. Based on
+pull requests and commits.
 
 [changelog]: https://keepachangelog.com/ "Keep a Changelog"
 
