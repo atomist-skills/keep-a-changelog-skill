@@ -32,6 +32,8 @@ export const Skill = skill<ChangelogConfiguration>({
 	author: "Atomist",
 	license: "Apache-2.0",
 	categories: [Category.RepoManagement],
+	iconUrl:
+		"https://raw.githubusercontent.com/atomist-skills/keep-a-changelog-skill/main/docs/images/icon.svg",
 
 	runtime: {
 		memory: 1024,
