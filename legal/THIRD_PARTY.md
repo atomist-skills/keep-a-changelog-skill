@@ -1,5 +1,7 @@
 # `@atomist/keep-a-changelog-skill`
 
+`@atomist/keep-a-changelog-skill` is licensed under Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
 This page details all runtime dependencies of `@atomist/keep-a-changelog-skill`.
 
 ## Licenses
