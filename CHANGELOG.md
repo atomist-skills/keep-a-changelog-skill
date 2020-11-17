@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Update skill icon. [1db56c5](https://github.com/atomist-skills/keep-a-changelog-skill/commit/1db56c54ff33462ecebe0376ffa2c68df89b94a7)
 -   Use type generation from @atomist/skill. [c7e75bf](https://github.com/atomist-skills/keep-a-changelog-skill/commit/c7e75bfb6f4730e1ddbe31f49285965bb3e79ba2)
 
+### Fixed
+
+-   Fix package dependencies. [2d6a3ae](https://github.com/atomist-skills/keep-a-changelog-skill/commit/2d6a3ae2a186f33be70dbde20a52de66d2654922)
+
 ## [1.2.0](https://github.com/atomist-skills/changelog-skill/compare/1.1.8...1.2.0) - 2020-10-16
 
 ### Changed
