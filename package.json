@@ -47,21 +47,18 @@
   },
   "dependencies": {
     "@atomist/skill": "^0.5.1",
-    "changelog-parser": "^2.8.0",
+    "@octokit/rest": "^18.0.9",
     "fs-extra": "^9.0.1",
+    "line-reader": "0.2.4",
     "lodash": "^4.17.20",
     "remark": "^12.0.1",
-    "remark-defsplit": "^3.0.0",
-    "remark-inline-links": "^4.0.0",
-    "remark-reference-links": "^5.0.0",
-    "semver": "^7.3.2"
+    "remark-inline-links": "^4.0.0"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.7.1",
     "@types/lodash": "^4.14.165",
     "@types/mocha": "^8.0.4",
     "@types/power-assert": "^1.5.3",
-    "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "eslint": "^7.13.0",
@@ -76,7 +73,6 @@
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "supervisor": "^0.12.0",
-    "ts-node": "^9.0.0",
     "typedoc": "^0.19.2",
     "typescript": "^4.0.5"
   },
