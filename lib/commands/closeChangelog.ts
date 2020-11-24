@@ -47,6 +47,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 			branch: repo.branch,
 			url: `https://github.com/${repo.owner}/${repo.repo}`,
 			apiUrl: repo.apiUrl,
+			channels: [ctx.trigger.source?.slack?.channel?.name],
 		},
 		params.version,
 		ctx,

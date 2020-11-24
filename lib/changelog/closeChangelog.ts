@@ -22,6 +22,7 @@ import {
 	git,
 	github,
 	status,
+	slack,
 } from "@atomist/skill";
 import * as fs from "fs-extra";
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
@@ -35,6 +36,7 @@ export async function closeChangelog(
 		apiUrl: string;
 		url: string;
 		branch: string;
+		channels: string[];
 	},
 	version: string,
 	ctx: Contextual<any, any>,
@@ -112,9 +114,10 @@ export async function closeChangelog(
 	);
 	await git.push(project);
 
+	const changelog = await readChangelog(changelogPath);
+	const body = findVersionBody(version, changelog);
+
 	if (cfg?.addChangelogToRelease !== false) {
-		const changelog = await readChangelog(changelogPath);
-		const body = findVersionBody(version, changelog);
 		if (body && release) {
 			if (!(release.body || "").includes(body)) {
 				const existingBody = release.body
@@ -127,6 +130,38 @@ export async function closeChangelog(
 					body: `${existingBody}${body.trim()}`,
 				});
 			}
+		}
+	}
+
+	if (cfg?.announce && body && release) {
+		const channels = [];
+		if (cfg?.announceChannel?.length !== 0) {
+			channels.push(...cfg.announceChannel.map(c => c.channelName));
+		} else {
+			channels.push(...repo.channels);
+		}
+		if (!(release.body || "").includes(body) && channels.length > 0) {
+			const existingBody = release.body
+				? `${release.body.trim()}\n\n`
+				: "";
+			const message = slack.infoMessage(
+				release.name,
+				`${existingBody}${slack.githubToSlack(body)}`,
+				ctx,
+				{
+					footer: slack.url(repo.url, `${repo.owner}/${repo.name}`),
+					footer_icon:
+						"https://images.atomist.com/rug/github_grey.png",
+				},
+			);
+			message.text = `${slack.url(
+				release.author.html_url,
+				`@${release.author.login}`,
+			)} created new release in ${slack.url(
+				repo.url,
+				`${repo.owner}/${repo.name}`,
+			)}`;
+			await ctx.message.send(message, { channels });
 		}
 	}
 

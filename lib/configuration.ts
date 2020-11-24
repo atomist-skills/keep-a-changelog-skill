@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { ChatChannelParameterValue } from "@atomist/skill";
+
 export const DefaultFileName = "CHANGELOG.md";
 
 export interface ChangelogConfiguration {
@@ -28,4 +30,6 @@ export interface ChangelogConfiguration {
 	mapSecurity?: string[];
 	mapBreaking?: string[];
 	repos?: any[];
+	announce?: boolean;
+	announceChannel?: ChatChannelParameterValue[];
 }

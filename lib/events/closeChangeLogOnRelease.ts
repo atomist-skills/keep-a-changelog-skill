@@ -34,6 +34,7 @@ export const handler: EventHandler<
 			apiUrl: tag.commit.repo.org.provider.apiUrl,
 			url: tag.commit.repo.url,
 			branch: tag.commit.repo.defaultBranch,
+			channels: tag.commit.repo.channels?.map(c => c.name),
 		},
 		version,
 		ctx,

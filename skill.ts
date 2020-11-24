@@ -68,13 +68,29 @@ export const Skill = skill<ChangelogConfiguration>({
 				"When a changelog section gets closed, the changelog contents of the release will be added to a corresponding GitHub release",
 			required: false,
 		},
+		announce: {
+			type: ParameterType.Boolean,
+			displayName: "Announce release",
+			description:
+				"Should a release be announced in a chat channel. Either select chat channels with the _Announce channels_ parameter or have announcements be sent into link channels.",
+			required: false,
+			visibility: ParameterVisibility.Advanced,
+		},
+		announceChannel: {
+			type: ParameterType.ChatChannels,
+			displayName: "Announce channels",
+			description:
+				"Select channels to send announcements to. Only takes affect if _Announce release_ is selected.",
+			required: false,
+			visibility: ParameterVisibility.Advanced,
+		},
 		mapAdded: {
 			type: ParameterType.StringArray,
 			displayName: "Map commits to Added",
 			description:
 				"Regular expressions to match against commit message to map into the _Added_ category",
 			required: false,
-			visibility: ParameterVisibility.Hidden,
+			visibility: ParameterVisibility.Advanced,
 		},
 		mapChanged: {
 			type: ParameterType.StringArray,
@@ -82,7 +98,7 @@ export const Skill = skill<ChangelogConfiguration>({
 			description:
 				"Regular expressions to match against commit message to map into the _Changed_ category",
 			required: false,
-			visibility: ParameterVisibility.Hidden,
+			visibility: ParameterVisibility.Advanced,
 		},
 		mapDeprecated: {
 			type: ParameterType.StringArray,
@@ -90,7 +106,7 @@ export const Skill = skill<ChangelogConfiguration>({
 			description:
 				"Regular expressions to match against commit message to map into the _Deprecated_ category",
 			required: false,
-			visibility: ParameterVisibility.Hidden,
+			visibility: ParameterVisibility.Advanced,
 		},
 		mapRemoved: {
 			type: ParameterType.StringArray,
@@ -98,7 +114,7 @@ export const Skill = skill<ChangelogConfiguration>({
 			description:
 				"Regular expressions to match against commit message to map into the _Removed_ category",
 			required: false,
-			visibility: ParameterVisibility.Hidden,
+			visibility: ParameterVisibility.Advanced,
 		},
 		mapFixed: {
 			type: ParameterType.StringArray,
@@ -106,7 +122,7 @@ export const Skill = skill<ChangelogConfiguration>({
 			description:
 				"Regular expressions to match against commit message to map into the _Fixed_ category",
 			required: false,
-			visibility: ParameterVisibility.Hidden,
+			visibility: ParameterVisibility.Advanced,
 		},
 		mapSecurity: {
 			type: ParameterType.StringArray,
@@ -114,7 +130,7 @@ export const Skill = skill<ChangelogConfiguration>({
 			description:
 				"Regular expressions to match against commit message to map into the _Security_ category",
 			required: false,
-			visibility: ParameterVisibility.Hidden,
+			visibility: ParameterVisibility.Advanced,
 		},
 		mapBreaking: {
 			type: ParameterType.StringArray,
@@ -122,7 +138,7 @@ export const Skill = skill<ChangelogConfiguration>({
 			description:
 				"Regular expressions to match against commit message to add BREAKING label to changelog entry",
 			required: false,
-			visibility: ParameterVisibility.Hidden,
+			visibility: ParameterVisibility.Advanced,
 		},
 		repos: parameter.repoFilter(),
 	},
