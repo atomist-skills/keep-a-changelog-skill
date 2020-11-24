@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.3.0...HEAD)
 
+### Added
+
+-   Add release announcement. [d45b8b8](https://github.com/atomist-skills/keep-a-changelog-skill/commit/d45b8b8103d6aa6e858e1797af2a6c023a04ce93)
+
 ## [1.3.0](https://github.com/atomist-skills/changelog-skill/compare/1.2.0...1.3.0) - 2020-11-17
 
 ### Changed
