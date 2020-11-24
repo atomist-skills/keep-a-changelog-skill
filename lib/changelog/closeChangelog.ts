@@ -149,6 +149,7 @@ export async function closeChangelog(
 				`${existingBody}${slack.githubToSlack(body)}`,
 				ctx,
 				{
+					author_link: release.html_url,
 					footer: slack.url(repo.url, `${repo.owner}/${repo.name}`),
 					footer_icon:
 						"https://images.atomist.com/rug/github_grey.png",
