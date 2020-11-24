@@ -161,7 +161,11 @@ export async function closeChangelog(
 				repo.url,
 				`${repo.owner}/${repo.name}`,
 			)}`;
-			await ctx.message.send(message, { channels });
+			await ctx.message.send(
+				message,
+				{ channels },
+				{ id: `${repo.owner}/${repo.name}#${release.id}` },
+			);
 		}
 	}
 
