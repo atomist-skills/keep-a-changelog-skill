@@ -1,6 +1,7 @@
 subscription closeChangeLogOnRelease {
   Release {
     name
+    action
     tag {
       name
       commit {

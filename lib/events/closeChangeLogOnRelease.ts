@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-import { EventHandler } from "@atomist/skill";
+import { EventHandler, status } from "@atomist/skill";
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
-import { CloseChangeLogOnReleaseSubscription } from "../typings/types";
+import {
+	CloseChangeLogOnReleaseSubscription,
+	ReleaseAction,
+} from "../typings/types";
 
 export const handler: EventHandler<
 	CloseChangeLogOnReleaseSubscription,
@@ -26,6 +29,14 @@ export const handler: EventHandler<
 	const release = ctx.data.Release[0];
 	const tag = release.tag;
 	const version = tag.name;
+
+	if (release.action !== ReleaseAction.Published) {
+		return status
+			.success(
+				`Ignoring release non-publication action: ${release.action}`,
+			)
+			.hidden();
+	}
 
 	return closeChangelog(
 		{

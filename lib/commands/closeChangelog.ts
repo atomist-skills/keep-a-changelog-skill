@@ -53,6 +53,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 		ctx,
 		ctx.configuration.find(c => c.name === params.configuration.name)
 			?.parameters,
+		true,
 	);
 
 	if (result.code === 0 && result.visibility !== "hidden") {
