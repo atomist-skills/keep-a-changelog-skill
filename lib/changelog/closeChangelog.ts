@@ -24,6 +24,7 @@ import {
 	status,
 	slack,
 } from "@atomist/skill";
+import { RestEndpointMethodTypes } from "@octokit/rest";
 import * as fs from "fs-extra";
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import { readChangelog } from "./changelog";
@@ -41,6 +42,7 @@ export async function closeChangelog(
 	version: string,
 	ctx: Contextual<any, any>,
 	cfg: ChangelogConfiguration,
+	command = false,
 ): Promise<HandlerStatus> {
 	const credential = await ctx.credential.resolve(
 		secret.gitHubAppToken({
@@ -58,7 +60,7 @@ export async function closeChangelog(
 	const api = github.api(id);
 	const repoSlug = `${repo.owner}/${repo.name}`;
 
-	let release;
+	let release: RestEndpointMethodTypes["repos"]["getReleaseByTag"]["response"]["data"];
 	try {
 		release = (
 			await api.repos.getReleaseByTag({
@@ -75,7 +77,11 @@ export async function closeChangelog(
 				.hidden();
 		}
 	} catch (e) {
-		// This can happen when the provided version is not a release on github
+		if (!command) {
+			return status.failure(
+				`Failed to get release ${version} that triggered skill: ${e.message}`,
+			);
+		}
 	}
 
 	const project = await ctx.project.clone(id);
