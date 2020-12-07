@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { EventHandler, secret, repository, github } from "@atomist/skill";
+import {
+	EventHandler,
+	secret,
+	repository,
+	github,
+	handleError,
+	status,
+} from "@atomist/skill";
 import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
 import { upsertChangelogLabels } from "./convergePullRequestChangelogLabels";
 
@@ -28,10 +35,8 @@ export const handler: EventHandler<ConvergeIssueChangelogLabelsSubscription> = a
 	const api = github.api(
 		repository.gitHub({ owner, repo: name, credential }),
 	);
-	await upsertChangelogLabels({ api, owner, repo: name });
-	return {
-		code: 0,
-		visibility: "hidden",
-		reason: `Converged changelog labels`,
-	};
+	await handleError(
+		async () => await upsertChangelogLabels({ api, owner, repo: name }),
+	);
+	return status.success(`Converged changelog labels`).hidden();
 };

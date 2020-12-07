@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { EventHandler, repository, secret, github } from "@atomist/skill";
+import {
+	EventHandler,
+	repository,
+	secret,
+	github,
+	status,
+	handleError,
+} from "@atomist/skill";
 import { Octokit } from "@octokit/rest";
 import { ConvergePullRequestChangelogLabelsSubscription } from "../typings/types";
 import { ChangelogLabels } from "../changelog/labels";
@@ -29,12 +36,10 @@ export const handler: EventHandler<ConvergePullRequestChangelogLabelsSubscriptio
 	const api = github.api(
 		repository.gitHub({ owner, repo: name, credential }),
 	);
-	await upsertChangelogLabels({ api, owner, repo: name });
-	return {
-		code: 0,
-		visibility: "hidden",
-		reason: `Converged changelog labels`,
-	};
+	await handleError(
+		async () => await upsertChangelogLabels({ api, owner, repo: name }),
+	);
+	return status.success(`Converged changelog labels`).hidden();
 };
 
 /**
