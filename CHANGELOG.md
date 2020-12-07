@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 -   Do not create entries when releases are deleted. [#83](https://github.com/atomist-skills/keep-a-changelog-skill/issues/83)
+-   Wrap label convergence in error handler. [f321735](https://github.com/atomist-skills/keep-a-changelog-skill/commit/f3217356fe4db9ca6af1c0d8ca41c279b54e516b)
 
 ## [1.4.0](https://github.com/atomist-skills/changelog-skill/compare/1.3.0...1.4.0) - 2020-11-24
 
