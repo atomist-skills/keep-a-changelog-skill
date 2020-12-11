@@ -15,6 +15,7 @@
  */
 
 import { EventHandler, status } from "@atomist/skill";
+
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 import {

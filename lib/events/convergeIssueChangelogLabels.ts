@@ -16,12 +16,13 @@
 
 import {
 	EventHandler,
-	secret,
-	repository,
 	github,
 	handleError,
+	repository,
+	secret,
 	status,
 } from "@atomist/skill";
+
 import { ConvergeIssueChangelogLabelsSubscription } from "../typings/types";
 import { upsertChangelogLabels } from "./convergePullRequestChangelogLabels";
 

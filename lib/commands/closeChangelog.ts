@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { CommandHandler, repository, slack, prompt } from "@atomist/skill";
+import { CommandHandler, prompt, repository, slack } from "@atomist/skill";
+
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
 

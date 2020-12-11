@@ -22,6 +22,7 @@ import {
 	resourceProvider,
 	skill,
 } from "@atomist/skill";
+
 import { ChangelogConfiguration } from "./lib/configuration";
 
 export const Skill = skill<ChangelogConfiguration>({
