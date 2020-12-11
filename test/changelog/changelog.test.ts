@@ -18,6 +18,7 @@ import { Project } from "@atomist/skill/lib/project/project";
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as assert from "power-assert";
+
 import {
 	addEntryToChangelog,
 	ChangelogEntry,

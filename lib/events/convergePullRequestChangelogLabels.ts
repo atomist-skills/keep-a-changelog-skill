@@ -16,15 +16,16 @@
 
 import {
 	EventHandler,
+	github,
+	handleError,
 	repository,
 	secret,
-	github,
 	status,
-	handleError,
 } from "@atomist/skill";
 import { Octokit } from "@octokit/rest";
-import { ConvergePullRequestChangelogLabelsSubscription } from "../typings/types";
+
 import { ChangelogLabels } from "../changelog/labels";
+import { ConvergePullRequestChangelogLabelsSubscription } from "../typings/types";
 
 export const handler: EventHandler<ConvergePullRequestChangelogLabelsSubscription> = async ctx => {
 	const repo = ctx.data.PullRequest[0].repo;

@@ -15,8 +15,9 @@
  */
 
 import { EventHandler } from "@atomist/skill";
-import { PushWithChangelogLabelSubscription } from "../typings/types";
+
 import { addChangelogEntryForCommit } from "../changelog/changelog";
+import { PushWithChangelogLabelSubscription } from "../typings/types";
 
 export const handler: EventHandler<PushWithChangelogLabelSubscription> = async ctx => {
 	return addChangelogEntryForCommit(

@@ -15,18 +15,19 @@
  */
 
 import {
-	HandlerStatus,
+	Contextual,
 	git,
+	HandlerStatus,
 	project,
 	repository,
 	secret,
-	Contextual,
 	status,
 	toArray,
 } from "@atomist/skill";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
 import { promisify } from "util";
+
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import {
 	ClosedIssueWithChangelogLabelSubscription,

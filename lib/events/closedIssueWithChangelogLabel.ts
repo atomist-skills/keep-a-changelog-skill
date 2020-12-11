@@ -15,8 +15,9 @@
  */
 
 import { EventHandler } from "@atomist/skill";
-import { ClosedIssueWithChangelogLabelSubscription } from "../typings/types";
+
 import { addChangelogEntryForClosedIssue } from "../changelog/changelog";
+import { ClosedIssueWithChangelogLabelSubscription } from "../typings/types";
 
 export const handler: EventHandler<ClosedIssueWithChangelogLabelSubscription> = async ctx => {
 	return addChangelogEntryForClosedIssue(

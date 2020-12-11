@@ -16,16 +16,17 @@
 
 import {
 	Contextual,
-	HandlerStatus,
-	secret,
-	repository,
 	git,
 	github,
-	status,
+	HandlerStatus,
+	repository,
+	secret,
 	slack,
+	status,
 } from "@atomist/skill";
 import { RestEndpointMethodTypes } from "@octokit/rest";
 import * as fs from "fs-extra";
+
 import { ChangelogConfiguration, DefaultFileName } from "../configuration";
 import { readChangelog } from "./changelog";
 import * as parseChangelog from "./changelogParser";

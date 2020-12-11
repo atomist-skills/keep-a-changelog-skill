@@ -15,6 +15,7 @@
  */
 
 import { CommandHandler, prompt, repository, slack } from "@atomist/skill";
+
 import {
 	addChangelogEntryForClosedIssue,
 	addChangelogEntryForCommit,

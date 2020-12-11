@@ -15,8 +15,9 @@
  */
 
 import { EventHandler } from "@atomist/skill";
-import { ClosedPullRequestWithChangelogLabelSubscription } from "../typings/types";
+
 import { addChangelogEntryForClosedIssue } from "../changelog/changelog";
+import { ClosedPullRequestWithChangelogLabelSubscription } from "../typings/types";
 
 export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscription> = async ctx => {
 	if (ctx.data.PullRequest[0].merged) {
