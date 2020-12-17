@@ -100,26 +100,38 @@ export async function closeChangelog(
 	}
 
 	try {
-		const changelog = (await fs.readFile(changelogPath)).toString();
-		const newChangelog = changelogAddRelease(changelog, version);
-		if (newChangelog === changelog) {
+		let changelogChanged = false;
+		await git.persistChanges({
+			project,
+			branch: repo.branch,
+			editors: [
+				async () => {
+					const changelog = await fs.readFile(changelogPath, "utf8");
+					const newChangelog = changelogAddRelease(
+						changelog,
+						version,
+					);
+					if (newChangelog === changelog) {
+						return undefined;
+					}
+					changelogChanged = true;
+					await fs.writeFile(changelogPath, newChangelog);
+					return `Changelog: add release ${version}
+
+[atomist:generated] [atomist-skill:${ctx.skill.namespace}/${ctx.skill.name}]`;
+				},
+			],
+		});
+		if (changelogChanged === false) {
 			return status.success(
-				`No changes to ${changelogFile} found in ${repoSlug}`,
+				`No changes to ${changelogFile} in ${repoSlug}`,
 			);
 		}
-		await fs.writeFile(changelogPath, newChangelog);
 	} catch (e) {
 		const reason = `Failed to update changelog in ${repoSlug} for release ${version} in ${repoSlug}`;
 		console.error(`${reason}: ${e.message}`);
 		return status.failure(reason);
 	}
-	await git.commit(
-		project,
-		`Changelog: add release ${version}
-
-[atomist:generated] [atomist-skill:${ctx.skill.namespace}/${ctx.skill.name}]`,
-	);
-	await git.push(project);
 
 	const changelog = await readChangelog(changelogPath);
 	const body = findVersionBody(version, changelog);

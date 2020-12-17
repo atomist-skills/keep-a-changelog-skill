@@ -10,6 +10,7 @@ subscription closedPullRequestWithChangelogLabel {
       url
       owner
       name
+      defaultBranch
       org {
         provider {
           url

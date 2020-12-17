@@ -22,8 +22,8 @@ import {
 	repository,
 	secret,
 	status,
-	toArray,
 } from "@atomist/skill";
+import { CommitEditor } from "@atomist/skill/lib/git";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
 import { promisify } from "util";
@@ -67,8 +67,8 @@ export async function addChangelogEntryForClosedIssue(
 	cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
 	let issue:
-		| ClosedIssueWithChangelogLabelSubscription["Issue"][0]
-		| ClosedPullRequestWithChangelogLabelSubscription["PullRequest"][0];
+		| ClosedIssueWithChangelogLabelSubscription["Issue"][number]
+		| ClosedPullRequestWithChangelogLabelSubscription["PullRequest"][number];
 	const authors: ChangelogEntry["authors"] = [];
 	if ((data as ClosedIssueWithChangelogLabelSubscription).Issue) {
 		const i = (data as ClosedIssueWithChangelogLabelSubscription).Issue[0];
@@ -112,6 +112,7 @@ export async function addChangelogEntryForClosedIssue(
 		qualifiers,
 		authors,
 	};
+	const allEntries = categories.map(category => ({ ...entry, category }));
 
 	const credential = await ctx.credential.resolve(
 		secret.gitHubAppToken({
@@ -127,12 +128,30 @@ export async function addChangelogEntryForClosedIssue(
 			credential,
 		}),
 	);
-	if (await updateChangelog(p, categories, entry, cfg || {})) {
-		await git.push(p);
+	const changelogFile = cfg.file || DefaultFileName;
+	const slugLink = `[${issue.repo.owner}/${issue.repo.name}](${issue.repo.url})`;
+	const changelogPath = p.path(changelogFile);
+	const newEntries = await filterChangelogEntries(allEntries, changelogPath);
+	if (newEntries.length < 1) {
+		return status
+			.success(
+				`All ${changelogFile} entries already exist in ${slugLink}`,
+			)
+			.hidden();
 	}
-	return status.success(
-		`Updated CHANGELOG.md in [${issue.repo.owner}/${issue.repo.name}](${issue.repo.url})`,
-	);
+
+	const author = newEntries
+		.find(e => e.authors.some(a => a.login))
+		.authors.find(a => a.login);
+
+	await git.persistChanges({
+		project: p,
+		branch: issue.repo.defaultBranch,
+		editors: [changelogEditor(p, newEntries, cfg)],
+		author,
+	});
+
+	return status.success(`Updated ${changelogFile} in ${slugLink}`);
 }
 
 /**
@@ -142,7 +161,7 @@ export async function addChangelogEntryForClosedIssue(
  * @returns {Promise<HandlerResult>}
  */
 export async function addChangelogEntryForCommit(
-	push: PushWithChangelogLabelSubscription["Push"][0],
+	push: PushWithChangelogLabelSubscription["Push"][number],
 	ctx: Contextual<any, any>,
 	cfg: ChangelogConfiguration,
 ): Promise<HandlerStatus> {
@@ -150,7 +169,7 @@ export async function addChangelogEntryForCommit(
 		return status.success("Ignoring pushes to non-default branch").hidden();
 	}
 
-	const entries: Array<{ entry: ChangelogEntry; categories: string[] }> = [];
+	const commitEntries: ChangelogEntry[] = [];
 	for (const commit of push.commits) {
 		const categories: string[] = [];
 		const qualifiers: string[] = [];
@@ -184,7 +203,7 @@ export async function addChangelogEntryForCommit(
 		const entry: ChangelogEntry = {
 			title: commit.message
 				.split("\n")[0]
-				.replace(/\[changelog:.*\]/g, "")
+				.replace(/\[changelog:.*?\]/g, "")
 				.trim(),
 			label: commit.sha.slice(0, 7),
 			url: commit.url,
@@ -197,114 +216,127 @@ export async function addChangelogEntryForCommit(
 			],
 			qualifiers,
 		};
-
-		if (categories.length > 0) {
-			entries.push({ entry, categories });
-		}
+		commitEntries.push(
+			...categories.map(category => ({ ...entry, category })),
+		);
 	}
 
-	if (entries.length > 0) {
-		const credential = await ctx.credential.resolve(
-			secret.gitHubAppToken({
-				owner: push.repo.owner,
-				repo: push.repo.name,
-				apiUrl: push.repo.org.provider.apiUrl,
-			}),
-		);
-		const p = await ctx.project.clone(
-			repository.gitHub({
-				owner: push.repo.owner,
-				repo: push.repo.name,
-				credential,
-			}),
-		);
-		const results = [];
-		for (const entry of entries) {
-			results.push(
-				await updateChangelog(
-					p,
-					entry.categories,
-					entry.entry,
-					toArray(ctx.configuration)?.[0]?.parameters || {},
-				),
-			);
-		}
-		if (results.some(r => !!r)) {
-			await git.push(p);
-		}
-		return status.success(
-			`Updated ${cfg.file || DefaultFileName} in [${push.repo.owner}/${
-				push.repo.name
-			}](${push.repo.url})`,
-		);
-	} else {
+	const changelogFile = cfg.file || DefaultFileName;
+	const slugLink = `[${push.repo.owner}/${push.repo.name}](${push.repo.url})`;
+	if (commitEntries.length < 1) {
+		return status
+			.success(`No updates to ${changelogFile} in ${slugLink}`)
+			.hidden();
+	}
+
+	const credential = await ctx.credential.resolve(
+		secret.gitHubAppToken({
+			owner: push.repo.owner,
+			repo: push.repo.name,
+			apiUrl: push.repo.org.provider.apiUrl,
+		}),
+	);
+	const p = await ctx.project.clone(
+		repository.gitHub({
+			owner: push.repo.owner,
+			repo: push.repo.name,
+			branch: push.branch,
+			credential,
+		}),
+	);
+
+	const changelogPath = p.path(changelogFile);
+	const newEntries = await filterChangelogEntries(
+		commitEntries,
+		changelogPath,
+	);
+	if (newEntries.length < 1) {
 		return status
 			.success(
-				`No updates to ${cfg.file || DefaultFileName} in [${
-					push.repo.owner
-				}/${push.repo.name}](${push.repo.url})`,
+				`All ${changelogFile} entries already exist in ${slugLink}`,
 			)
 			.hidden();
 	}
+
+	const author = newEntries
+		.find(e => e.authors.some(a => a.login))
+		.authors.find(a => a.login);
+
+	await git.persistChanges({
+		project: p,
+		branch: push.branch,
+		editors: [changelogEditor(p, newEntries, cfg)],
+		author,
+	});
+	return status.success(`Updated ${changelogFile} in ${slugLink}`);
 }
 
+/**
+ * Filter out changelog entries whose URL is already in changelog. If
+ * changelog file does not exist or is not readable, all entries are
+ * returned.
+ */
+export async function filterChangelogEntries(
+	entries: ChangelogEntry[],
+	changelogPath: string,
+): Promise<ChangelogEntry[]> {
+	try {
+		const content = await fs.readFile(changelogPath, "utf8");
+		return entries.filter(e => !RegExp(`\\b${e.url}\\b`).test(content));
+	} catch (e) {
+		return entries;
+	}
+}
+
+/**
+ * Return an editor function suitable for git.persistChanges.
+ */
+const changelogEditor = (
+	proj: project.Project,
+	entries: ChangelogEntry[],
+	cfg: ChangelogConfiguration,
+): CommitEditor => async () => {
+	await updateChangelog(proj, entries, cfg);
+	const message = ["Added changelog entries", ""];
+	for (const entry of entries) {
+		message.push(`-   ${entry.label} to ${entry.category}`);
+	}
+	message.push("", "[atomist:generated]");
+	return message.join("\n");
+};
+
+/**
+ * Add `entries` to changelog that are not already present. Return
+ * added entries.
+ */
 async function updateChangelog(
 	p: project.Project,
-	categories: string[],
-	entry: ChangelogEntry,
+	entries: ChangelogEntry[],
 	cfg: ChangelogConfiguration,
-): Promise<boolean> {
+): Promise<void> {
 	const changelogPath = p.path(cfg.file || DefaultFileName);
-	const authors = entry.authors || [];
-	if (!cfg.addAuthor) {
-		entry.authors = [];
-	}
-	if (await fs.pathExists(changelogPath)) {
-		// If changelog exists make sure it doesn't already contain the label
-		const content = (await fs.readFile(changelogPath)).toString();
-		if (!content.includes(entry.url)) {
-			await updateAndWriteChangelog(p, categories, entry, changelogPath);
-		}
-	} else {
-		await updateAndWriteChangelog(p, categories, entry, changelogPath);
-	}
-
-	if (!(await git.status(p)).isClean) {
-		let options = {};
-		if (authors.length > 0) {
-			options = {
-				name: authors[0].name,
-				email: authors[0].email,
-			};
-		}
-		await git.commit(
-			p,
-			`Changelog: ${entry.label} to ${categories.join(", ")}
-
-[atomist:generated]`,
-			options,
-		);
-		return true;
-	}
-	return false;
+	const aEntries = cfg.addAuthor
+		? entries
+		: entries.map(e => ({ ...e, authors: [] }));
+	await updateAndWriteChangelog(p, aEntries, changelogPath);
+	return;
 }
 
+/**
+ * Add each entry to changelog, if an entry with the same URL does not
+ * already exist.
+ */
 async function updateAndWriteChangelog(
 	p: project.Project,
-	categories: string[],
-	entry: ChangelogEntry,
+	entries: ChangelogEntry[],
 	changelogPath: string,
-): Promise<any> {
+): Promise<void> {
+	if (!entries || entries.length < 1) {
+		return;
+	}
 	let changelog = await readChangelog(changelogPath);
-	for (const category of categories) {
-		changelog = addEntryToChangelog(
-			{
-				...entry,
-				category,
-			},
-			changelog,
-			p,
-		);
+	for (const entry of entries) {
+		changelog = addEntryToChangelog(entry, changelog, p);
 	}
 	return writeChangelog(changelog, changelogPath);
 }
@@ -338,7 +370,7 @@ export async function readChangelog(
 
 export function addEntryToChangelog(
 	entry: ChangelogEntry,
-	cl: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
+	cl: parseChangelog.Changelog,
 	p: project.Project,
 ): any {
 	const version = readUnreleasedVersion(cl, p);
@@ -374,8 +406,7 @@ export function addEntryToChangelog(
  * @param changelog parsed changelog object
  * @return markdown formatted changelog file contents
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function changelogToString(changelog: any): string {
+export function changelogToString(changelog: parseChangelog.Changelog): string {
 	let content = `# ${changelog.title}`;
 	if (changelog.description) {
 		content = `${content}
@@ -414,22 +445,24 @@ ${v.parsed[category].join("\n")}`;
  * Write changelog back out to the CHANGELOG.md file
  */
 export async function writeChangelog(
-	changelog: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
+	changelog: parseChangelog.Changelog,
 	changelogPath: string,
 ): Promise<void> {
 	const content = changelogToString(changelog);
 	return fs.writeFile(changelogPath, content);
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-function readUnreleasedVersion(cl: any, p: project.Project): any {
-	let version;
+function readUnreleasedVersion(
+	cl: parseChangelog.Changelog,
+	p: project.Project,
+): parseChangelog.Changelog["versions"][number] {
+	let version: parseChangelog.Changelog["versions"][number];
 	// Get Unreleased section or create if not already available
 	if (
 		cl &&
 		cl.versions &&
 		cl.versions.length > 0 &&
-		// This github.com version is really odd. Not sure what the parser thinks here
+		// This github.com version is really odd, not sure what the parser thinks here
 		(!cl.versions[0].version || cl.versions[0].version === "github.com")
 	) {
 		version = cl.versions[0];
@@ -443,6 +476,7 @@ function readUnreleasedVersion(cl: any, p: project.Project): any {
 					? `compare/${cl.versions[0].version}...HEAD`
 					: "tree/HEAD"
 			})`,
+			body: "",
 			parsed: {},
 		};
 		cl.versions = [version, ...cl.versions];
