@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.4.1...HEAD)
 
+### Changed
+
+-   Leverage git persistChanges in @atomist/skill. [#141](https://github.com/atomist-skills/keep-a-changelog-skill/issues/141)
+
 ## [1.4.1](https://github.com/atomist-skills/changelog-skill/compare/1.4.0...1.4.1) - 2020-12-07
 
 ### Fixed
