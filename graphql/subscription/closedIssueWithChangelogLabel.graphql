@@ -9,6 +9,7 @@ subscription closedIssueWithChangelogLabel {
       url
       owner
       name
+      defaultBranch
       org {
         provider {
           url

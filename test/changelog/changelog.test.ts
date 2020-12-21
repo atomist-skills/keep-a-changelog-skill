@@ -23,6 +23,7 @@ import {
 	addEntryToChangelog,
 	ChangelogEntry,
 	changelogToString,
+	filterChangelogEntries,
 	readChangelog,
 	writeChangelog,
 } from "../../lib/changelog/changelog";
@@ -145,5 +146,150 @@ describe("changelog", () => {
 		for (const ev of ["0.15.1", "0.15.0", "0.14.0"]) {
 			assert(vs.includes(ev));
 		}
+	});
+
+	describe("filterChangelogEntries", () => {
+		it("returns all entries when no changelog", async () => {
+			const e = [
+				{
+					category: "added",
+					authors: [{ login: "you" }],
+					title: "Something added.",
+					label: "#4",
+					url: "https://github.com/some/repo/issues/4",
+					qualifiers: [],
+				},
+				{
+					category: "removed",
+					authors: [{ login: "you" }],
+					title: "Something removed.",
+					label: "#44",
+					url: "https://github.com/some/repo/issues/44",
+					qualifiers: ["breaking"],
+				},
+				{
+					category: "fixed",
+					authors: [{ login: "you" }],
+					title: "Something fixed.",
+					label: "abcdef0",
+					url:
+						"https://github.com/some/repo/commit/abcdef0123456789abcdef",
+					qualifiers: [],
+				},
+			];
+			const c = "not/a/real/file";
+			const f = await filterChangelogEntries(e, c);
+			assert.deepStrictEqual(f, e);
+		});
+
+		it("returns all entries when none match", async () => {
+			const e = [
+				{
+					category: "added",
+					authors: [{ login: "you" }],
+					title: "Something added.",
+					label: "#4",
+					url: "https://github.com/some/repo/issues/4",
+					qualifiers: [],
+				},
+				{
+					category: "removed",
+					authors: [{ login: "you" }],
+					title: "Something removed.",
+					label: "#44",
+					url: "https://github.com/some/repo/issues/44",
+					qualifiers: ["breaking"],
+				},
+				{
+					category: "fixed",
+					authors: [{ login: "you" }],
+					title: "Something fixed.",
+					label: "abcdef0",
+					url:
+						"https://github.com/some/repo/commit/abcdef0123456789abcdef",
+					qualifiers: [],
+				},
+			];
+			const c = path.join(__dirname, "vCHANGELOG.md");
+			const f = await filterChangelogEntries(e, c);
+			assert.deepStrictEqual(f, e);
+		});
+
+		it("filters out matching entries", async () => {
+			const e = [
+				{
+					category: "added",
+					authors: [{ login: "you" }],
+					title: "Something added.",
+					label: "#4",
+					url: "https://github.com/atomist/k8svent/issues/11",
+					qualifiers: [],
+				},
+				{
+					category: "removed",
+					authors: [{ login: "you" }],
+					title: "Something removed.",
+					label: "#44",
+					url: "https://github.com/atomist/k8svent/issues/44",
+					qualifiers: ["breaking"],
+				},
+				{
+					category: "fixed",
+					authors: [{ login: "you" }],
+					title: "Something fixed.",
+					label: "32c1101",
+					url:
+						"https://github.com/atomist/k8svent/commit/32c11015c603ef90378914f82811ee1489c19991",
+					qualifiers: [],
+				},
+			];
+			const c = path.join(__dirname, "vCHANGELOG.md");
+			const f = await filterChangelogEntries(e, c);
+			const x = [
+				{
+					category: "removed",
+					authors: [{ login: "you" }],
+					title: "Something removed.",
+					label: "#44",
+					url: "https://github.com/atomist/k8svent/issues/44",
+					qualifiers: ["breaking"],
+				},
+			];
+			assert.deepStrictEqual(f, x);
+		});
+
+		it("retains partial matches", async () => {
+			const e = [
+				{
+					category: "added",
+					authors: [{ login: "you" }],
+					title: "Something added.",
+					label: "#4",
+					url: "https://github.com/atomist/k8svent/issues/11",
+					qualifiers: [],
+				},
+				{
+					category: "removed",
+					authors: [{ login: "you" }],
+					title: "Something removed.",
+					label: "#1",
+					url: "https://github.com/atomist/k8svent/issues/1",
+					qualifiers: ["breaking"],
+				},
+			];
+			const c = path.join(__dirname, "vCHANGELOG.md");
+			const f = await filterChangelogEntries(e, c);
+			const x = [
+				{
+					category: "removed",
+					authors: [{ login: "you" }],
+					title: "Something removed.",
+					label: "#1",
+					url: "https://github.com/atomist/k8svent/issues/1",
+					qualifiers: ["breaking"],
+				},
+			];
+			assert.deepStrictEqual(f, x);
+		});
 	});
 });
