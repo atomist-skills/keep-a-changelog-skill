@@ -268,6 +268,9 @@ export async function addChangelogEntryForCommit(
 		editors: [changelogEditor(p, newEntries, cfg)],
 		author,
 	});
+	await ctx.audit.log(
+		`Added changelog entries: ${newEntries.map(e => e.title).join(", ")}`,
+	);
 	return status.success(`Updated ${changelogFile} in ${slugLink}`);
 }
 
@@ -296,8 +299,14 @@ const changelogEditor = (
 	entries: ChangelogEntry[],
 	cfg: ChangelogConfiguration,
 ): CommitEditor => async () => {
+	if (!entries || entries.length < 1) {
+		return undefined;
+	}
 	await updateChangelog(proj, entries, cfg);
-	const message = ["Added changelog entries", ""];
+	const message = [
+		`Add changelog entr${entries.length > 1 ? "ies" : "y"}`,
+		"",
+	];
 	for (const entry of entries) {
 		message.push(`-   ${entry.label} to ${entry.category}`);
 	}
