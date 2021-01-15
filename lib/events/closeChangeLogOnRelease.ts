@@ -31,11 +31,12 @@ export const handler: EventHandler<
 	const tag = release.tag;
 	const version = tag.name;
 
-	if (release.action !== ReleaseAction.Published) {
+	if (
+		release.action !== ReleaseAction.Published &&
+		release.action !== ReleaseAction.Released
+	) {
 		return status
-			.success(
-				`Ignoring release non-publication action: ${release.action}`,
-			)
+			.success(`Ignoring release action: ${release.action}`)
 			.hidden();
 	}
 
