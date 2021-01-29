@@ -1,11 +1,15 @@
 query issueByNumber($owner: String!, $repo: String!, $number: Float!) {
-  Issue(state: closed, number: $number) {
+  Issue(
+    state: closed
+    number: $number
+    filter: { repo: { name: $repo, owner: $owner } }
+  ) {
     number
     title
     labels {
       name
     }
-    repo(owner: $owner, name: $repo) @required {
+    repo {
       url
       owner
       name
