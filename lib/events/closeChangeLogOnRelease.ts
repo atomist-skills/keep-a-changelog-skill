@@ -32,6 +32,7 @@ export const handler: EventHandler<
 	const version = tag.name;
 
 	if (
+		release.action !== ReleaseAction.Created &&
 		release.action !== ReleaseAction.Published &&
 		release.action !== ReleaseAction.Released
 	) {
