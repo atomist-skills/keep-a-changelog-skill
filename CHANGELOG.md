@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Leverage git persistChanges in @atomist/skill. [#141](https://github.com/atomist-skills/keep-a-changelog-skill/issues/141)
 -   Close release on released. [fb1862a](https://github.com/atomist-skills/keep-a-changelog-skill/commit/fb1862a9c6dc2ee7e045a0e72c0723c4e43dd75c)
+-   Update issue query. [#156](https://github.com/atomist-skills/keep-a-changelog-skill/issues/156)
 
 ## [1.4.1](https://github.com/atomist-skills/changelog-skill/compare/1.4.0...1.4.1) - 2020-12-07
 
