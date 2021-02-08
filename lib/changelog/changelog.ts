@@ -24,6 +24,7 @@ import {
 	status,
 } from "@atomist/skill";
 import { CommitEditor } from "@atomist/skill/lib/git";
+import { headChangedFiles } from "@atomist/skill/lib/git/operation";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
 import { promisify } from "util";
@@ -256,6 +257,11 @@ export async function addChangelogEntryForCommit(
 				`All ${changelogFile} entries already exist in ${slugLink}`,
 			)
 			.hidden();
+	}
+
+	const changedFiles = await headChangedFiles(p);
+	if (changedFiles.length === 1 && changedFiles.includes(changelogFile)) {
+		return status.success(`Ignoring change to '${changelogFile}'`).hidden();
 	}
 
 	const author = newEntries
