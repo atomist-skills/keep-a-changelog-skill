@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 -   Close release on released. [fb1862a](https://github.com/atomist-skills/keep-a-changelog-skill/commit/fb1862a9c6dc2ee7e045a0e72c0723c4e43dd75c)
 -   Update issue query. [#156](https://github.com/atomist-skills/keep-a-changelog-skill/issues/156)
 
+### Fixed
+
+-   Prevent updates to changelog file to self-trigger. [82c179b](https://github.com/atomist-skills/keep-a-changelog-skill/commit/82c179bc8e2b6312f2c0d7ab790a9e885de8e1ca)
+
 ## [1.4.1](https://github.com/atomist-skills/changelog-skill/compare/1.4.0...1.4.1) - 2020-12-07
 
 ### Fixed
