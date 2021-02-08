@@ -25,6 +25,7 @@ import {
 	changelogToString,
 	filterChangelogEntries,
 	readChangelog,
+	removeEntriesByCommits,
 	writeChangelog,
 } from "../../lib/changelog/changelog";
 import { DefaultFileName } from "../../lib/configuration";
@@ -290,6 +291,50 @@ describe("changelog", () => {
 				},
 			];
 			assert.deepStrictEqual(f, x);
+		});
+	});
+
+	describe("removeEntriesByCommits", () => {
+		it("does nothing safely", () => {
+			const entries: any[] = [
+				{ label: "abcdef0" },
+				{ label: "bcdef01" },
+				{ label: "cdef012" },
+			];
+			const shass = [undefined, []];
+			shass.forEach(shas => {
+				const r = removeEntriesByCommits(entries, shas);
+				assert.deepStrictEqual(r, entries);
+			});
+		});
+
+		it("filters nothing", () => {
+			const entries: any[] = [
+				{ label: "abcdef0" },
+				{ label: "bcdef01" },
+				{ label: "cdef012" },
+			];
+			const shas = ["0123456", "1234567", "2345678"];
+			const r = removeEntriesByCommits(entries, shas);
+			assert.deepStrictEqual(r, entries);
+		});
+
+		it("remove matching SHAs", () => {
+			const entries: any[] = [
+				{ label: "abcdef0" },
+				{ label: "bcdef01" },
+				{ label: "cdef012" },
+				{ label: "def0123" },
+			];
+			const shas = [
+				"0123456789abcdef",
+				"bcdef0123456789a",
+				"0123456789abcdef",
+				"cdef0123456789ab",
+			];
+			const r = removeEntriesByCommits(entries, shas);
+			const e = [{ label: "abcdef0" }, { label: "def0123" }];
+			assert.deepStrictEqual(r, e);
 		});
 	});
 });
