@@ -24,7 +24,6 @@ import {
 	status,
 } from "@atomist/skill";
 import { CommitEditor } from "@atomist/skill/lib/git";
-import { headChangedFiles } from "@atomist/skill/lib/git/operation";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
 import { promisify } from "util";
@@ -245,10 +244,35 @@ export async function addChangelogEntryForCommit(
 			credential,
 		}),
 	);
-
 	const changelogPath = p.path(changelogFile);
-	const newEntries = await filterChangelogEntries(
+
+	const changelogCommits: string[] = [];
+	for (const commit of push.commits) {
+		try {
+			const diffResult = await p.exec("git", [
+				"diff",
+				"--name-only",
+				`${commit.sha}~1...${commit.sha}`,
+			]);
+			const diffOut = diffResult.stdout;
+			const diffFiles = diffOut
+				.split("\n")
+				.map(f => f.trim())
+				.filter(f => f?.length > 0);
+			if (diffFiles.length === 1 && diffFiles.includes(changelogFile)) {
+				changelogCommits.push(commit.sha);
+			}
+		} catch (e) {
+			// ignore
+		}
+	}
+	const validEntries = removeEntriesByCommits(
 		commitEntries,
+		changelogCommits,
+	);
+
+	const newEntries = await filterChangelogEntries(
+		validEntries,
 		changelogPath,
 	);
 	if (newEntries.length < 1) {
@@ -257,11 +281,6 @@ export async function addChangelogEntryForCommit(
 				`All ${changelogFile} entries already exist in ${slugLink}`,
 			)
 			.hidden();
-	}
-
-	const changedFiles = await headChangedFiles(p);
-	if (changedFiles.length === 1 && changedFiles.includes(changelogFile)) {
-		return status.success(`Ignoring change to '${changelogFile}'`).hidden();
 	}
 
 	const author = newEntries
@@ -278,6 +297,27 @@ export async function addChangelogEntryForCommit(
 		`Added changelog entries: ${newEntries.map(e => e.title).join(", ")}`,
 	);
 	return status.success(`Updated ${changelogFile} in ${slugLink}`);
+}
+
+/**
+ * Remove changelog entries by commit SHA. The commit SHA is matched
+ * against the changelog entry label.
+ *
+ * @param entries changelog entries to filter
+ * @param shas array of commit SHAs to filter out
+ * @return changelog entries that do not have labels that match any of the commit SHAs
+ */
+export function removeEntriesByCommits(
+	entries: ChangelogEntry[],
+	shas: string[],
+): ChangelogEntry[] {
+	if (!shas || shas.length < 1) {
+		return entries;
+	}
+	return entries.filter(e => {
+		const shaRegExp = new RegExp(`^${e.label}`);
+		return !shas.some(s => shaRegExp.exec(s));
+	});
 }
 
 /**
