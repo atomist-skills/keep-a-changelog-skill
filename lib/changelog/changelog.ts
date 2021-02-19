@@ -243,7 +243,7 @@ export async function addChangelogEntryForCommit(
 			branch: push.branch,
 			credential,
 		}),
-		{ depth: 2 },
+		{ depth: push.commits.length + 1 },
 	);
 	const changelogPath = p.path(changelogFile);
 
