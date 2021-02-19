@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 -   Retain non-changelog commits in push. [#165](https://github.com/atomist-skills/keep-a-changelog-skill/issues/165)
 
+### Fixed
+
+-   Clone with depth 2 to make sure that we can get the file diff. [9cb1c93](https://github.com/atomist-skills/keep-a-changelog-skill/commit/9cb1c935c22f3aa00516536703aa1aedaf3224db)
+
 ## [1.5.0](https://github.com/atomist-skills/changelog-skill/compare/1.4.1...1.5.0) - 2021-02-08
 
 ### Added
