@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist-skills/changelog-skill/compare/1.5.1...HEAD)
 
+### Fixed
+
+-   Clone all commits from push + 1. [d1d3c12](https://github.com/atomist-skills/keep-a-changelog-skill/commit/d1d3c122e0a522fa47550398d6500a4e033ffa6b)
+
 ## [1.5.1](https://github.com/atomist-skills/changelog-skill/compare/1.5.0...1.5.1) - 2021-02-19
 
 ### Changed
