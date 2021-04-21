@@ -18,6 +18,7 @@ import {
 	Contextual,
 	git,
 	HandlerStatus,
+	log,
 	project,
 	repository,
 	secret,
