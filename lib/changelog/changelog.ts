@@ -294,7 +294,7 @@ export async function addChangelogEntryForCommit(
 		editors: [changelogEditor(p, newEntries, cfg)],
 		author,
 	});
-	await ctx.audit.log(
+	log.info(
 		`Added changelog entries: ${newEntries.map(e => e.title).join(", ")}`,
 	);
 	return status.success(`Updated ${changelogFile} in ${slugLink}`);

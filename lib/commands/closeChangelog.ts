@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CommandHandler, prompt, repository, slack } from "@atomist/skill";
+import { CommandHandler, log, prompt, repository, slack } from "@atomist/skill";
 
 import { closeChangelog } from "../changelog/closeChangelog";
 import { ChangelogConfiguration } from "../configuration";
@@ -29,7 +29,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 		},
 	});
 
-	await ctx.audit.log("Obtaining linked repository");
+	log.info("Obtaining linked repository");
 	const repo = await repository.linkedRepository(ctx);
 	if (!repo) {
 		return {
@@ -38,9 +38,7 @@ export const handler: CommandHandler<ChangelogConfiguration> = async ctx => {
 		};
 	}
 
-	await ctx.audit.log(
-		`Closing changelog section for version '${params.version}'`,
-	);
+	log.info(`Closing changelog section for version '${params.version}'`);
 	const result = await closeChangelog(
 		{
 			owner: repo.owner,
