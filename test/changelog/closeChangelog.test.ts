@@ -527,18 +527,15 @@ Initial release
 			const c: any = {
 				versions: [
 					{
-						title:
-							"[5.6.0](https://g.com/a/k/compare/0.6.0...5.6.0) - 2018-03-03",
+						title: "[5.6.0](https://g.com/a/k/compare/0.6.0...5.6.0) - 2018-03-03",
 						body: "nope",
 					},
 					{
-						title:
-							"[0.6.0](https://g.com/a/k/compare/0.5.0...0.6.0) - 2018-03-02",
+						title: "[0.6.0](https://g.com/a/k/compare/0.5.0...0.6.0) - 2018-03-02",
 						body: "yes",
 					},
 					{
-						title:
-							"[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
+						title: "[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
 						body: "no",
 					},
 				],
@@ -551,23 +548,19 @@ Initial release
 			const c: any = {
 				versions: [
 					{
-						title:
-							"[v5.6.0](https://g.com/a/k/compare/v0.6.0...v5.6.0) - 2018-03-03",
+						title: "[v5.6.0](https://g.com/a/k/compare/v0.6.0...v5.6.0) - 2018-03-03",
 						body: "nope",
 					},
 					{
-						title:
-							"[v0.6.0](https://g.com/a/k/compare/v0.5.1...v0.6.0) - 2018-03-02",
+						title: "[v0.6.0](https://g.com/a/k/compare/v0.5.1...v0.6.0) - 2018-03-02",
 						body: "negative",
 					},
 					{
-						title:
-							"[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
+						title: "[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
 						body: "affirmative",
 					},
 					{
-						title:
-							"[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
+						title: "[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
 						body: "no",
 					},
 				],
@@ -580,23 +573,19 @@ Initial release
 			const c: any = {
 				versions: [
 					{
-						title:
-							"[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
+						title: "[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
 						body: "nope",
 					},
 					{
-						title:
-							"[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
+						title: "[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
 						body: "oui",
 					},
 					{
-						title:
-							"[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
+						title: "[v0.5.1](https://g.com/a/k/compare/v0.5.0...v0.5.1) - 2018-03-01",
 						body: "nil",
 					},
 					{
-						title:
-							"[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
+						title: "[v0.5.0](https://g.com/a/k/compare/v0.4.0...v0.5.0) - 2018-03-01",
 						body: "no",
 					},
 				],
@@ -609,23 +598,19 @@ Initial release
 			const c: any = {
 				versions: [
 					{
-						title:
-							"[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
+						title: "[v10](https://g.com/a/k/compare/version9...v10) - 2018-03-03",
 						body: "nope",
 					},
 					{
-						title:
-							"[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
+						title: "[version9](https://g.com/a/k/compare/v0.5.1...version9) - 2018-03-02",
 						body: "negative",
 					},
 					{
-						title:
-							"[v0.5.1](https://g.com/a/k/compare/0.5.0...v0.5.1) - 2018-03-01",
+						title: "[v0.5.1](https://g.com/a/k/compare/0.5.0...v0.5.1) - 2018-03-01",
 						body: "nil",
 					},
 					{
-						title:
-							"[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
+						title: "[0.5.0](https://g.com/a/k/compare/0.4.0...0.5.0) - 2018-03-01",
 						body: "no",
 					},
 				],

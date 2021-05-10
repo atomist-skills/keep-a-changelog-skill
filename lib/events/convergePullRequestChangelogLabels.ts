@@ -27,21 +27,22 @@ import { Octokit } from "@octokit/rest";
 import { ChangelogLabels } from "../changelog/labels";
 import { ConvergePullRequestChangelogLabelsSubscription } from "../typings/types";
 
-export const handler: EventHandler<ConvergePullRequestChangelogLabelsSubscription> = async ctx => {
-	const repo = ctx.data.PullRequest[0].repo;
-	const { owner, name } = repo;
-	const credential = await ctx.credential.resolve(
-		secret.gitHubAppToken({ owner, repo: name }),
-	);
+export const handler: EventHandler<ConvergePullRequestChangelogLabelsSubscription> =
+	async ctx => {
+		const repo = ctx.data.PullRequest[0].repo;
+		const { owner, name } = repo;
+		const credential = await ctx.credential.resolve(
+			secret.gitHubAppToken({ owner, repo: name }),
+		);
 
-	const api = github.api(
-		repository.gitHub({ owner, repo: name, credential }),
-	);
-	await handleError(
-		async () => await upsertChangelogLabels({ api, owner, repo: name }),
-	);
-	return status.success(`Converged changelog labels`).hidden();
-};
+		const api = github.api(
+			repository.gitHub({ owner, repo: name, credential }),
+		);
+		await handleError(
+			async () => await upsertChangelogLabels({ api, owner, repo: name }),
+		);
+		return status.success(`Converged changelog labels`).hidden();
+	};
 
 /**
  * Information needed to check and create a label.

@@ -61,12 +61,12 @@ describe("changelog", () => {
 
 	it("should add entry to changelog", async () => {
 		const clp = path.join(process.cwd(), DefaultFileName);
-		const p = ({
+		const p = {
 			id: {
 				owner: "atomist",
 				repo: "test",
 			},
-		} as any) as Project;
+		} as any as Project;
 		const entry: ChangelogEntry = {
 			label: "#1",
 			title: "This is a test label",
@@ -87,12 +87,12 @@ describe("changelog", () => {
 
 	it("should convert back to markdown", async () => {
 		const clp = path.join(process.cwd(), DefaultFileName);
-		const p = ({
+		const p = {
 			id: {
 				owner: "atomist",
 				repo: "test",
 			},
-		} as any) as Project;
+		} as any as Project;
 		const entry: ChangelogEntry = {
 			label: "#1",
 			title: "Something useful was added",
@@ -114,16 +114,15 @@ describe("changelog", () => {
 
 	it("should write changes back to changelog", async () => {
 		const clp = path.join(process.cwd(), DefaultFileName);
-		const p = ({
+		const p = {
 			id: {
 				owner: "atomist",
 				repo: "test",
 			},
-		} as any) as Project;
+		} as any as Project;
 		const entry: ChangelogEntry = {
 			label: "1",
-			title:
-				"This is a test label with some really long text and some more bla bla bla. And even some more and more and more.",
+			title: "This is a test label with some really long text and some more bla bla bla. And even some more and more and more.",
 			category: "added",
 			url: "https://github.com/atomist/test/issues/1",
 			qualifiers: ["breaking"],
@@ -173,8 +172,7 @@ describe("changelog", () => {
 					authors: [{ login: "you" }],
 					title: "Something fixed.",
 					label: "abcdef0",
-					url:
-						"https://github.com/some/repo/commit/abcdef0123456789abcdef",
+					url: "https://github.com/some/repo/commit/abcdef0123456789abcdef",
 					qualifiers: [],
 				},
 			];
@@ -206,8 +204,7 @@ describe("changelog", () => {
 					authors: [{ login: "you" }],
 					title: "Something fixed.",
 					label: "abcdef0",
-					url:
-						"https://github.com/some/repo/commit/abcdef0123456789abcdef",
+					url: "https://github.com/some/repo/commit/abcdef0123456789abcdef",
 					qualifiers: [],
 				},
 			];
@@ -239,8 +236,7 @@ describe("changelog", () => {
 					authors: [{ login: "you" }],
 					title: "Something fixed.",
 					label: "32c1101",
-					url:
-						"https://github.com/atomist/k8svent/commit/32c11015c603ef90378914f82811ee1489c19991",
+					url: "https://github.com/atomist/k8svent/commit/32c11015c603ef90378914f82811ee1489c19991",
 					qualifiers: [],
 				},
 			];
