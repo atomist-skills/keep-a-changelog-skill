@@ -19,18 +19,19 @@ import { EventHandler } from "@atomist/skill";
 import { addChangelogEntryForClosedIssue } from "../changelog/changelog";
 import { ClosedPullRequestWithChangelogLabelSubscription } from "../typings/types";
 
-export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscription> = async ctx => {
-	if (ctx.data.PullRequest[0].merged) {
-		return addChangelogEntryForClosedIssue(
-			ctx.data,
-			ctx,
-			ctx.configuration?.parameters,
-		);
-	} else {
-		return {
-			visibility: "hidden",
-			code: 0,
-			reason: "Pull request closed but not merged. Ignoring...",
-		};
-	}
-};
+export const handler: EventHandler<ClosedPullRequestWithChangelogLabelSubscription> =
+	async ctx => {
+		if (ctx.data.PullRequest[0].merged) {
+			return addChangelogEntryForClosedIssue(
+				ctx.data,
+				ctx,
+				ctx.configuration?.parameters,
+			);
+		} else {
+			return {
+				visibility: "hidden",
+				code: 0,
+				reason: "Pull request closed but not merged. Ignoring...",
+			};
+		}
+	};
