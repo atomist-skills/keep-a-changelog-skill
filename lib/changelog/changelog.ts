@@ -342,25 +342,27 @@ export async function filterChangelogEntries(
 /**
  * Return an editor function suitable for git.persistChanges.
  */
-const changelogEditor = (
-	proj: project.Project,
-	entries: ChangelogEntry[],
-	cfg: ChangelogConfiguration,
-): CommitEditor => async () => {
-	if (!entries || entries.length < 1) {
-		return undefined;
-	}
-	await updateChangelog(proj, entries, cfg);
-	const message = [
-		`Add changelog entr${entries.length > 1 ? "ies" : "y"}`,
-		"",
-	];
-	for (const entry of entries) {
-		message.push(`-   ${entry.label} to ${entry.category}`);
-	}
-	message.push("", "[atomist:generated]");
-	return message.join("\n");
-};
+const changelogEditor =
+	(
+		proj: project.Project,
+		entries: ChangelogEntry[],
+		cfg: ChangelogConfiguration,
+	): CommitEditor =>
+	async () => {
+		if (!entries || entries.length < 1) {
+			return undefined;
+		}
+		await updateChangelog(proj, entries, cfg);
+		const message = [
+			`Add changelog entr${entries.length > 1 ? "ies" : "y"}`,
+			"",
+		];
+		for (const entry of entries) {
+			message.push(`-   ${entry.label} to ${entry.category}`);
+		}
+		message.push("", "[atomist:generated]");
+		return message.join("\n");
+	};
 
 /**
  * Add `entries` to changelog that are not already present. Return

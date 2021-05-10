@@ -19,10 +19,11 @@ import { EventHandler } from "@atomist/skill";
 import { addChangelogEntryForCommit } from "../changelog/changelog";
 import { PushWithChangelogLabelSubscription } from "../typings/types";
 
-export const handler: EventHandler<PushWithChangelogLabelSubscription> = async ctx => {
-	return addChangelogEntryForCommit(
-		ctx.data.Push?.[0],
-		ctx,
-		ctx.configuration?.parameters,
-	);
-};
+export const handler: EventHandler<PushWithChangelogLabelSubscription> =
+	async ctx => {
+		return addChangelogEntryForCommit(
+			ctx.data.Push?.[0],
+			ctx,
+			ctx.configuration?.parameters,
+		);
+	};
