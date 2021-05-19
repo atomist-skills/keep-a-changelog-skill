@@ -441,7 +441,7 @@ export function addEntryToChangelog(
 		.join(" ");
 	const title = entry.title.endsWith(".") ? entry.title : `${entry.title}.`;
 	const prefix = qualifiers && qualifiers.length > 0 ? `${qualifiers} ` : "";
-	const line = `-   ${prefix}${_.upperFirst(title)} [${entry.label}](${
+	const line = `*   ${prefix}${_.upperFirst(title)} [${entry.label}](${
 		entry.url
 	})${
 		entry.authors?.length > 0
