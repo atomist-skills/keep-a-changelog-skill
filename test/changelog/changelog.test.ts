@@ -81,7 +81,7 @@ describe("changelog", () => {
 		const cl = addEntryToChangelog(entry, ocl, p);
 		assert.equal(
 			cl.versions[0].parsed.Added[cl.versions[0].parsed.Added.length - 1],
-			"-   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)",
+			"*   This is a test label. [#1](https://github.com/atomist/test/issues/1) by [@foo](https://github.com/foo)",
 		);
 	});
 
@@ -105,7 +105,7 @@ describe("changelog", () => {
 		const out = changelogToString(cl);
 		// tslint:disable:max-line-length
 		assert(
-			/- {3}Something useful was added. \[#1\]\(https:\/\/github.com\/atomist\/test\/issues\/1\)/m.test(
+			/\* {3}Something useful was added. \[#1\]\(https:\/\/github.com\/atomist\/test\/issues\/1\)/m.test(
 				out,
 			),
 		);
