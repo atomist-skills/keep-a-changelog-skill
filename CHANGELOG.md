@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
--   Use * instead of -. [de45761](https://github.com/atomist-skills/keep-a-changelog-skill/commit/de457615e24dc45e26964340988bef80b500fb76)
+*   Use * instead of -. [de45761](https://github.com/atomist-skills/keep-a-changelog-skill/commit/de457615e24dc45e26964340988bef80b500fb76)
 
 ## [1.5.4](https://github.com/atomist-skills/changelog-skill/compare/1.5.3...1.5.4) - 2021-04-21
 
